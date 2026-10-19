@@ -22,8 +22,7 @@ class SleepSession {
   }
 
   // Duration of a finished session (zero while still sleeping)
-  Duration get length =>
-      wakeTime == null ? Duration.zero : wakeTime!.difference(bedTime);
+  Duration get length => wakeTime == null ? Duration.zero : wakeTime!.difference(bedTime);
 
   // A night is named by the morning you woke up (date only)
   DateTime get nightDate {

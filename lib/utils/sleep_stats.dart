@@ -28,8 +28,7 @@ Duration averageDuration(List<SleepSession> list) {
   return Duration(minutes: (total / list.length).round());
 }
 
-double _mean(Iterable<num> xs) =>
-    xs.isEmpty ? 0 : xs.fold<num>(0, (a, b) => a + b) / xs.length;
+double _mean(Iterable<num> xs) => xs.isEmpty ? 0 : xs.fold<num>(0, (a, b) => a + b) / xs.length;
 
 // Finished nights whose wake-up falls in the [n] calendar days ending
 // [offset] days before [today].
@@ -42,10 +41,7 @@ List<SleepSession> inLastDays(
   final end = addDays(today, 1 - offset);
   final start = addDays(end, -n);
   return sessions
-      .where((s) =>
-          s.wakeTime != null &&
-          !s.wakeTime!.isBefore(start) &&
-          s.wakeTime!.isBefore(end))
+      .where((s) => s.wakeTime != null && !s.wakeTime!.isBefore(start) && s.wakeTime!.isBefore(end))
       .toList();
 }
 

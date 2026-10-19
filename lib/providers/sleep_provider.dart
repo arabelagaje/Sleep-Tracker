@@ -63,9 +63,9 @@ class SleepProvider extends ChangeNotifier {
     return saved;
   }
 
-  Future<void> rate(SleepSession session, int? quality) => save(quality == null
-      ? session.copyWith(clearQuality: true)
-      : session.copyWith(quality: quality));
+  Future<void> rate(SleepSession session, int? quality) => save(
+    quality == null ? session.copyWith(clearQuality: true) : session.copyWith(quality: quality),
+  );
 
   Future<void> delete(SleepSession session) async {
     await _db.deleteSession(session.id!);

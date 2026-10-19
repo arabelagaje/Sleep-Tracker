@@ -29,12 +29,7 @@ class DatabaseHelper {
       path = join(documentsDirectory.path, 'sleep_tracker.db');
     }
 
-    return await openDatabase(
-      path,
-      version: 2,
-      onCreate: _onCreate,
-      onUpgrade: _onUpgrade,
-    );
+    return await openDatabase(path, version: 2, onCreate: _onCreate, onUpgrade: _onUpgrade);
   }
 
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
@@ -123,16 +118,11 @@ class DatabaseHelper {
   // Delete a session
   Future<int> deleteSession(int id) async {
     final db = await database;
-    return await db.delete(
-      'sleep_sessions',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    return await db.delete('sleep_sessions', where: 'id = ?', whereArgs: [id]);
   }
 
   // Get sessions within a date range
-  Future<List<SleepSession>> getSessionsInRange(
-      DateTime start, DateTime end) async {
+  Future<List<SleepSession>> getSessionsInRange(DateTime start, DateTime end) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(
       'sleep_sessions',
@@ -156,11 +146,10 @@ class DatabaseHelper {
   // Save one setting
   Future<void> setSetting(String key, String value) async {
     final db = await database;
-    await db.insert(
-      'settings',
-      {'key': key, 'value': value},
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    await db.insert('settings', {
+      'key': key,
+      'value': value,
+    }, conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   // Close the database

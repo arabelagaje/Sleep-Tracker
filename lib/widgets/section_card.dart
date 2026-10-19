@@ -78,7 +78,11 @@ class CardLink extends StatelessWidget {
       foregroundColor: context.colors.accentInk,
       minimumSize: const Size(0, 36),
       padding: const EdgeInsets.symmetric(horizontal: 6),
-      textStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+      textStyle: const TextStyle(
+        fontFamily: 'PlusJakartaSans',
+        fontWeight: FontWeight.w600,
+        fontSize: 13,
+      ),
     ),
     child: Text(label),
   );

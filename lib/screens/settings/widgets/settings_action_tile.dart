@@ -34,7 +34,11 @@ class SettingsActionTile extends StatelessWidget {
           foregroundColor: c.accentInk,
           side: BorderSide(color: c.line),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          textStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+          textStyle: const TextStyle(
+            fontFamily: 'PlusJakartaSans',
+            fontWeight: FontWeight.w600,
+            fontSize: 13,
+          ),
         ),
         child: busy
             ? const SizedBox(

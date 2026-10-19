@@ -143,7 +143,11 @@ class _LogScreenState extends State<LogScreen> {
             foregroundColor: c.accentInk,
             side: BorderSide(color: c.line, width: 1.5),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-            textStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+            textStyle: const TextStyle(
+              fontFamily: 'PlusJakartaSans',
+              fontWeight: FontWeight.w600,
+              fontSize: 15,
+            ),
           ),
           icon: const Icon(Icons.add, size: 18),
           label: const Text('Add a past night'),

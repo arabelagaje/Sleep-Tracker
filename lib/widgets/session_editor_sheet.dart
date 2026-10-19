@@ -304,7 +304,11 @@ class _SessionEditorSheetState extends State<SessionEditorSheet> {
                       backgroundColor: c.accent,
                       foregroundColor: c.onAccent,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                      textStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+                      textStyle: const TextStyle(
+                        fontFamily: 'PlusJakartaSans',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15,
+                      ),
                     ),
                     child: const Text('Save'),
                   ),

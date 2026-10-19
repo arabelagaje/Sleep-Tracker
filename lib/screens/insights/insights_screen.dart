@@ -40,7 +40,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
           Icon(d.isNegative ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_up, size: 14),
           Flexible(
             child: Text(
-              '${fmtDur(d.abs())} vs previous ${_period.days} days',
+              '${fmtDur(d.abs())} vs prev. ${_period.days}d',
               style: const TextStyle(fontWeight: FontWeight.w600),
               overflow: TextOverflow.ellipsis,
             ),

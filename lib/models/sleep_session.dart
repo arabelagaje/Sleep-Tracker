@@ -21,13 +21,24 @@ class SleepSession {
     return wakeTime!.difference(bedTime).inMinutes;
   }
 
+  // Duration of a finished session (zero while still sleeping)
+  Duration get length =>
+      wakeTime == null ? Duration.zero : wakeTime!.difference(bedTime);
+
+  // A night is named by the morning you woke up (date only)
+  DateTime get nightDate {
+    final w = wakeTime ?? bedTime;
+    return DateTime(w.year, w.month, w.day);
+  }
+
+  bool get hasNotes => notes != null && notes!.trim().isNotEmpty;
+
   // Convert SleepSession to Map for database storage
   Map<String, dynamic> toMap() {
     return {
       'id': id,
       'bed_time': bedTime.millisecondsSinceEpoch,
       'wake_time': wakeTime?.millisecondsSinceEpoch,
-      'duration': duration,
       'quality': quality,
       'notes': notes,
       'created_at': createdAt.millisecondsSinceEpoch,
@@ -48,7 +59,8 @@ class SleepSession {
     );
   }
 
-  // Create a copy of SleepSession with optional field updates
+  // Create a copy of SleepSession with optional field updates.
+  // The clear* flags set nullable fields back to null.
   SleepSession copyWith({
     int? id,
     DateTime? bedTime,
@@ -56,13 +68,16 @@ class SleepSession {
     int? quality,
     String? notes,
     DateTime? createdAt,
+    bool clearWakeTime = false,
+    bool clearQuality = false,
+    bool clearNotes = false,
   }) {
     return SleepSession(
       id: id ?? this.id,
       bedTime: bedTime ?? this.bedTime,
-      wakeTime: wakeTime ?? this.wakeTime,
-      quality: quality ?? this.quality,
-      notes: notes ?? this.notes,
+      wakeTime: clearWakeTime ? null : wakeTime ?? this.wakeTime,
+      quality: clearQuality ? null : quality ?? this.quality,
+      notes: clearNotes ? null : notes ?? this.notes,
       createdAt: createdAt ?? this.createdAt,
     );
   }

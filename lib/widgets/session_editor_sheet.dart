@@ -224,7 +224,8 @@ class _SessionEditorSheetState extends State<SessionEditorSheet> {
                   ],
                   const SizedBox(height: 16),
                   const _FieldLabel('How did you sleep?'),
-                  Row(
+                  Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
                       StarRating(
                         value: _quality,

@@ -33,7 +33,12 @@ class SectionCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
-              ?trailing,
+              if (trailing != null) ...[
+                const SizedBox(width: 8),
+                Flexible(
+                  child: Align(alignment: Alignment.centerRight, child: trailing),
+                ),
+              ],
             ],
           ),
           const SizedBox(height: 10),
@@ -51,8 +56,12 @@ class CardCaption extends StatelessWidget {
   final String text;
 
   @override
-  Widget build(BuildContext context) =>
-      Text(text, style: TextStyle(fontSize: 12.5, color: context.colors.ink2));
+  Widget build(BuildContext context) => Text(
+    text,
+    maxLines: 1,
+    overflow: TextOverflow.ellipsis,
+    style: TextStyle(fontSize: 12.5, color: context.colors.ink2),
+  );
 }
 
 // Text button used as a card link ("Edit").

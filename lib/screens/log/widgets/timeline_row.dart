@@ -34,9 +34,10 @@ class TimelineRow extends StatelessWidget {
         ),
         child: Row(
           children: [
-            SizedBox(
-              width: timelineDayWidth,
-              height: 44,
+            ConstrainedBox(
+              constraints: const BoxConstraints.tightFor(
+                width: timelineDayWidth,
+              ).copyWith(minHeight: 44),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,

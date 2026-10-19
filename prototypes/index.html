@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sleep Tracker V2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared/base.css">
+<style>
+:root {
+  --font: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --desk: #e7e6f3; --desk-ink: #3d3a5c; --bezel: #1b1a2b;
+  --bg: #f6f5fc; --surface: #ffffff; --surface-2: #efedf8; --sheet: #ffffff;
+  --ink: #1d1b33; --ink-2: #57537a; --muted: #c9c5df; --line: #e2dff0;
+  --accent: #5b4fd6; --accent-ink: #4a3fc4; --on-accent: #fff; --accent-soft: #e6e3fb;
+  --star: #e49a1c; --danger: #c2334d; --scheme: light;
+  --orb-a: #7a6ff0; --orb-b: #4a3fc4; --orb-glow: rgba(91, 79, 214, .28);
+  --track: #ebe9f6;
+  --h0: #efedf8; --h1: #dcd8fa; --h2: #b4abf2; --h3: #7d70e3; --h4: #4a3fc4;
+  --h-ink-lo: #1d1b33; --h-ink-hi: #ffffff;
+  --toast: #1d1b33; --toast-accent: #b8b0ff;
+}
+:root[data-theme="dark"] {
+  --desk: #0b0a14; --desk-ink: #a9a5c8; --bezel: #000;
+  --bg: #100f1e; --surface: #1a1930; --surface-2: #232240; --sheet: #1a1930;
+  --ink: #eeedfa; --ink-2: #a6a2c8; --muted: #3e3b62; --line: #2c2a4a;
+  --accent: #8f86ff; --accent-ink: #a9a2ff; --on-accent: #120f2e; --accent-soft: #2a2752;
+  --star: #f5b742; --danger: #ff7a8f; --scheme: dark;
+  --orb-a: #3a3190; --orb-b: #1f1a5c; --orb-glow: rgba(143, 134, 255, .3);
+  --track: #22213c;
+  --h0: #1f1e38; --h1: #2e2a5c; --h2: #4a419a; --h3: #7a70e0; --h4: #b3abff;
+  --h-ink-lo: #eeedfa; --h-ink-hi: #120f2e;
+  --toast: #eeedfa; --toast-ink: #100f1e; --toast-accent: #4a3fc4;
+}
+.top { display: flex; align-items: center; justify-content: space-between; padding: 20px 10px 4px 24px; }
+.top small { display: block; font-size: 13px; color: var(--ink-2); font-weight: 500; }
+.top h1 { margin: 2px 0 0; font-size: 24px; font-weight: 800; letter-spacing: -.02em; }
+.top .acts { display: flex; }
+.pad { padding: 0 20px 24px; display: flex; flex-direction: column; gap: 16px; }
+.when-sleeping { display: none !important; }
+.is-sleeping .when-sleeping { display: revert !important; }
+.is-sleeping .when-awake { display: none !important; }
+
+/* ---------- Tonight ---------- */
+.orb-wrap { display: grid; place-items: center; padding: 40px 0 18px; position: relative; }
+.stars-bg { position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .6s; }
+[data-theme="dark"] .stars-bg, .is-sleeping .stars-bg { opacity: 1; }
+.stars-bg i { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: var(--accent-ink); }
+.orb {
+  width: 216px; height: 216px; border-radius: 50%; border: 0;
+  background: radial-gradient(circle at 32% 28%, var(--orb-a), var(--orb-b) 70%);
+  color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+  box-shadow: 0 0 0 14px var(--orb-glow), 0 0 0 30px color-mix(in srgb, var(--orb-glow) 45%, transparent), 0 24px 50px -18px var(--orb-b);
+  transition: transform .2s;
+}
+.orb:active { transform: scale(.97); }
+.orb svg { width: 42px; height: 42px; }
+.orb .big { font-size: 32px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+.orb .lbl { font-size: 14px; font-weight: 600; opacity: .9; }
+.is-sleeping .orb { animation: breathe 5s ease-in-out infinite; }
+@keyframes breathe { 50% { box-shadow: 0 0 0 22px var(--orb-glow), 0 0 0 44px color-mix(in srgb, var(--orb-glow) 35%, transparent), 0 24px 50px -18px var(--orb-b); } }
+.orb-sub { text-align: center; font-size: 14px; color: var(--ink-2); margin: 0; }
+
+
+.ends { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.end { border: 1px solid var(--line); background: var(--surface); border-radius: 18px; padding: 12px 14px; text-align: left; display: flex; gap: 12px; align-items: center; min-height: 66px; }
+.end:hover { border-color: var(--accent); }
+.end .dot { width: 34px; height: 34px; border-radius: 11px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent-ink); flex: none; }
+.end .dot svg { width: 18px; height: 18px; }
+.end small { display: block; font-size: 12px; color: var(--ink-2); font-weight: 500; }
+.end b { font-size: 17px; font-weight: 700; }
+.bar.slot i { background: var(--track); }
+.empty-note { margin: 0; padding: 18px 8px; text-align: center; color: var(--ink-2); font-size: 14px; line-height: 1.5; }
+.field:has(> .tag-input) { display: none; } /* tags are out of scope for V2 */
+.proto-bar .data a { text-decoration: none; padding: 0 2px; }
+.proto-bar .data a.on { font-weight: 700; text-decoration: underline; }
+
+.card { background: var(--surface); border-radius: 22px; padding: 18px; border: 1px solid var(--line); }
+.card-h { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 10px; }
+.card-h h2 { margin: 0; font-size: 15px; font-weight: 700; }
+.card-h small { color: var(--ink-2); font-size: 12.5px; }
+.link { border: 0; background: transparent; color: var(--accent-ink); font-weight: 600; font-size: 13px; min-height: 36px; padding: 0 6px; }
+.last-top { display: flex; justify-content: space-between; align-items: flex-end; gap: 8px; }
+.last-dur { font-size: 40px; font-weight: 800; letter-spacing: -.03em; line-height: 1; }
+.delta { font-size: 13px; color: var(--ink-2); font-weight: 500; }
+.last-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; color: var(--ink-2); font-size: 14px; }
+.quote { margin: 10px 0 0; font-size: 14px; color: var(--ink-2); padding: 10px 12px; background: var(--surface-2); border-radius: 12px; }
+
+.bars { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; align-items: end; height: 120px; position: relative; padding-top: 6px; }
+.bars .goal { position: absolute; left: 0; right: 0; border-top: 1.5px dashed var(--ink-2); opacity: .45; }
+.bars .goal span { position: absolute; right: 0; top: -18px; font-size: 11px; color: var(--ink-2); }
+.bar { display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; justify-content: flex-end; border: 0; background: transparent; padding: 0; }
+.bar i { display: block; width: 100%; max-width: 26px; border-radius: 8px 8px 4px 4px; background: var(--accent); }
+.bar.under i { opacity: .45; }
+.bar small { height: 18px; line-height: 18px; font-size: 11px; color: var(--ink-2); font-weight: 600; }
+
+/* ---------- Log ---------- */
+.segm { display: flex; background: var(--surface-2); border-radius: 12px; padding: 4px; }
+.segm button { flex: 1; border: 0; background: transparent; font-size: 13px; font-weight: 600; min-height: 36px; border-radius: 9px; color: var(--ink-2); }
+.segm button.on { background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px rgba(0, 0, 0, .12); }
+.filters { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin: 0 -20px; padding: 0 20px; }
+.filters .chip { flex: none; }
+.week-h { display: flex; justify-content: space-between; align-items: baseline; margin: 6px 2px 2px; }
+.week-h b { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-2); }
+.week-h small { font-size: 12px; color: var(--ink-2); }
+.axis { display: grid; grid-template-columns: 52px minmax(0, 1fr) 76px; gap: 8px; font-size: 10.5px; color: var(--ink-2); font-weight: 600; }
+.axis div { display: flex; justify-content: space-between; }
+.lrow { display: grid; grid-template-columns: 52px minmax(0, 1fr) 76px; gap: 8px; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--line); }
+.lrow .day { border: 0; background: transparent; padding: 0; text-align: left; font-size: 13px; font-weight: 700; line-height: 1.2; min-height: 44px; }
+.lrow .day small { display: block; font-weight: 500; color: var(--ink-2); font-size: 11.5px; }
+.lane { position: relative; height: 26px; border-radius: 8px; background: var(--track); border: 0; padding: 0; }
+.lane i { position: absolute; top: 5px; bottom: 5px; border-radius: 5px; background: var(--accent); }
+.lane.under i { opacity: .5; }
+.lane .mid { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--ink-2); opacity: .25; }
+.lane .nt { position: absolute; right: 4px; top: 50%; transform: translateY(-50%); color: var(--ink-2); display: grid; }
+.lane .nt svg { width: 12px; height: 12px; }
+.lrow .r { text-align: right; }
+.lrow .r b { font-size: 14px; display: block; }
+.lrow .r [data-rate-wrap] { display: inline-flex; }
+.lrow .r .rate { min-width: 13px; padding: 1px 0; min-height: 22px; }
+.add-btn { width: 100%; border: 1.5px dashed var(--line); background: transparent; color: var(--accent-ink); }
+.legend { display: flex; gap: 14px; font-size: 12px; color: var(--ink-2); flex-wrap: wrap; }
+.legend i { display: inline-block; width: 12px; height: 8px; border-radius: 3px; background: var(--accent); margin-right: 5px; vertical-align: 0; }
+
+.cal-h { display: flex; justify-content: space-between; align-items: center; }
+.cal-h b { font-size: 18px; }
+.cal { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+.cal .dow { font-size: 11px; color: var(--ink-2); text-align: center; font-weight: 700; }
+.cal button, .cal .blank { aspect-ratio: 1; border-radius: 12px; border: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; font-size: 13px; font-weight: 700; padding: 0; }
+.cal button small { font-size: 9.5px; font-weight: 600; opacity: .85; }
+.cal .today { box-shadow: inset 0 0 0 2px var(--ink); }
+.cal .l0 { background: var(--h0); color: var(--ink-2); }
+.cal .l1 { background: var(--h1); color: var(--h-ink-lo); } .cal .l2 { background: var(--h2); color: var(--h-ink-lo); }
+.cal .l3 { background: var(--h3); color: #fff; } .cal .l4 { background: var(--h4); color: var(--h-ink-hi); }
+[data-theme="dark"] .cal .l3 { color: #120f2e; }
+.cal .future { opacity: .4; display: grid; place-items: center; }
+.scale { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-2); }
+.scale i { width: 18px; height: 12px; border-radius: 4px; display: inline-block; }
+
+/* ---------- Insights ---------- */
+.group { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.group .card-h { margin-bottom: 0; }
+.tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.tile { background: var(--surface-2); border-radius: 16px; padding: 12px 14px; }
+.tile small { color: var(--ink-2); font-size: 12px; font-weight: 600; }
+.tile b { display: block; font-size: 24px; font-weight: 800; letter-spacing: -.02em; margin-top: 4px; }
+.tile span { font-size: 12px; color: var(--ink-2); }
+.tile .d { display: inline-flex; align-items: center; gap: 2px; font-weight: 600; }
+.tile .d svg { width: 14px; height: 14px; }
+.win { height: 180px; }
+.win svg { width: 100%; height: 100%; overflow: visible; display: block; }
+.ax { fill: var(--ink-2); font: 600 10px var(--font); }
+
+/* ---------- Settings ---------- */
+.sub-top { display: flex; align-items: center; gap: 4px; padding: 4px 0 0; margin-left: -12px; }
+.sub-top h2 { margin: 0; font-size: 20px; font-weight: 800; }
+.group-h { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; color: var(--ink-2); margin: 6px 4px -6px; }
+.set-card { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 2px 16px; }
+.set { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.set:last-child { border-bottom: 0; }
+.set b { font-size: 14.5px; font-weight: 600; display: block; }
+.set small { font-size: 12.5px; color: var(--ink-2); }
+.stepper { display: flex; align-items: center; gap: 4px; flex: none; }
+.stepper button { width: 36px; height: 36px; border: 1px solid var(--line); background: var(--surface-2); border-radius: 10px; font-weight: 700; font-size: 16px; }
+.stepper output { min-width: 50px; text-align: center; font-weight: 700; }
+.switch { position: relative; width: 50px; height: 30px; flex: none; }
+.switch input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; z-index: 1; }
+.switch span { position: absolute; inset: 0; border-radius: 999px; background: var(--muted); transition: .2s; }
+.switch span::after { content: ''; position: absolute; top: 3px; left: 3px; width: 24px; height: 24px; border-radius: 50%; background: #fff; transition: .2s; box-shadow: 0 1px 3px rgba(0, 0, 0, .2); }
+.switch input:checked + span { background: var(--accent); }
+.switch input:checked + span::after { transform: translateX(20px); }
+.switch input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+.theme-seg { width: 100%; margin: 4px 0 14px; }
+.small-btn { border: 1px solid var(--line); background: var(--surface-2); color: var(--accent-ink); font-weight: 600; font-size: 13px; min-height: 38px; padding: 0 14px; border-radius: 10px; flex: none; }
+.about { text-align: center; font-size: 12px; color: var(--ink-2); margin: 4px 0 0; }
+
+/* ---------- Overflow menu + About ---------- */
+.menu { position: absolute; top: 64px; right: 14px; z-index: 15; min-width: 190px; padding: 6px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line); box-shadow: 0 16px 40px -12px rgba(0, 0, 0, .35); display: flex; flex-direction: column; }
+.menu button { border: 0; background: transparent; display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 12px; border-radius: 10px; font-size: 14.5px; font-weight: 600; text-align: left; }
+.menu button:hover, .menu button:focus-visible { background: var(--surface-2); }
+.menu svg { width: 18px; height: 18px; color: var(--ink-2); }
+.app-id { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px 0 4px; text-align: center; }
+.app-id .logo { width: 72px; height: 72px; border-radius: 22px; display: grid; place-items: center; color: #fff; background: radial-gradient(circle at 32% 28%, var(--orb-a), var(--orb-b) 70%); }
+.app-id .logo svg { width: 34px; height: 34px; }
+.app-id b { font-size: 20px; font-weight: 800; }
+.app-id small { color: var(--ink-2); font-size: 13px; }
+.about-p { margin: 0; color: var(--ink-2); font-size: 14px; line-height: 1.55; text-align: center; }
+</style>
+</head>
+<body>
+<div class="proto-bar"><span>Sleep Tracker · UI prototype</span><span class="data">Demo data: <a href="?nights=30">30</a>·<a href="?nights=2">2</a>·<a href="?nights=0">0</a> nights</span></div>
+
+<main class="phone">
+  <header class="top">
+    <div><small id="today"></small><h1 id="greet">Good evening</h1></div>
+    <div class="acts">
+      <button type="button" class="icon-btn" id="open-menu" aria-label="More options" aria-haspopup="menu" aria-expanded="false"></button>
+    </div>
+  </header>
+
+  <div class="menu" id="menu" role="menu" hidden>
+    <button type="button" role="menuitem" data-go="settings"><span data-icon="gear"></span>Settings</button>
+    <button type="button" role="menuitem" data-go="about"><span data-icon="info"></span>About</button>
+  </div>
+
+  <div class="scroll">
+    <!-- ================= TONIGHT ================= -->
+    <section data-view="tonight" class="pad">
+      <div class="orb-wrap">
+        <div class="stars-bg" id="stars-bg" aria-hidden="true"></div>
+        <button type="button" class="orb" data-sleep-toggle>
+          <span class="when-awake" data-icon="moon"></span>
+          <span class="lbl when-awake">Start sleep</span>
+          <span class="big when-sleeping" data-live-timer>00:00:00</span>
+          <span class="lbl when-sleeping">Tap when you wake</span>
+        </button>
+      </div>
+      <p class="orb-sub when-awake" id="orb-sub"></p>
+      <p class="orb-sub when-sleeping">Sweet dreams. Tap the bedtime card to adjust it.</p>
+
+      <div class="ends">
+        <button type="button" class="end" id="end-bed"><span class="dot" data-icon="moon"></span><span><small id="end-bed-l">Bedtime</small><b id="e-bed"></b></span></button>
+        <button type="button" class="end" id="end-wake"><span class="dot" data-icon="sun"></span><span><small>Woke up</small><b id="e-wake"></b></span></button>
+      </div>
+
+      <article class="card" id="last-card">
+        <div class="card-h"><h2>Last night</h2><button type="button" class="link" id="last-edit">Edit</button></div>
+        <div class="last-top"><div class="last-dur" id="last-dur"></div><span class="delta" id="last-delta"></span></div>
+        <div class="last-row"><span id="last-q-l">How was it?</span><span data-rate-wrap id="last-rate"></span></div>
+        <p class="quote" id="last-note"></p>
+      </article>
+
+      <article class="card">
+        <div class="card-h"><h2>This week</h2><small id="week-sum"></small></div>
+        <div class="bars" id="week-bars"></div>
+      </article>
+    </section>
+
+    <!-- ================= LOG ================= -->
+    <section data-view="log" class="pad" hidden>
+      <div class="segm" role="group" aria-label="Log view">
+        <button type="button" class="on" data-logview="timeline">Timeline</button>
+        <button type="button" data-logview="month">Month</button>
+      </div>
+
+      <div id="lv-timeline" style="display:flex;flex-direction:column;gap:12px">
+        <div class="filters" role="group" aria-label="Filter nights">
+          <button type="button" class="chip on" data-filter="all">All</button>
+          <button type="button" class="chip" data-filter="unrated">Unrated</button>
+          <button type="button" class="chip" data-filter="notes">With notes</button>
+          <button type="button" class="chip" data-filter="short">Under goal</button>
+        </div>
+        <div>
+          <div class="axis"><span></span><div><span>6p</span><span>9p</span><span>12a</span><span>3a</span><span>6a</span><span>9a</span><span>12p</span></div><span></span></div>
+          <div id="rows"></div>
+        </div>
+        <div class="legend"><span><i></i>Met goal</span><span><i style="opacity:.5"></i>Under goal</span><span style="display:inline-flex;gap:4px;align-items:center" id="lg-note"></span></div>
+      </div>
+
+      <div id="lv-month" hidden style="display:flex;flex-direction:column;gap:12px">
+        <div class="cal-h"><b>October 2026</b><span style="display:flex"><button type="button" class="icon-btn" aria-label="Previous month" id="m-prev"></button><button type="button" class="icon-btn" aria-label="Next month" id="m-next" disabled style="opacity:.35"></button></span></div>
+        <div class="cal" id="cal"></div>
+        <div class="scale"><span>Less</span><i style="background:var(--h1)"></i><i style="background:var(--h2)"></i><i style="background:var(--h3)"></i><i style="background:var(--h4)"></i><span>More sleep</span></div>
+      </div>
+
+      <button type="button" class="btn add-btn" data-add-session><span data-icon="plus"></span>Add a past night</button>
+    </section>
+
+    <!-- ================= INSIGHTS ================= -->
+    <section data-view="insights" class="pad" hidden>
+      <article class="card group">
+        <div class="card-h"><h2>Summary</h2><small id="period-lbl"></small></div>
+        <div class="segm" role="group" aria-label="Summary period">
+          <button type="button" class="on" data-period="7">7 days</button>
+          <button type="button" data-period="30">30 days</button>
+          <button type="button" data-period="all">All time</button>
+        </div>
+        <div class="tiles" id="tiles"></div>
+      </article>
+      <article class="card">
+        <div class="card-h"><h2>Bed &amp; wake times</h2><small id="win-sub">last 14 nights</small></div>
+        <div class="win" id="win-box"><svg id="win" role="img" aria-label="Bed and wake times for recent nights"></svg></div>
+        <p class="empty-note" id="win-empty" hidden></p>
+        <div class="legend" id="win-legend" style="margin-top:8px"><span><i></i>Met goal</span><span><i style="opacity:.5"></i>Under goal</span><span><i style="height:0;border-top:2px dashed var(--ink-2);background:none;border-radius:0;width:14px;vertical-align:3px"></i>Average <b id="win-avg" style="color:var(--ink)"></b></span></div>
+      </article>
+    </section>
+
+    <!-- ================= SETTINGS ================= -->
+    <section data-view="settings" class="pad" hidden>
+      <div class="sub-top"><button type="button" class="icon-btn" data-back aria-label="Back"></button><h2>Settings</h2></div>
+
+      <div class="group-h">Sleep</div>
+      <div class="set-card">
+        <div class="set"><span><b>Sleep goal</b><small>Drives the goal line and “met goal” stats</small></span>
+          <span class="stepper"><button type="button" id="g-dn" aria-label="Decrease goal">−</button><output id="g-out">8h</output><button type="button" id="g-up" aria-label="Increase goal">+</button></span></div>
+        <div class="set"><span><b>Ask me to rate in the morning</b><small>A gentle prompt after you stop — never required</small></span><label class="switch"><input type="checkbox" checked aria-label="Morning rating prompt"><span></span></label></div>
+      </div>
+
+      <div class="group-h">Appearance</div>
+      <div class="set-card">
+        <div class="set" style="border-bottom:0;padding-bottom:6px"><span><b>Theme</b></span></div>
+        <div class="segm theme-seg" role="group" aria-label="Theme">
+          <button type="button" data-theme-pick="system">System</button>
+          <button type="button" data-theme-pick="light">Light</button>
+          <button type="button" data-theme-pick="dark">Dark</button>
+        </div>
+      </div>
+
+      <div class="group-h">Data</div>
+      <div class="set-card">
+        <div class="set"><span><b>Export</b><small>CSV with every night, rating and note</small></span><button type="button" class="small-btn" onclick="Proto.toast('Export ready (mock)')">Export</button></div>
+        <div class="set"><span><b>Import</b><small>Bring nights in from a CSV file</small></span><button type="button" class="small-btn" onclick="Proto.toast('Pick a file (mock)')">Import</button></div>
+      </div>
+    </section>
+
+    <!-- ================= ABOUT ================= -->
+    <section data-view="about" class="pad" hidden>
+      <div class="sub-top"><button type="button" class="icon-btn" data-back aria-label="Back"></button><h2>About</h2></div>
+      <div class="app-id"><span class="logo" data-icon="moon"></span><b>Sleep Tracker</b><small>Version 0.2.0 (prototype)</small></div>
+      <p class="about-p">Tap to log bed and wake times, rate your nights and keep notes. Everything stays on this device.</p>
+      <div class="set-card">
+        <div class="set"><span><b>Your data</b><small>Stored locally in SQLite, never uploaded</small></span></div>
+        <div class="set"><span><b>Send feedback</b><small>Ideas, bugs, anything</small></span><button type="button" class="small-btn" onclick="Proto.toast('Opens email (mock)')">Send</button></div>
+        <div class="set"><span><b>Open-source licenses</b><small>Packages this app is built with</small></span><button type="button" class="small-btn" onclick="Proto.toast('Licenses page (mock)')">View</button></div>
+      </div>
+    </section>
+  </div>
+
+  <nav class="nav" role="tablist">
+    <button type="button" data-tab="tonight" class="active" role="tab"><span data-icon="moon"></span>Tonight</button>
+    <button type="button" data-tab="log" role="tab"><span data-icon="list"></span>Log</button>
+    <button type="button" data-tab="insights" role="tab"><span data-icon="chart"></span>Insights</button>
+  </nav>
+</main>
+
+<script src="shared/common.js"></script>
+<script>
+const P = Proto, S = P.sessions;
+// Demo switch: ?nights=N trims the mock data to show early-use states.
+const nightsParam = new URLSearchParams(location.search).get('nights');
+if (nightsParam !== null) S.splice(Math.max(0, +nightsParam || 0));
+const last = S[0];
+const MIN = 3, enough = (n) => n >= MIN; // averages need at least 3 nights to mean anything
+P.dateOf = (s) => s.wake; // one rule everywhere: a night is named by the morning you woke up
+const TODAY = new Date(2026, 9, 19);
+const daysAgo = (n) => new Date(TODAY.getFullYear(), TODAY.getMonth(), TODAY.getDate() - n);
+// Nights whose wake-up falls in the n calendar days ending `offset` days before today.
+const inLastDays = (n, offset = 0) => S.filter((s) => s.wake >= daysAgo(n + offset - 1) && s.wake < daysAgo(offset - 1));
+document.querySelectorAll('.proto-bar .data a').forEach((a) => a.classList.toggle('on', a.getAttribute('href') === '?nights=' + (nightsParam ?? '30')));
+let goal = P.GOAL, filter = 'all', period = '7', prevTab = 'tonight';
+const $ = (id) => document.getElementById(id);
+const avg = (a) => a.reduce((x, y) => x + y, 0) / (a.length || 1);
+
+$('today').textContent = P.fmtLong(new Date(2026, 9, 19));
+$('open-menu').innerHTML = P.icons.more;
+document.querySelectorAll('[data-back]').forEach((b) => (b.innerHTML = P.icons.back));
+$('m-prev').innerHTML = P.icons.back;
+$('m-next').innerHTML = P.icons.back.replace('<path', '<path transform="rotate(180 12 12)"');
+$('lg-note').innerHTML = P.icons.note.replace(/width="20" height="20"/, 'width="12" height="12"') + 'Has note';
+const h = new Date().getHours();
+$('greet').textContent = h < 5 || h >= 18 ? 'Good evening' : h < 12 ? 'Good morning' : 'Good afternoon';
+$('stars-bg').innerHTML = Array.from({ length: 26 }, (_, i) =>
+  `<i style="left:${(i * 37) % 100}%;top:${(i * 53) % 100}%;opacity:${0.15 + (i % 5) / 10}"></i>`).join('');
+
+/* ---------- Tonight ---------- */
+const all = S.length ? P.stats() : null;
+// "Usual" = the last 14 nights. The Insights chart uses the same window, so both show the same time.
+const usual = S.length ? P.stats(S.slice(0, 14)) : null;
+$('orb-sub').innerHTML = enough(S.length)
+  ? `Usual bedtime <b>${P.fmtClock(usual.avgBed)}</b> · last ${Math.min(14, S.length)} nights`
+  : `Your usual bedtime shows up after ${MIN} nights`;
+function renderEnds(on) {
+  $('end-bed-l').textContent = on ? 'In bed since' : 'Bedtime';
+  $('e-bed').textContent = on ? P.fmtClock(P.tracker.start) : last ? P.fmtClock(last.bed) : '—';
+  $('e-wake').textContent = on ? 'Sleeping…' : last ? P.fmtClock(last.wake) : '—';
+  $('end-bed').dataset.openSession = on ? 'active' : last ? last.id : '';
+  $('end-wake').dataset.openSession = on ? 'active' : last ? last.id : '';
+}
+renderEnds(false);
+if (last) {
+  $('last-dur').textContent = P.fmtDur(last.dur);
+  const ld = Math.round(last.dur - all.avg);
+  $('last-delta').textContent = !enough(S.length) ? '' : Math.abs(ld) < 5 ? 'right on your average' : `${P.fmtDur(Math.abs(ld))} ${ld > 0 ? 'above' : 'below'} average`;
+  $('last-rate').innerHTML = P.rateButtons(last, 20);
+  $('last-note').textContent = last.notes || 'No notes yet — tap Edit to add some.';
+  $('last-edit').dataset.openSession = last.id;
+} else {
+  $('last-card').innerHTML = `<div class="card-h"><h2>Last night</h2></div><p class="empty-note">Your first night shows up here. Tap the moon at bedtime, or add a past night from Log.</p>`;
+}
+
+function weekBars() {
+  const max = 10 * 60, week = inLastDays(7), days = Array.from({ length: 7 }, (_, i) => daysAgo(6 - i));
+  const met = week.filter((s) => s.dur >= goal).length;
+  $('week-sum').textContent = !week.length ? 'no nights yet'
+    : enough(week.length) ? `avg ${P.fmtDur(avg(week.map((s) => s.dur)))} · ${met}/${week.length} met goal`
+    : `${week.length} of 7 nights logged`;
+  $('week-bars').innerHTML =
+    `<div class="goal" style="bottom:${24 + 90 * goal / max}px"><span>${P.fmtDur(goal)} goal</span></div>` +
+    days.map((d) => {
+      const s = week.find((x) => x.wake.toDateString() === d.toDateString());
+      const dow = P.fmtDow(d)[0];
+      return s
+        ? `<button type="button" class="bar tip ${s.dur < goal ? 'under' : ''}" data-open-session="${s.id}" data-tip="${P.fmtDay(s.wake)}\n${P.fmtDur(s.dur)}" aria-label="${P.fmtDay(s.wake)}, ${P.fmtDur(s.dur)}"><i style="height:${Math.round(90 * s.dur / max)}px"></i><small>${dow}</small></button>`
+        : `<span class="bar slot" aria-label="${P.fmtDay(d)}: nothing logged"><i style="height:4px"></i><small>${dow}</small></span>`;
+    }).join('');
+}
+
+P.tracker.listeners.push(renderEnds);
+
+/* ---------- Log ---------- */
+const pos = (d) => (P.eveMin(d) / (18 * 60)) * 100;
+const noteIco = P.icons.note.replace(/width="20" height="20"/, 'width="12" height="12"');
+function rows() {
+  const list = S.filter((s) => filter === 'all' || (filter === 'unrated' && !s.quality) || (filter === 'notes' && s.notes) || (filter === 'short' && s.dur < goal));
+  let html = '', wk = -1;
+  list.forEach((s) => {
+    const w = Math.floor((S.indexOf(s)) / 7);
+    if (w !== wk) {
+      wk = w;
+      const chunk = S.slice(w * 7, w * 7 + 7);
+      html += `<div class="week-h"><b>${w === 0 ? 'This week' : w === 1 ? 'Last week' : `${w} weeks ago`}</b><small>avg ${P.fmtDur(avg(chunk.map((c) => c.dur)))}</small></div>`;
+    }
+    html += `<div class="lrow">
+      <button type="button" class="day" data-open-session="${s.id}">${P.fmtDow(s.wake)}<small>${s.wake.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</small></button>
+      <button type="button" class="lane tip ${s.dur < goal ? 'under' : ''}" data-open-session="${s.id}" data-tip="${P.fmtClock(s.bed)} → ${P.fmtClock(s.wake)}" aria-label="${P.fmtDay(s.wake)}: ${P.fmtClock(s.bed)} to ${P.fmtClock(s.wake)}">
+        <span class="mid" style="left:33.33%"></span><i style="left:${pos(s.bed)}%;width:${pos(s.wake) - pos(s.bed)}%"></i>${s.notes ? `<span class="nt">${noteIco}</span>` : ''}</button>
+      <div class="r"><b>${P.fmtDur(s.dur)}</b><span data-rate-wrap>${P.rateButtons(s, 12)}</span></div>
+    </div>`;
+  });
+  $('rows').innerHTML = html || '<p style="color:var(--ink-2);text-align:center;font-size:14px">No nights match this filter.</p>';
+}
+function calendar() {
+  const byDay = {};
+  S.forEach((s) => { if (s.wake.getMonth() === 9) byDay[s.wake.getDate()] = s; });
+  const lvl = (m) => (m < 360 ? 1 : m < 420 ? 2 : m < goal ? 3 : 4);
+  let c = ['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((d) => `<span class="dow">${d}</span>`).join('');
+  for (let i = 0; i < (new Date(2026, 9, 1).getDay() + 6) % 7; i++) c += '<span class="blank"></span>';
+  for (let d = 1; d <= 31; d++) {
+    const s = byDay[d];
+    c += s ? `<button type="button" class="l${lvl(s.dur)} tip ${d === 19 ? 'today' : ''}" data-open-session="${s.id}" data-tip="${P.fmtDur(s.dur)}${s.quality ? ' · ' + s.quality + '★' : ''}" aria-label="October ${d}, ${P.fmtDur(s.dur)}">${d}<small>${P.fmtHours(s.dur)}h</small></button>`
+      : d > 19 ? `<span class="blank l0 future">${d}</span>`
+      : `<button type="button" class="l0" data-add-session aria-label="October ${d}: nothing logged, add a night">${d}</button>`;
+  }
+  $('cal').innerHTML = c;
+}
+
+/* ---------- Insights ---------- */
+function tiles() {
+  const list = period === 'all' ? S : inLastDays(+period), n = list.length;
+  $('period-lbl').textContent = period === 'all'
+    ? (n ? `since ${P.fmtDay(list[n - 1].wake)}` : '')
+    : `${P.fmtDay(daysAgo(+period - 1))} – ${P.fmtDay(TODAY)}`;
+  if (!n) { $('tiles').innerHTML = `<p class="empty-note" style="grid-column:1/-1">No nights in this period yet.</p>`; return; }
+  const st = P.stats(list), ok = enough(n), later = `after ${MIN} nights`;
+  const prev = period === 'all' ? [] : inLastDays(+period, +period);
+  const d = ok && enough(prev.length) ? st.avg - avg(prev.map((s) => s.dur)) : null;
+  const rated = list.filter((s) => s.quality).length;
+  $('tiles').innerHTML = [
+    ['Average', ok ? P.fmtDur(st.avg) : '—', d !== null ? `<span class="d">${d >= 0 ? P.icons.up : P.icons.down}${P.fmtDur(Math.abs(d))} vs previous ${period} days</span>` : ok ? `${n} nights` : later],
+    ['Met goal', `${list.filter((s) => s.dur >= goal).length}/${n}`, `nights ≥ ${P.fmtDur(goal)}`],
+    ['Longest', P.fmtDur(st.longest.dur), P.fmtDay(st.longest.wake)],
+    ['Shortest', P.fmtDur(st.shortest.dur), P.fmtDay(st.shortest.wake)],
+    ['Avg bedtime', ok ? P.fmtClock(st.avgBed) : '—', ok ? `± ${st.consistency} min` : later],
+    ['Avg wake', ok ? P.fmtClock(st.avgWake) : '—', ok ? 'typical morning' : later],
+    ['Avg quality', rated ? st.avgQuality.toFixed(1) + ' / 5' : '—', rated ? P.stars(Math.round(st.avgQuality), 12) : 'no ratings yet'],
+    ['Nights logged', String(n), `${n - rated} not rated yet`],
+  ].map(([a, b, c]) => `<div class="tile"><small>${a}</small><b>${b}</b><span>${c}</span></div>`).join('');
+}
+function windowChart() {
+  const svg = $('win'), n = Math.min(14, S.length), list = S.slice(0, n).reverse();
+  $('win-sub').textContent = n ? `last ${n} night${n === 1 ? '' : 's'}` : '';
+  $('win-box').hidden = $('win-legend').hidden = !enough(n);
+  $('win-empty').hidden = enough(n);
+  $('win-empty').textContent = `Your bed and wake pattern shows up after ${MIN} nights.`;
+  if (!enough(n)) return;
+  // Always lay out 14 slots so bars keep the same width while history fills in (newest on the right).
+  const W = svg.getBoundingClientRect().width || 310, H = 180, L = 34, T = 8, B = 16, slots = 14;
+  const y0 = 2 * 60, y1 = 16 * 60, y = (m) => T + ((m - y0) / (y1 - y0)) * (H - T - B), bw = (W - L) / slots;
+  const x0 = L + (slots - n) * bw;
+  let g = '';
+  [[2 * 60, '8p'], [6 * 60, '12a'], [10 * 60, '4a'], [14 * 60, '8a']].forEach(([m, t]) =>
+    g += `<line x1="${L}" x2="${W}" y1="${y(m)}" y2="${y(m)}" stroke="var(--line)"/><text class="ax" x="${L - 6}" y="${y(m) + 3}" text-anchor="end">${t}</text>`);
+  list.forEach((s, i) => {
+    const x = x0 + i * bw + bw * 0.2, w = bw * 0.6, tip = `${P.fmtDay(s.wake)}: ${P.fmtClock(s.bed)} → ${P.fmtClock(s.wake)} (${P.fmtDur(s.dur)})`;
+    g += `<rect x="${x}" y="${y(P.eveMin(s.bed))}" width="${w}" height="${y(P.eveMin(s.wake)) - y(P.eveMin(s.bed))}" rx="4" fill="var(--accent)" opacity="${s.dur >= goal ? 1 : .5}" style="cursor:pointer" data-sid="${s.id}" data-tip="${tip}"><title>${tip}</title></rect>`;
+  });
+  [usual.avgBed, usual.avgWake].forEach((d) => {
+    const yy = y(P.eveMin(d));
+    g += `<line x1="${L}" x2="${W}" y1="${yy}" y2="${yy}" stroke="var(--ink-2)" stroke-width="1.5" stroke-dasharray="4 4"/>`;
+  });
+  $('win-avg').textContent = `${P.fmtClock(usual.avgBed)} → ${P.fmtClock(usual.avgWake)}`;
+  g += `<text class="ax" x="${x0}" y="${H}">${P.fmtDay(list[0].wake)}</text><text class="ax" x="${W}" y="${H}" text-anchor="end">Latest</text>`;
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.innerHTML = g;
+  svg.querySelectorAll('[data-sid]').forEach((r) => r.addEventListener('click', () => P.openSheet(r.dataset.sid)));
+}
+
+/* ---------- Settings ---------- */
+function setGoal(m) { goal = Math.min(12 * 60, Math.max(4 * 60, m)); $('g-out').textContent = P.fmtDur(goal); refresh(); }
+$('g-up').onclick = () => setGoal(goal + 30);
+$('g-dn').onclick = () => setGoal(goal - 30);
+function markTheme(pick) { document.querySelectorAll('[data-theme-pick]').forEach((b) => b.classList.toggle('on', b.dataset.themePick === pick)); }
+let themePick = 'system';
+document.addEventListener('click', (e) => {
+  const tp = e.target.closest('[data-theme-pick]');
+  if (tp) {
+    themePick = tp.dataset.themePick;
+    P.setTheme(themePick === 'system' ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : themePick);
+    markTheme(themePick);
+  }
+  const lv = e.target.closest('[data-logview]');
+  if (lv) {
+    document.querySelectorAll('[data-logview]').forEach((b) => b.classList.toggle('on', b === lv));
+    $('lv-timeline').hidden = lv.dataset.logview !== 'timeline';
+    $('lv-month').hidden = lv.dataset.logview !== 'month';
+  }
+  const f = e.target.closest('[data-filter]');
+  if (f) { filter = f.dataset.filter; document.querySelectorAll('[data-filter]').forEach((b) => b.classList.toggle('on', b === f)); rows(); }
+  const pr = e.target.closest('[data-period]');
+  if (pr) { period = pr.dataset.period; document.querySelectorAll('[data-period]').forEach((b) => b.classList.toggle('on', b === pr)); tiles(); }
+  const tab = e.target.closest('[data-tab]');
+  if (tab) { prevTab = tab.dataset.tab; if (tab.dataset.tab === 'insights') requestAnimationFrame(windowChart); }
+});
+const menu = $('menu'), menuBtn = $('open-menu');
+function setMenu(open) { menu.hidden = !open; menuBtn.setAttribute('aria-expanded', open); if (open) menu.querySelector('button').focus(); }
+menuBtn.addEventListener('click', (e) => { e.stopPropagation(); setMenu(menu.hidden); });
+document.addEventListener('click', (e) => {
+  const go = e.target.closest('[data-go]');
+  if (go) P.showTab(go.dataset.go);
+  if (!e.target.closest('#menu')) setMenu(false); else if (go) setMenu(false);
+  if (e.target.closest('[data-back]')) P.showTab(prevTab);
+});
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !menu.hidden) { setMenu(false); menuBtn.focus(); } });
+markTheme('system');
+
+// Long-press any bar, lane, calendar day or chart bar to read its value; a normal tap still opens the editor.
+let pressTimer, longPressed = false;
+document.addEventListener('pointerdown', (e) => {
+  const el = e.target.closest('[data-tip]');
+  if (!el) return;
+  longPressed = false;
+  pressTimer = setTimeout(() => { longPressed = true; P.toast(el.getAttribute('data-tip').replace(/\n/g, ' · ')); }, 450);
+});
+['pointerup', 'pointercancel', 'pointerleave'].forEach((t) => document.addEventListener(t, () => clearTimeout(pressTimer)));
+document.querySelector('.scroll').addEventListener('scroll', () => clearTimeout(pressTimer));
+document.addEventListener('click', (e) => { if (longPressed) { e.stopPropagation(); e.preventDefault(); longPressed = false; } }, true);
+document.addEventListener('contextmenu', (e) => { if (e.target.closest('[data-tip]')) e.preventDefault(); });
+
+function refresh() { weekBars(); rows(); calendar(); tiles(); windowChart(); }
+P.boot();
+refresh();
+if (location.hash) P.showTab(location.hash.slice(1)); // e.g. #log, #insights, #settings
+window.addEventListener('resize', windowChart);
+</script>
+</body>
+</html>

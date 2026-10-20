@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -29,8 +31,10 @@ class DatabaseHelper {
       path = join(documentsDirectory.path, 'sleep_tracker.db');
     }
 
-    return await openDatabase(path, version: 2, onCreate: _onCreate, onUpgrade: _onUpgrade);
+    return await openDatabase(path, version: schemaVersion, onCreate: _onCreate, onUpgrade: _onUpgrade);
   }
+
+  static const schemaVersion = 2;
 
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
     if (oldVersion < 2) await _createSettings(db);
@@ -150,6 +154,64 @@ class DatabaseHelper {
       'key': key,
       'value': value,
     }, conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  // Writes a standalone copy of the whole database to [path].
+  Future<void> exportTo(String path) async {
+    final db = await database;
+    final file = File(path);
+    if (await file.exists()) await file.delete();
+    await db.execute('VACUUM INTO ?', [path]);
+  }
+
+  // Replaces all sessions and settings with those in the database file at
+  // [path]. The file is migrated in place first if it comes from an older app
+  // version, so pass a copy.
+  // Throws [FormatException] when the file isn't a usable backup; the current
+  // data is left untouched in that case.
+  Future<void> importFrom(String path) async {
+    final Database src;
+    try {
+      src = await openReadOnlyDatabase(path);
+    } on DatabaseException {
+      throw const FormatException('Not a Sleep Tracker backup');
+    }
+    try {
+      final version = await src.getVersion();
+      final tables = await src.query(
+        'sqlite_master',
+        where: 'type = ? AND name = ?',
+        whereArgs: ['table', 'sleep_sessions'],
+      );
+      if (tables.isEmpty) throw const FormatException('Not a Sleep Tracker backup');
+      if (version > schemaVersion) {
+        throw const FormatException('Backup is from a newer app version');
+      }
+    } on DatabaseException {
+      throw const FormatException('Not a Sleep Tracker backup');
+    } finally {
+      await src.close();
+    }
+
+    // Bring the file up to the current schema with the regular migrations.
+    final migrated = await openDatabase(path, version: schemaVersion, onUpgrade: _onUpgrade);
+    await migrated.close();
+
+    final db = await database;
+    await db.execute('ATTACH DATABASE ? AS src', [path]);
+    try {
+      await db.transaction((txn) async {
+        await txn.delete('sleep_sessions');
+        await txn.delete('settings');
+        await txn.execute('''
+          INSERT INTO sleep_sessions (id, bed_time, wake_time, quality, notes, created_at)
+          SELECT id, bed_time, wake_time, quality, notes, created_at FROM src.sleep_sessions
+        ''');
+        await txn.execute('INSERT INTO settings (key, value) SELECT key, value FROM src.settings');
+      });
+    } finally {
+      await db.execute('DETACH DATABASE src');
+    }
   }
 
   // Close the database

@@ -285,7 +285,7 @@ lib/
 - Groups:
   - Sleep: goal, rate prompt
   - Appearance: theme
-  - (Data: export, import — deferred)
+  - Data: export, import (whole SQLite file; import replaces everything)
 
 **SettingsGroup**
 | Prop | Type | Meaning |

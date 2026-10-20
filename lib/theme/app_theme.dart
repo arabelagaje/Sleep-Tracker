@@ -103,6 +103,17 @@ class AppColors extends ThemeExtension<AppColors> {
     toastAccent: Color(0xFF4A3FC4),
   );
 
+  // Calendar colour for a shade in 0–1, blended across heat[1]..heat[4].
+  Color heatAt(double t) {
+    final stops = heat.sublist(1);
+    final x = t.clamp(0.0, 1.0) * (stops.length - 1);
+    final i = x.floor().clamp(0, stops.length - 2);
+    return Color.lerp(stops[i], stops[i + 1], x - i)!;
+  }
+
+  // Readable text on top of [bg].
+  Color inkOn(Color bg) => bg.computeLuminance() > 0.3 ? const Color(0xFF1D1B33) : Colors.white;
+
   @override
   AppColors copyWith() => this;
 

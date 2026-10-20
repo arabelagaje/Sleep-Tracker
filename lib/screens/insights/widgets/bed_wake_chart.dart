@@ -5,7 +5,7 @@ import '../../../theme/app_theme.dart';
 import '../../../utils/formatters.dart';
 import '../../../utils/sleep_stats.dart';
 import '../../../widgets/empty_note.dart';
-import '../../../widgets/long_press_value.dart';
+import '../../../widgets/session_context_menu.dart';
 
 class BedWakeChart extends StatelessWidget {
   const BedWakeChart({
@@ -15,6 +15,7 @@ class BedWakeChart extends StatelessWidget {
     this.usualWake,
     required this.goal,
     required this.onTapSession,
+    required this.onLongPressSession,
   });
 
   final List<SleepSession> sessions; // up to 14, oldest to newest
@@ -22,6 +23,7 @@ class BedWakeChart extends StatelessWidget {
   final TimeOfDay? usualWake;
   final Duration goal;
   final ValueChanged<SleepSession> onTapSession;
+  final SessionLongPress onLongPressSession;
 
   static const _height = 180.0, _left = 34.0, _top = 8.0, _bottom = 16.0;
   static const _y0 = 2 * 60, _y1 = 16 * 60; // 8pm → 10am, in minutes after 6pm
@@ -104,10 +106,10 @@ class BedWakeChart extends StatelessWidget {
       width: bw * 0.6,
       top: top,
       height: (bottom - top).clamp(2, _height),
-      child: LongPressValue(
-        valueText:
-            '${fmtDay(s.nightDate)}: ${fmtClock(s.bedTime)} → ${fmtClock(s.wakeTime!)} (${fmtDur(s.length)})',
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
         onTap: () => onTapSession(s),
+        onLongPressStart: (d) => onLongPressSession(s, d.globalPosition),
         child: Container(
           decoration: BoxDecoration(
             color: c.accent.withValues(alpha: s.length >= goal ? 1 : 0.5),

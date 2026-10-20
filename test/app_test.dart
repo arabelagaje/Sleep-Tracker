@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:sleep_tracker/main.dart';
+import 'package:sleep_tracker/screens/log/widgets/calendar_day_cell.dart';
+import 'package:sleep_tracker/screens/log/widgets/timeline_row.dart';
+import 'package:sleep_tracker/screens/tonight/widgets/week_bars_card.dart';
 import 'package:sleep_tracker/models/sleep_session.dart';
 import 'package:sleep_tracker/providers/settings_provider.dart';
 import 'package:sleep_tracker/providers/sleep_provider.dart';
@@ -51,7 +54,7 @@ Future<void> _visitAll(WidgetTester tester) async {
   }
   await tester.tap(find.text('Log').last);
   await tester.pump();
-  await tester.tap(find.text('Month'));
+  await tester.tap(find.text('Calendar'));
   await tester.pump();
   for (final p in ['30 days', 'All time']) {
     await tester.tap(find.text('Insights').last);
@@ -125,5 +128,63 @@ void main() {
     expect(find.text('In bed since'), findsOneWidget);
     await tester.pump(const Duration(seconds: 1));
     await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('long-press menus open everywhere a night is shown', (tester) async {
+    final (sleep, _) = await _pumpApp(tester, 10);
+    Future<void> menu(Finder target, String item) async {
+      await tester.ensureVisible(target.first);
+      await tester.pumpAndSettle();
+      await tester.longPress(target.first);
+      await tester.pumpAndSettle();
+      expect(find.textContaining(item), findsOneWidget);
+      await tester.tapAt(const Offset(5, 5));
+      await tester.pumpAndSettle();
+    }
+
+    await tester.dragUntilVisible(
+      find.byType(WeekBarsCard),
+      find.byType(ListView).first,
+      const Offset(0, -200),
+    );
+    await menu(find.byType(WeekBarsCard), 'Delete');
+    await tester.ensureVisible(find.text('Last night'));
+    await tester.pumpAndSettle();
+    await tester.longPress(find.text('Last night'));
+    await tester.pumpAndSettle();
+    expect(find.text('Delete'), findsNothing);
+
+    await tester.tap(find.text('Insights').last);
+    await tester.pump();
+    await tester.longPress(find.text('Longest'));
+    await tester.pumpAndSettle();
+    expect(find.text('Delete'), findsNothing);
+
+    await tester.tap(find.text('Log').last);
+    await tester.pump();
+    await tester.tap(find.text('Calendar'));
+    await tester.pump();
+    await menu(find.byWidgetPredicate((w) => w is CalendarDayCell && w.session != null), 'Delete');
+    await menu(
+      find.byWidgetPredicate((w) => w is CalendarDayCell && w.session == null && !w.isFuture),
+      'Add a night for',
+    );
+    await tester.tap(find.text('Timeline'));
+    await tester.pump();
+    await menu(find.byType(TimelineRow), 'Delete');
+
+    // Delete through the menu, then the Undo toast shows.
+    final count = sleep.nights.length;
+    await tester.longPress(find.byType(TimelineRow).first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Delete'));
+    await tester.pumpAndSettle();
+    for (var i = 0; i < 5 && sleep.nights.length == count; i++) {
+      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 100)));
+      await tester.pump();
+    }
+    await tester.pump();
+    expect(sleep.nights.length, count - 1);
+    expect(find.text('Session deleted'), findsOneWidget);
   });
 }

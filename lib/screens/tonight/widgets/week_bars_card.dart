@@ -4,7 +4,7 @@ import '../../../models/sleep_session.dart';
 import '../../../theme/app_theme.dart';
 import '../../../utils/formatters.dart';
 import '../../../utils/sleep_stats.dart';
-import '../../../widgets/long_press_value.dart';
+import '../../../widgets/session_context_menu.dart';
 import '../../../widgets/section_card.dart';
 
 class WeekBarsCard extends StatelessWidget {
@@ -13,11 +13,15 @@ class WeekBarsCard extends StatelessWidget {
     required this.days,
     required this.goal,
     required this.onTapSession,
+    required this.onLongPressSession,
+    required this.onLongPressEmptyDay,
   });
 
   final List<(DateTime, SleepSession?)> days; // 7 entries, oldest to today
   final Duration goal;
   final ValueChanged<SleepSession> onTapSession;
+  final SessionLongPress onLongPressSession;
+  final void Function(DateTime date, Offset position) onLongPressEmptyDay;
 
   static const _barArea = 90.0, _labelArea = 24.0;
 
@@ -67,11 +71,12 @@ class WeekBarsCard extends StatelessWidget {
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 4),
-                      child: LongPressValue(
-                        valueText: s == null
-                            ? '${fmtDay(date)}: nothing logged'
-                            : '${fmtDay(date)} · ${fmtDur(s.length)}',
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
                         onTap: s == null ? null : () => onTapSession(s),
+                        onLongPressStart: (d) => s == null
+                            ? onLongPressEmptyDay(date, d.globalPosition)
+                            : onLongPressSession(s, d.globalPosition),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [

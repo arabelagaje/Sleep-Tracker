@@ -12,7 +12,7 @@ class LogViewToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SegmentedControl<LogView>(
-    options: const [(LogView.timeline, 'Timeline'), (LogView.month, 'Month')],
+    options: const [(LogView.timeline, 'Timeline'), (LogView.month, 'Calendar')],
     value: value,
     onChanged: onChanged,
   );

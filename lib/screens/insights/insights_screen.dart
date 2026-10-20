@@ -7,6 +7,7 @@ import '../../providers/sleep_provider.dart';
 import '../../utils/formatters.dart';
 import '../../utils/sleep_stats.dart';
 import '../../widgets/section_card.dart';
+import '../../widgets/session_context_menu.dart';
 import '../../widgets/session_editor_sheet.dart';
 import '../../widgets/star_rating.dart';
 import 'widgets/bed_wake_chart.dart';
@@ -114,6 +115,8 @@ class _InsightsScreenState extends State<InsightsScreen> {
             usualBedtime: usual?.bed,
             usualWake: usual?.wake,
             goal: goal,
+            onLongPressSession: (s, pos) =>
+                SessionContextMenu.show(context, position: pos, session: s),
             onTapSession: (s) =>
                 SessionEditorSheet.show(context, mode: EditorMode.editNight, session: s),
           ),

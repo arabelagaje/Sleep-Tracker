@@ -4,6 +4,7 @@ import '../../../models/sleep_session.dart';
 import '../../../theme/app_theme.dart';
 import '../../../utils/formatters.dart';
 import '../../../utils/sleep_stats.dart';
+import '../../../widgets/session_context_menu.dart';
 import 'calendar_day_cell.dart';
 
 class MonthCalendar extends StatelessWidget {
@@ -14,7 +15,9 @@ class MonthCalendar extends StatelessWidget {
     required this.today,
     required this.goal,
     required this.onTapSession,
+    required this.onLongPressSession,
     required this.onTapEmptyDay,
+    required this.onLongPressEmptyDay,
     required this.onPrevMonth,
     this.onNextMonth,
   });
@@ -24,7 +27,9 @@ class MonthCalendar extends StatelessWidget {
   final DateTime today;
   final Duration goal;
   final ValueChanged<SleepSession> onTapSession;
+  final SessionLongPress onLongPressSession;
   final ValueChanged<DateTime> onTapEmptyDay;
+  final void Function(DateTime date, Offset position) onLongPressEmptyDay;
   final VoidCallback onPrevMonth;
   final VoidCallback? onNextMonth; // null = disabled
 
@@ -87,10 +92,15 @@ class MonthCalendar extends StatelessWidget {
     return CalendarDayCell(
       date: date,
       session: s,
-      level: s == null ? 0 : sleepLevel(s.length, goal),
+      shade: s == null ? null : sleepShade(s.length, goal),
       isToday: date == today,
       isFuture: isFuture,
       onTap: isFuture ? null : (s == null ? () => onTapEmptyDay(date) : () => onTapSession(s)),
+      onLongPress: isFuture
+          ? null
+          : (s == null
+                ? (pos) => onLongPressEmptyDay(date, pos)
+                : (pos) => onLongPressSession(s, pos)),
     );
   }
 }

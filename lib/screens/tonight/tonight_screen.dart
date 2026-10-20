@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/sleep_session.dart';
 import '../../providers/settings_provider.dart';
 import '../../providers/sleep_provider.dart';
+import '../../theme/app_theme.dart';
+import '../../utils/formatters.dart';
 import '../../utils/sleep_stats.dart';
 import '../../widgets/rate_prompt_dialog.dart';
+import '../../widgets/session_context_menu.dart';
 import '../../widgets/session_editor_sheet.dart';
 import '../../widgets/undo_snackbar.dart';
 import 'widgets/bed_wake_cards.dart';
@@ -37,6 +41,50 @@ class TonightScreen extends StatelessWidget {
     );
   }
 
+  // Long-press on the orb while sleeping: discard an accidental start.
+  Future<void> _cancel(BuildContext context) async {
+    final sleep = context.read<SleepProvider>();
+    final active = sleep.active;
+    if (active == null) return;
+    HapticFeedback.mediumImpact();
+    final c = context.colors;
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text(
+          'Cancel this session?',
+          style: TextStyle(fontWeight: FontWeight.w700, fontSize: 19),
+        ),
+        content: Text(
+          'Started at ${fmtClock(active.bedTime)} '
+          '(${fmtDur(DateTime.now().difference(active.bedTime))} ago). '
+          'It will be discarded, not saved as a night.',
+          style: TextStyle(color: c.ink2, height: 1.45),
+        ),
+        actionsAlignment: MainAxisAlignment.spaceBetween,
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            style: TextButton.styleFrom(foregroundColor: c.danger),
+            child: const Text('Discard'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            style: FilledButton.styleFrom(backgroundColor: c.accent, foregroundColor: c.onAccent),
+            child: const Text('Keep sleeping'),
+          ),
+        ],
+      ),
+    );
+    if (ok != true || !context.mounted) return;
+    await sleep.delete(active);
+    if (!context.mounted) return;
+    UndoSnackbar.show(context, message: 'Session cancelled', onUndo: () => sleep.restore(active));
+  }
+
+  void _menu(BuildContext context, SleepSession s, Offset pos) =>
+      SessionContextMenu.show(context, position: pos, session: s);
+
   void _edit(BuildContext context, SleepSession s) => SessionEditorSheet.show(
     context,
     mode: s.isActive ? EditorMode.editActive : EditorMode.editNight,
@@ -67,6 +115,7 @@ class TonightScreen extends StatelessWidget {
           isSleeping: sleep.isSleeping,
           startedAt: active?.bedTime,
           onPressed: () => _toggle(context),
+          onLongPress: () => _cancel(context),
         ),
         UsualBedtimeLine(
           usualBedtime: usual?.bed,
@@ -90,7 +139,14 @@ class TonightScreen extends StatelessWidget {
           onRate: (q) => sleep.rate(last!, q),
         ),
         const SizedBox(height: 16),
-        WeekBarsCard(days: days, goal: goal, onTapSession: (s) => _edit(context, s)),
+        WeekBarsCard(
+          days: days,
+          goal: goal,
+          onTapSession: (s) => _edit(context, s),
+          onLongPressSession: (s, pos) => _menu(context, s, pos),
+          onLongPressEmptyDay: (date, pos) =>
+              SessionContextMenu.showAddNight(context, position: pos, date: date),
+        ),
       ],
     );
   }

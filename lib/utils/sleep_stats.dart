@@ -48,13 +48,10 @@ List<SleepSession> inLastDays(
 // Monday of the week containing [d].
 DateTime weekStart(DateTime d) => addDays(dateOnly(d), -(d.weekday - 1));
 
-// Calendar shade 1–4 by duration against the goal.
-int sleepLevel(Duration d, Duration goal) {
-  final m = d.inMinutes;
-  if (m < 360) return 1;
-  if (m < 420) return 2;
-  if (m < goal.inMinutes) return 3;
-  return 4;
+// Calendar shade 0–1 from time ÷ goal, clamped to ½×…1½× (goal = 0.5).
+double sleepShade(Duration d, Duration goal) {
+  final ratio = d.inMinutes / goal.inMinutes;
+  return (ratio.clamp(0.5, 1.5) - 0.5).toDouble();
 }
 
 class UsualTimes {

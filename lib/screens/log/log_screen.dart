@@ -7,6 +7,7 @@ import '../../providers/sleep_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../utils/sleep_stats.dart';
 import '../../widgets/empty_note.dart';
+import '../../widgets/session_context_menu.dart';
 import '../../widgets/session_editor_sheet.dart';
 import 'widgets/calendar_legend.dart';
 import 'widgets/log_filter_chips.dart';
@@ -78,7 +79,13 @@ class _LogScreenState extends State<LogScreen> {
         );
       }
       out.add(
-        TimelineRow(session: s, goal: goal, onTap: () => _edit(s), onRate: (q) => sleep.rate(s, q)),
+        TimelineRow(
+          session: s,
+          goal: goal,
+          onTap: () => _edit(s),
+          onRate: (q) => sleep.rate(s, q),
+          onLongPress: (pos) => SessionContextMenu.show(context, position: pos, session: s),
+        ),
       );
     }
     if (out.isEmpty) return const [EmptyNote(message: 'No nights match this filter.')];
@@ -117,7 +124,11 @@ class _LogScreenState extends State<LogScreen> {
             today: today,
             goal: goal,
             onTapSession: _edit,
+            onLongPressSession: (s, pos) =>
+                SessionContextMenu.show(context, position: pos, session: s),
             onTapEmptyDay: _add,
+            onLongPressEmptyDay: (date, pos) =>
+                SessionContextMenu.showAddNight(context, position: pos, date: date),
             onPrevMonth: () => setState(() => _month = DateTime(_month.year, _month.month - 1)),
             onNextMonth: _month == thisMonth
                 ? null

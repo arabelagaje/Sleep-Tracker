@@ -4,11 +4,18 @@ import '../../../theme/app_theme.dart';
 import 'live_timer_text.dart';
 
 class SleepOrb extends StatefulWidget {
-  const SleepOrb({super.key, required this.isSleeping, this.startedAt, required this.onPressed});
+  const SleepOrb({
+    super.key,
+    required this.isSleeping,
+    this.startedAt,
+    required this.onPressed,
+    this.onLongPress,
+  });
 
   final bool isSleeping;
   final DateTime? startedAt;
   final VoidCallback onPressed;
+  final VoidCallback? onLongPress; // only offered while sleeping (cancel)
 
   @override
   State<SleepOrb> createState() => _SleepOrbState();
@@ -74,6 +81,7 @@ class _SleepOrbState extends State<SleepOrb> with SingleTickerProviderStateMixin
               onTapCancel: () => setState(() => _pressed = false),
               onTapUp: (_) => setState(() => _pressed = false),
               onTap: widget.onPressed,
+              onLongPress: widget.isSleeping ? widget.onLongPress : null,
               child: AnimatedScale(
                 scale: _pressed ? 0.97 : 1,
                 duration: const Duration(milliseconds: 200),
@@ -126,6 +134,16 @@ class _SleepOrbState extends State<SleepOrb> with SingleTickerProviderStateMixin
                               ),
                               const SizedBox(height: 6),
                               const _OrbLabel('Tap when you wake'),
+                              if (widget.onLongPress != null) ...[
+                                const SizedBox(height: 10),
+                                const Opacity(
+                                  opacity: 0.65,
+                                  child: Text(
+                                    'Hold to cancel',
+                                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                                  ),
+                                ),
+                              ],
                             ]
                           : const [
                               Icon(Icons.bedtime_outlined, size: 42, color: Colors.white),

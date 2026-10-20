@@ -58,7 +58,8 @@ lib/
     ├── section_card.dart
     ├── segmented_control.dart
     ├── empty_note.dart
-    ├── long_press_value.dart
+    ├── session_context_menu.dart
+    ├── rate_prompt_dialog.dart
     └── undo_snackbar.dart
 ```
 
@@ -103,7 +104,8 @@ lib/
 | `isSleeping` | `bool` | Which face to show |
 | `startedAt` | `DateTime?` | Start of the running session |
 | `onPressed` | `VoidCallback` | Start or stop |
-- States: awake ("Start sleep") · sleeping (live timer, "Tap when you wake")
+| `onLongPress` | `VoidCallback?` | Sleeping only: cancel the session (asks to confirm) |
+- States: awake ("Start sleep") · sleeping (live timer, "Tap when you wake", "Hold to cancel")
 
 **LiveTimerText**
 | Prop | Type | Meaning |
@@ -144,6 +146,8 @@ lib/
 | `days` | list of 7 (date + Session?) | Oldest to today |
 | `goal` | `Duration` | Goal line and bar style |
 | `onTapSession` | `ValueChanged<Session>` | Opens the editor |
+| `onLongPressSession` | (Session, Offset) | Opens the context menu |
+| `onLongPressEmptyDay` | (DateTime, Offset) | "Add a night for …" menu |
 - States: no nights · early ("N of 7 nights logged") · normal ("avg … · x/y met goal")
 - Bar states: met goal · under goal · empty day
 
@@ -152,7 +156,7 @@ lib/
 **LogScreen**
 - Props: none
 - States:
-  - view: timeline / month
+  - view: timeline / calendar
   - filter: all / unrated / with notes / under goal
   - visible month
   - no nights · no filter results · normal
@@ -162,7 +166,7 @@ lib/
 |---|---|---|
 | `value` | timeline / month | Current view |
 | `onChanged` | callback | View switched |
-- States: Timeline · Month
+- States: Timeline · Calendar
 
 **LogFilterChips**
 | Prop | Type | Meaning |
@@ -189,6 +193,7 @@ lib/
 | `goal` | `Duration` | Met / under styling |
 | `onTap` | `VoidCallback` | Opens the editor |
 | `onRate` | `ValueChanged<int?>` | Inline rating |
+| `onLongPress` | `ValueChanged<Offset>` | Context menu (anywhere on the row) |
 - States: met / under goal · rated / unrated · with / without note
 
 **TimelineLane**
@@ -198,8 +203,7 @@ lib/
 | `wakeTime` | `DateTime` | Bar end |
 | `underGoal` | `bool` | Faded bar |
 | `hasNote` | `bool` | Note icon |
-| `valueText` | `String` | Long-press text |
-- States: met / under goal · with / without note · long-pressed
+- States: met / under goal · with / without note
 
 **MonthCalendar**
 | Prop | Type | Meaning |
@@ -210,6 +214,8 @@ lib/
 | `goal` | `Duration` | Shading |
 | `onTapSession` | `ValueChanged<Session>` | Opens the editor |
 | `onTapEmptyDay` | `ValueChanged<DateTime>` | Add a night for that day |
+| `onLongPressSession` | (Session, Offset) | Context menu |
+| `onLongPressEmptyDay` | (DateTime, Offset) | "Add a night for …" menu |
 | `onPrevMonth` | `VoidCallback` | Previous month |
 | `onNextMonth` | `VoidCallback?` | Null = disabled |
 - States: current month (next disabled) · past month
@@ -219,15 +225,16 @@ lib/
 |---|---|---|
 | `date` | `DateTime` | Day number |
 | `session` | Session? | Logged night |
-| `level` | `int` (0–4) | Shade |
+| `shade` | `double?` (0–1) | Time ÷ goal clamped to ½×…1½×, blended across the heat colours; null = nothing logged |
 | `isToday` | `bool` | Outline |
 | `isFuture` | `bool` | Dimmed, inert |
 | `onTap` | `VoidCallback?` | Edit or add |
-- States: logged (levels 1–4) · empty past · future · today
+| `onLongPress` | `ValueChanged<Offset>?` | Context menu or "Add a night" menu |
+- States: logged (shaded) · empty past · future · today
 
 **CalendarLegend**
 - Props: none
-- States: static
+- States: static (gradient: ½× goal · Goal · 1½× goal)
 
 ### Insights
 
@@ -267,7 +274,8 @@ lib/
 | `usualWake` | `TimeOfDay?` | Dashed line |
 | `goal` | `Duration` | Met / under bars |
 | `onTapSession` | `ValueChanged<Session>` | Opens the editor |
-- States: not enough data (fewer than 3) · partial (3–13, right-aligned) · full (14) · bar long-pressed
+| `onLongPressSession` | (Session, Offset) | Context menu |
+- States: not enough data (fewer than 3) · partial (3–13, right-aligned) · full (14)
 
 ### Settings
 
@@ -277,7 +285,7 @@ lib/
 - Groups:
   - Sleep: goal, rate prompt
   - Appearance: theme
-  - Data: export, import
+  - (Data: export, import — deferred)
 
 **SettingsGroup**
 | Prop | Type | Meaning |
@@ -371,13 +379,22 @@ lib/
 | `message` | `String` | Text shown |
 - States: static
 
-**LongPressValue**
+**SessionContextMenu**
 | Prop | Type | Meaning |
 |---|---|---|
-| `valueText` | `String` | Shown on long-press |
-| `onTap` | `VoidCallback?` | Normal tap |
-| `child` | `Widget` | Wrapped widget |
-- States: idle · showing value
+| `session` | Session | The night |
+| `onRate` | `ValueChanged<int?>` | Rate from the menu |
+- Opened next to the finger on long-press (with a haptic tap)
+- Header: date, bed → wake · duration, stars; items: Edit, Delete (Undo toast)
+- Variant: "Add a night for …" for empty days
+- States: open · closed
+
+**RatePromptDialog**
+| Prop | Type | Meaning |
+|---|---|---|
+| `length` | `Duration` | Shown as "7h 45m logged" |
+- Shown after Stop when "Ask me to rate in the morning" is on; Skip closes it
+- States: unrated · picked (closes)
 
 **UndoSnackbar**
 | Prop | Type | Meaning |
@@ -385,3 +402,10 @@ lib/
 | `message` | `String` | "Session saved", "Session deleted" |
 | `onUndo` | `VoidCallback` | Undo action |
 - States: shown · dismissed
+
+## Outside the app
+
+**Quick Settings tile (Android)**
+- Start / stop sleep from the notification shade, also on the lock screen
+- Label "Start sleep" / "Sleeping", subtitle "Last 7h 45m" / "Since 11:02 PM"
+- Logic and wording live in Dart (`lib/services/quick_tile.dart`); Android only draws the pushed state and forwards taps

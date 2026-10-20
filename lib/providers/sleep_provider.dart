@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import '../models/sleep_session.dart';
 import '../services/database_helper.dart';
+import '../services/quick_tile.dart';
 
 class SleepProvider extends ChangeNotifier {
   SleepProvider([DatabaseHelper? db]) : _db = db ?? DatabaseHelper();
@@ -27,6 +28,7 @@ class SleepProvider extends ChangeNotifier {
       ..sort((a, b) => b.wakeTime!.compareTo(a.wakeTime!));
     _loading = false;
     notifyListeners();
+    await QuickTile.push(_active, lastNight);
   }
 
   Future<void> startSleep([DateTime? at]) async {

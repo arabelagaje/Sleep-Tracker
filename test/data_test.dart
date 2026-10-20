@@ -4,6 +4,7 @@ import 'package:sleep_tracker/models/sleep_session.dart';
 import 'package:sleep_tracker/providers/settings_provider.dart';
 import 'package:sleep_tracker/providers/sleep_provider.dart';
 import 'package:sleep_tracker/services/database_helper.dart';
+import 'package:sleep_tracker/services/quick_tile.dart';
 import 'package:sleep_tracker/utils/formatters.dart';
 import 'package:sleep_tracker/utils/sleep_stats.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -19,6 +20,7 @@ SleepSession night(int day, int bedH, int bedM, int minutes, {int? q}) {
 }
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
   sqfliteFfiInit();
   databaseFactory = databaseFactoryFfi;
 
@@ -89,5 +91,21 @@ void main() {
     expect(fmtDur(const Duration(minutes: 465)), '7h 45m');
     expect(fmtDur(const Duration(hours: 8)), '8h');
     expect(fmtTimer(const Duration(seconds: 3723)), '01:02:03');
+  });
+
+  test('quick tile state is decided in Dart', () {
+    final n = night(18, 23, 0, 465);
+    expect(QuickTile.stateFor(null, null), {
+      'active': false,
+      'label': 'Start sleep',
+      'subtitle': null,
+    });
+    expect(QuickTile.stateFor(null, n)['subtitle'], 'Last 7h 45m');
+    final active = SleepSession(bedTime: DateTime(2026, 10, 19, 23, 2), createdAt: DateTime(2026));
+    expect(QuickTile.stateFor(active, n), {
+      'active': true,
+      'label': 'Sleeping',
+      'subtitle': 'Since 11:02 PM',
+    });
   });
 }

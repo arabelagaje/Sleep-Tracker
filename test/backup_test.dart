@@ -25,12 +25,14 @@ void main() {
   final db = DatabaseHelper();
 
   setUp(() async {
-    DatabaseHelper.pathOverride = inMemoryDatabasePath;
-    await db.close();
     dir = await Directory.systemTemp.createTemp('backup_test');
+    DatabaseHelper.pathOverride = join(dir.path, 'sleep_tracker.db');
   });
 
-  tearDown(() => dir.delete(recursive: true));
+  tearDown(() async {
+    await db.close();
+    await dir.delete(recursive: true);
+  });
 
   test('export then import restores sessions and settings', () async {
     await db.insertSession(night(18));
@@ -49,6 +51,12 @@ void main() {
     expect(sessions.map((s) => s.bedTime.day), [19, 18]);
     expect(sessions.first.quality, 4);
     expect(await db.getSettings(), {'goal_minutes': '450'});
+    expect(File(file).existsSync(), isFalse);
+
+    // The replaced data is kept beside it.
+    final previous = await openReadOnlyDatabase('${DatabaseHelper.pathOverride}.bkp');
+    expect(await previous.query('sleep_sessions'), hasLength(2));
+    await previous.close();
   });
 
   test('a version 1 backup is migrated', () async {
@@ -95,6 +103,7 @@ void main() {
     await n.close();
     await expectLater(db.importFrom(newer), throwsFormatException);
 
+    expect(dir.listSync().map((f) => basename(f.path)), ['sleep_tracker.db']);
     expect((await db.getAllSessions()).single.bedTime.day, 18);
   });
 }

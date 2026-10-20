@@ -18,20 +18,27 @@ class DatabaseHelper {
   // Tests point this at an in-memory database
   static String? pathOverride;
 
+  // The quick tile's background engine sets this to false so it gets its own
+  // connection instead of sharing the app's, which an import closes.
+  static bool singleInstance = true;
+
   Future<Database> get database async {
     if (_database != null) return _database!;
     _database = await _initDatabase();
     return _database!;
   }
 
-  Future<Database> _initDatabase() async {
-    var path = pathOverride;
-    if (path == null) {
-      final documentsDirectory = await getApplicationDocumentsDirectory();
-      path = join(documentsDirectory.path, 'sleep_tracker.db');
-    }
+  Future<String> filePath() async =>
+      pathOverride ?? join((await getApplicationDocumentsDirectory()).path, 'sleep_tracker.db');
 
-    return await openDatabase(path, version: schemaVersion, onCreate: _onCreate, onUpgrade: _onUpgrade);
+  Future<Database> _initDatabase() async {
+    return await openDatabase(
+      await filePath(),
+      version: schemaVersion,
+      onCreate: _onCreate,
+      onUpgrade: _onUpgrade,
+      singleInstance: singleInstance,
+    );
   }
 
   static const schemaVersion = 2;
@@ -156,61 +163,73 @@ class DatabaseHelper {
     }, conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  // Writes a standalone copy of the whole database to [path].
-  Future<void> exportTo(String path) async {
+  // Copies the database file to [to].
+  Future<void> exportTo(String to) async {
     final db = await database;
-    final file = File(path);
-    if (await file.exists()) await file.delete();
-    await db.execute('VACUUM INTO ?', [path]);
+    // Moves changes still in the write-ahead log, if any, into the file.
+    await db.rawQuery('PRAGMA wal_checkpoint(TRUNCATE)');
+    await File(await filePath()).copy(to);
   }
 
-  // Replaces all sessions and settings with those in the database file at
-  // [path]. The file is migrated in place first if it comes from an older app
-  // version, so pass a copy.
-  // Throws [FormatException] when the file isn't a usable backup; the current
-  // data is left untouched in that case.
-  Future<void> importFrom(String path) async {
-    final Database src;
+  // Puts the backup file [incoming] in place of the database file and opens
+  // it; an older backup is brought up to date by the regular migrations. The
+  // replaced file is kept as `.bkp` until the next import. [incoming] is
+  // moved or deleted either way.
+  // Throws [FormatException] when it isn't a usable backup; the current data
+  // is left untouched in that case.
+  Future<void> importFrom(String incoming) async {
     try {
-      src = await openReadOnlyDatabase(path);
+      await _check(incoming);
+    } catch (_) {
+      await File(incoming).delete();
+      rethrow;
+    }
+
+    final path = await filePath();
+    final previous = '$path.bkp';
+    await close();
+    await _deleteSideFiles(path);
+    await File(path).rename(previous);
+    await File(incoming).rename(path);
+    try {
+      await database;
+    } catch (_) {
+      await _deleteSideFiles(path);
+      await File(previous).rename(path);
+      rethrow;
+    }
+  }
+
+  Future<void> _check(String file) async {
+    const notOurs = FormatException('Not a Sleep Tracker backup');
+    final Database db;
+    try {
+      db = await openReadOnlyDatabase(file, singleInstance: false);
     } on DatabaseException {
-      throw const FormatException('Not a Sleep Tracker backup');
+      throw notOurs;
     }
     try {
-      final version = await src.getVersion();
-      final tables = await src.query(
+      final tables = await db.query(
         'sqlite_master',
         where: 'type = ? AND name = ?',
         whereArgs: ['table', 'sleep_sessions'],
       );
-      if (tables.isEmpty) throw const FormatException('Not a Sleep Tracker backup');
-      if (version > schemaVersion) {
+      if (tables.isEmpty) throw notOurs;
+      if (await db.getVersion() > schemaVersion) {
         throw const FormatException('Backup is from a newer app version');
       }
     } on DatabaseException {
-      throw const FormatException('Not a Sleep Tracker backup');
+      throw notOurs;
     } finally {
-      await src.close();
+      await db.close();
     }
+  }
 
-    // Bring the file up to the current schema with the regular migrations.
-    final migrated = await openDatabase(path, version: schemaVersion, onUpgrade: _onUpgrade);
-    await migrated.close();
-
-    final db = await database;
-    await db.execute('ATTACH DATABASE ? AS src', [path]);
-    try {
-      await db.transaction((txn) async {
-        await txn.delete('sleep_sessions');
-        await txn.delete('settings');
-        await txn.execute('''
-          INSERT INTO sleep_sessions (id, bed_time, wake_time, quality, notes, created_at)
-          SELECT id, bed_time, wake_time, quality, notes, created_at FROM src.sleep_sessions
-        ''');
-        await txn.execute('INSERT INTO settings (key, value) SELECT key, value FROM src.settings');
-      });
-    } finally {
-      await db.execute('DETACH DATABASE src');
+  // SQLite's journal files, which belong to the file being replaced.
+  Future<void> _deleteSideFiles(String path) async {
+    for (final suffix in ['-journal', '-wal', '-shm']) {
+      final f = File('$path$suffix');
+      if (await f.exists()) await f.delete();
     }
   }
 

@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 
 import '../models/sleep_session.dart';
 import '../providers/sleep_provider.dart';
+import 'database_helper.dart';
 import '../utils/formatters.dart';
 
 // Bridge to the Android Quick Settings tile.
@@ -39,6 +40,9 @@ class QuickTile {
 @pragma('vm:entry-point')
 Future<void> quickTileMain() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // This engine lives on beside the app's, so keep a connection of our own
+  // and only while handling a tap: an import closes and replaces the file.
+  DatabaseHelper.singleInstance = false;
   final sleep = SleepProvider();
   QuickTile.channel.setMethodCallHandler((call) async {
     if (call.method != 'tap') return null;
@@ -50,6 +54,7 @@ Future<void> quickTileMain() async {
       await sleep.startSleep();
     }
     // load() inside start/stop already pushed the new tile state.
+    await DatabaseHelper().close();
     return null;
   });
   await QuickTile.channel.invokeMethod('ready');

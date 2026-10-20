@@ -1,4 +1,4 @@
-package com.example.sleep_tracker
+package com.arabelagaje.sleeptracker
 
 import android.os.Build
 import android.service.quicksettings.Tile

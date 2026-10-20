@@ -1,0 +1,18 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Themed icon (Android 13+): one colour, eyes and mouth cut out as holes. -->
+    <group android:pivotX="54" android:pivotY="54" android:scaleX="0.78" android:scaleY="0.78">
+    <group android:translateX="-1" android:translateY="2">
+    <path android:fillType="evenOdd" android:fillColor="#FFFFFFFF"
+        android:pathData="M29,60 a21,21 0 1,0 42,0 a21,21 0 1,0 -42,0 Z M35.93,58.69 L36.34,59.04 L36.78,59.40 L37.23,59.72 L37.69,60.01 L38.16,60.28 L38.63,60.51 L39.11,60.71 L39.60,60.88 L40.09,61.01 L40.59,61.10 L41.09,61.16 L41.60,61.18 L42.11,61.16 L42.61,61.10 L43.11,61.01 L43.60,60.88 L44.09,60.71 L44.57,60.51 L45.04,60.28 L45.51,60.01 L45.97,59.72 L46.42,59.40 L46.86,59.04 L47.27,58.69 L47.65,58.19 L47.82,57.59 L47.74,56.97 L47.43,56.43 L46.93,56.05 L46.33,55.88 L45.71,55.96 L45.17,56.27 L44.81,56.59 L44.48,56.85 L44.16,57.08 L43.85,57.28 L43.55,57.45 L43.25,57.60 L42.96,57.72 L42.68,57.82 L42.40,57.89 L42.13,57.94 L41.86,57.97 L41.60,57.98 L41.34,57.97 L41.07,57.94 L40.80,57.89 L40.52,57.82 L40.24,57.72 L39.95,57.60 L39.65,57.45 L39.35,57.28 L39.04,57.08 L38.72,56.85 L38.39,56.59 L38.03,56.27 L37.49,55.96 L36.87,55.88 L36.27,56.05 L35.77,56.43 L35.46,56.97 L35.38,57.59 L35.55,58.19 Z M52.73,58.69 L53.14,59.04 L53.58,59.40 L54.03,59.72 L54.49,60.01 L54.96,60.28 L55.43,60.51 L55.91,60.71 L56.40,60.88 L56.89,61.01 L57.39,61.10 L57.89,61.16 L58.40,61.18 L58.91,61.16 L59.41,61.10 L59.91,61.01 L60.40,60.88 L60.89,60.71 L61.37,60.51 L61.84,60.28 L62.31,60.01 L62.77,59.72 L63.22,59.40 L63.66,59.04 L64.07,58.69 L64.45,58.19 L64.62,57.59 L64.54,56.97 L64.23,56.43 L63.73,56.05 L63.13,55.88 L62.51,55.96 L61.97,56.27 L61.61,56.59 L61.28,56.85 L60.96,57.08 L60.65,57.28 L60.35,57.45 L60.05,57.60 L59.76,57.72 L59.48,57.82 L59.20,57.89 L58.93,57.94 L58.66,57.97 L58.40,57.98 L58.14,57.97 L57.87,57.94 L57.60,57.89 L57.32,57.82 L57.04,57.72 L56.75,57.60 L56.45,57.45 L56.15,57.28 L55.84,57.08 L55.52,56.85 L55.19,56.59 L54.83,56.27 L54.29,55.96 L53.67,55.88 L53.07,56.05 L52.57,56.43 L52.26,56.97 L52.18,57.59 L52.35,58.19 Z M47.48,68.82 a2.52,3.15 0 1,0 5.04,0 a2.52,3.15 0 1,0 -5.04,0 Z" />
+    <path android:pathData="M64,33 h10 L64,44 h10" android:strokeColor="#FFFFFFFF" android:strokeWidth="3.6"
+        android:strokeLineCap="round" android:strokeLineJoin="round" />
+    <path android:pathData="M76,23 h7 l-7,8 h7" android:strokeColor="#FFFFFFFF" android:strokeWidth="2.8"
+        android:strokeLineCap="round" android:strokeLineJoin="round" />
+    </group>
+    </group>
+</vector>

@@ -1,0 +1,28 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Sleeping face: the app's purple orb with closed eyes, a small mouth and Zz. -->
+    <group android:pivotX="54" android:pivotY="54" android:scaleX="0.78" android:scaleY="0.78">
+    <group android:translateX="-1" android:translateY="2">
+    <path android:pathData="M29,60 a21,21 0 1,0 42,0 a21,21 0 1,0 -42,0 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="radial" android:centerX="44.1" android:centerY="51.6"
+                android:gradientRadius="33.6">
+                <item android:offset="0" android:color="#7A6FF0" />
+                <item android:offset="0.75" android:color="#4A3FC4" />
+            </gradient>
+        </aapt:attr>
+    </path>
+    <path android:pathData="M36.98,57.48 q4.62,4.20 9.24,0" android:strokeColor="#FFFFFF" android:strokeWidth="3.2" android:strokeLineCap="round" />
+    <path android:pathData="M53.78,57.48 q4.62,4.20 9.24,0" android:strokeColor="#FFFFFF" android:strokeWidth="3.2" android:strokeLineCap="round" />
+    <path android:pathData="M47.48,68.82 a2.52,3.15 0 1,0 5.04,0 a2.52,3.15 0 1,0 -5.04,0 Z" android:fillColor="#FFFFFF" />
+    <path android:pathData="M64,33 h10 L64,44 h10" android:strokeColor="#5B4FD6" android:strokeWidth="3.6"
+        android:strokeLineCap="round" android:strokeLineJoin="round" />
+    <path android:pathData="M76,23 h7 l-7,8 h7" android:strokeColor="#9A90EE" android:strokeWidth="2.8"
+        android:strokeLineCap="round" android:strokeLineJoin="round" />
+    </group>
+    </group>
+</vector>

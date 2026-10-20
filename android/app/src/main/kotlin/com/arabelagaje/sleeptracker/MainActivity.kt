@@ -1,4 +1,4 @@
-package com.example.sleep_tracker
+package com.arabelagaje.sleeptracker
 
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine

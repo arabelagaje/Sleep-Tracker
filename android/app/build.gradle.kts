@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.sleep_tracker"
+    namespace = "com.arabelagaje.sleeptracker"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -20,8 +20,7 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.sleep_tracker"
+        applicationId = "com.arabelagaje.sleeptracker"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
@@ -31,6 +30,10 @@ android {
     }
 
     buildTypes {
+        debug {
+            // Lets a debug build sit next to the release build on the phone.
+            applicationIdSuffix = ".debug"
+        }
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.

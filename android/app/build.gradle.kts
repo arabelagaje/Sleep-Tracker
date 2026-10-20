@@ -27,12 +27,14 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        manifestPlaceholders["appName"] = "Sleep Tracker"
     }
 
     buildTypes {
         debug {
             // Lets a debug build sit next to the release build on the phone.
             applicationIdSuffix = ".debug"
+            manifestPlaceholders["appName"] = "Sleep Tracker (Debug)"
         }
         release {
             // TODO: Add your own signing config for the release build.

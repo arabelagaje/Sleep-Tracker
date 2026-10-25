@@ -6,7 +6,7 @@ import '../settings/widgets/settings_action_tile.dart';
 import '../settings/widgets/settings_group.dart';
 import '../shell/sub_screen.dart';
 
-const appVersion = '1.0.0'; // keep in sync with pubspec.yaml
+const appVersion = '1.1.0'; // keep in sync with pubspec.yaml
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});

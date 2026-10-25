@@ -39,19 +39,19 @@ void main() {
 
     final done = await p.stopSleep(DateTime(2026, 10, 19, 7));
     expect(p.isSleeping, isFalse);
-    expect(p.lastNight!.length, const Duration(hours: 8));
-    expect(p.lastNight!.nightDate, DateTime(2026, 10, 19));
+    expect(p.previous!.length, const Duration(hours: 8));
+    expect(p.previous!.nightDate, DateTime(2026, 10, 19));
 
     await p.resume(done!);
     expect(p.isSleeping, isTrue);
     await p.stopSleep(DateTime(2026, 10, 19, 7));
 
-    await p.rate(p.lastNight!, 4);
-    expect(p.lastNight!.quality, 4);
-    await p.rate(p.lastNight!, null);
-    expect(p.lastNight!.quality, isNull);
+    await p.rate(p.previous!, 4);
+    expect(p.previous!.quality, 4);
+    await p.rate(p.previous!, null);
+    expect(p.previous!.quality, isNull);
 
-    final s = p.lastNight!;
+    final s = p.previous!;
     await p.delete(s);
     expect(p.nights, isEmpty);
     await p.restore(s);
@@ -81,7 +81,7 @@ void main() {
     await p.stopSleep(DateTime(2026, 10, 24, 15));
     expect(p.finished.first.isNap, isTrue);
     expect(p.nights.single.length, const Duration(hours: 8));
-    expect(p.lastNight!.nightDate, DateTime(2026, 10, 24));
+    expect(p.previous!.isNap, isTrue); // the card and tile show what you just did
 
     // Marking it as a night brings it back.
     await p.save(p.finished.first.copyWith(isNap: false));

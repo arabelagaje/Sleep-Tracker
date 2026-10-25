@@ -23,7 +23,8 @@ class SleepProvider extends ChangeNotifier {
 
   // Finished sessions without naps, newest wake-up first. Stats and charts use these.
   List<SleepSession> get nights => _nights;
-  SleepSession? get lastNight => _nights.isEmpty ? null : _nights.first;
+  // Latest finished session, nap or night: what you just did.
+  SleepSession? get previous => _finished.firstOrNull;
 
   Future<void> load() async {
     final all = await _db.getAllSessions();
@@ -33,7 +34,7 @@ class SleepProvider extends ChangeNotifier {
     _nights = _finished.where((s) => !s.isNap).toList();
     _loading = false;
     notifyListeners();
-    await QuickTile.push(_active, lastNight);
+    await QuickTile.push(_active, previous);
   }
 
   Future<void> startSleep([DateTime? at]) async {

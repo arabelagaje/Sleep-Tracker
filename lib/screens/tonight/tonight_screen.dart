@@ -96,7 +96,7 @@ class TonightScreen extends StatelessWidget {
     final sleep = context.watch<SleepProvider>();
     final goal = context.select<SettingsProvider, Duration>((s) => s.goal);
     final nights = sleep.nights;
-    final last = sleep.lastNight;
+    final last = sleep.previous;
     final active = sleep.active;
     final usual = usualTimes(nights);
     final today = dateOnly(DateTime.now());
@@ -132,7 +132,8 @@ class TonightScreen extends StatelessWidget {
         const SizedBox(height: 16),
         LastNightCard(
           session: last,
-          deltaVsAverage: last != null && nights.length >= minNights
+          // The average is of nights, so a nap isn't compared with it.
+          deltaVsAverage: last != null && !last.isNap && nights.length >= minNights
               ? last.length - averageDuration(nights)
               : null,
           onEdit: () => _edit(context, last!),

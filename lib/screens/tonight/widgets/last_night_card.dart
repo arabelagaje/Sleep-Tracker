@@ -34,15 +34,15 @@ class LastNightCard extends StatelessWidget {
     final s = session;
     if (s == null) {
       return const SectionCard(
-        title: 'Last night',
+        title: 'Previous sleep',
         child: EmptyNote(
           message:
-              'Your first night shows up here. Tap the moon at bedtime, or add a past night from Log.',
+              'Your first sleep shows up here. Tap the moon at bedtime, or add a past night from Log.',
         ),
       );
     }
     return SectionCard(
-      title: 'Last night',
+      title: 'Previous sleep',
       trailing: CardLink('Edit', onPressed: onEdit),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

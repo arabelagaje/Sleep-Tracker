@@ -148,9 +148,9 @@ void main() {
       const Offset(0, -200),
     );
     await menu(find.byType(WeekBarsCard), 'Delete');
-    await tester.ensureVisible(find.text('Last night'));
+    await tester.ensureVisible(find.text('Previous sleep'));
     await tester.pumpAndSettle();
-    await tester.longPress(find.text('Last night'));
+    await tester.longPress(find.text('Previous sleep'));
     await tester.pumpAndSettle();
     expect(find.text('Delete'), findsNothing);
 

@@ -35,43 +35,43 @@ class DatabaseHelper {
     return await openDatabase(
       await filePath(),
       version: schemaVersion,
-      onCreate: _onCreate,
-      onUpgrade: _onUpgrade,
+      onCreate: (db, _) => _migrate(db, 0),
+      onUpgrade: (db, from, _) => _migrate(db, from),
       singleInstance: singleInstance,
     );
   }
 
-  static const schemaVersion = 3;
-
-  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    if (oldVersion < 2) await _createSettings(db);
-    if (oldVersion < 3) {
-      await db.execute('ALTER TABLE sleep_sessions ADD COLUMN is_nap INTEGER NOT NULL DEFAULT 0');
-    }
-  }
-
-  Future<void> _createSettings(Database db) async {
-    await db.execute('''
-      CREATE TABLE settings (
-        key TEXT PRIMARY KEY,
-        value TEXT NOT NULL
-      )
-    ''');
-  }
-
-  Future<void> _onCreate(Database db, int version) async {
-    await db.execute('''
+  // One step per schema version, in order; never edit a released step, add a
+  // new one. A new install runs them all, so it can't drift from an upgrade.
+  static final List<Future<void> Function(Database)> _migrations = [
+    // 1
+    (db) => db.execute('''
       CREATE TABLE sleep_sessions (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         bed_time INTEGER NOT NULL,
         wake_time INTEGER,
         quality INTEGER,
         notes TEXT,
-        created_at INTEGER NOT NULL,
-        is_nap INTEGER NOT NULL DEFAULT 0
+        created_at INTEGER NOT NULL
       )
-    ''');
-    await _createSettings(db);
+    '''),
+    // 2
+    (db) => db.execute('''
+      CREATE TABLE settings (
+        key TEXT PRIMARY KEY,
+        value TEXT NOT NULL
+      )
+    '''),
+    // 3
+    (db) => db.execute('ALTER TABLE sleep_sessions ADD COLUMN is_nap INTEGER NOT NULL DEFAULT 0'),
+  ];
+
+  static int get schemaVersion => _migrations.length;
+
+  Future<void> _migrate(Database db, int from) async {
+    for (final step in _migrations.skip(from)) {
+      await step(db);
+    }
   }
 
   // Create a new sleep session

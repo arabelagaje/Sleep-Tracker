@@ -86,6 +86,36 @@ void main() {
     expect(await db.getSettings(), isEmpty);
   });
 
+  test('a new install and an upgraded v1 file have the same schema', () async {
+    Future<Map<String, List<Object?>>> schema(String file) async {
+      final d = await openReadOnlyDatabase(file, singleInstance: false);
+      final out = <String, List<Object?>>{};
+      for (final t in ['sleep_sessions', 'settings']) {
+        out[t] = (await d.rawQuery('PRAGMA table_info($t)')).map((c) => c.values.toList()).toList();
+      }
+      await d.close();
+      return out;
+    }
+
+    await db.getSettings(); // creates the current file from scratch
+    await db.close();
+    final fresh = await schema(DatabaseHelper.pathOverride!);
+
+    final file = join(dir.path, 'v1.db');
+    final old = await openDatabase(
+      file,
+      version: 1,
+      onCreate: (d, _) => d.execute(
+        'CREATE TABLE sleep_sessions (id INTEGER PRIMARY KEY AUTOINCREMENT, bed_time INTEGER NOT NULL, '
+        'wake_time INTEGER, quality INTEGER, notes TEXT, created_at INTEGER NOT NULL)',
+      ),
+    );
+    await old.close();
+    await db.importFrom(file);
+    await db.close();
+    expect(await schema(DatabaseHelper.pathOverride!), fresh);
+  });
+
   test('bad files are rejected and data is kept', () async {
     await db.insertSession(night(18));
 

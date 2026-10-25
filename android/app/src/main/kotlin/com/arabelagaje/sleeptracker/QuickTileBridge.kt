@@ -21,7 +21,8 @@ object QuickTileBridge {
     private var ready = false
     private var pendingTaps = 0
 
-    data class TileState(val active: Boolean, val label: String, val subtitle: String?)
+    // [since]: bedtime in epoch ms while sleeping, for `{elapsed}` in the subtitle.
+    data class TileState(val active: Boolean, val label: String, val subtitle: String?, val since: Long?)
 
     // Registers the Dart → Android calls on any engine (app or background).
     fun attach(context: Context, messenger: BinaryMessenger): MethodChannel {
@@ -74,12 +75,14 @@ object QuickTileBridge {
             .putBoolean("active", state["active"] as? Boolean ?: false)
             .putString("label", state["label"] as? String)
             .putString("subtitle", state["subtitle"] as? String)
+            .putLong("since", (state["since"] as? Number)?.toLong() ?: -1L)
             .apply()
     }
 
     fun load(context: Context): TileState? {
         val p = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
         val label = p.getString("label", null) ?: return null
-        return TileState(p.getBoolean("active", false), label, p.getString("subtitle", null))
+        val since = p.getLong("since", -1L).takeIf { it >= 0 }
+        return TileState(p.getBoolean("active", false), label, p.getString("subtitle", null), since)
     }
 }

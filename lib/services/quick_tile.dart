@@ -8,15 +8,22 @@ import '../utils/formatters.dart';
 
 // Bridge to the Android Quick Settings tile.
 //
-// Android only draws what Dart sends ({active, label, subtitle}) and forwards
-// taps to [quickTileMain]. All sleep logic and wording lives here, so DB or
-// behaviour changes stay on the Dart side.
+// Android only draws what Dart sends ({active, label, subtitle, since}) and
+// forwards taps to [quickTileMain]. All sleep logic and wording lives here, so
+// DB or behaviour changes stay on the Dart side. The one exception: while
+// sleeping, Android replaces `{elapsed}` in the subtitle with the time since
+// `since` (epoch ms), so the tile counts up without waking Dart.
 class QuickTile {
   static const channel = MethodChannel('sleep_tracker/quick_tile');
 
   static Map<String, Object?> stateFor(SleepSession? active, SleepSession? last) {
     if (active != null) {
-      return {'active': true, 'label': 'Sleeping', 'subtitle': 'Since ${fmtClock(active.bedTime)}'};
+      return {
+        'active': true,
+        'label': 'Sleeping',
+        'subtitle': '{elapsed}',
+        'since': active.bedTime.millisecondsSinceEpoch,
+      };
     }
     return {
       'active': false,

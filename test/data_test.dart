@@ -135,7 +135,8 @@ void main() {
     expect(QuickTile.stateFor(active, n), {
       'active': true,
       'label': 'Sleeping',
-      'subtitle': 'Since 11:02 PM',
+      'subtitle': '{elapsed}',
+      'since': DateTime(2026, 10, 19, 23, 2).millisecondsSinceEpoch,
     });
   });
 }

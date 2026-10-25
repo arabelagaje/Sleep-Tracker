@@ -10,12 +10,12 @@ import 'session_editor_sheet.dart';
 import 'star_rating.dart';
 import 'undo_snackbar.dart';
 
-enum _MenuAction { edit, delete, add }
+enum _MenuAction { edit, nap, delete, add }
 
 // Long-press callback for a night, with the finger's global position.
 typedef SessionLongPress = void Function(SleepSession session, Offset position);
 
-// Long-press menu for a night: its value, quick rating, Edit and Delete.
+// Long-press menu for a session: its value, quick rating, Edit, nap/night and Delete.
 class SessionContextMenu extends StatefulWidget {
   const SessionContextMenu({super.key, required this.session, required this.onRate});
 
@@ -37,7 +37,7 @@ class SessionContextMenu extends StatefulWidget {
         session: session,
         onRate: (q) async {
           await sleep.rate(current, q);
-          current = sleep.nights.firstWhere((s) => s.id == session.id, orElse: () => current);
+          current = sleep.finished.firstWhere((s) => s.id == session.id, orElse: () => current);
         },
       ),
     );
@@ -45,6 +45,8 @@ class SessionContextMenu extends StatefulWidget {
     switch (action) {
       case _MenuAction.edit:
         SessionEditorSheet.show(context, mode: EditorMode.editNight, session: current);
+      case _MenuAction.nap:
+        await sleep.save(current.copyWith(isNap: !current.isNap));
       case _MenuAction.delete:
         await sleep.delete(current);
         if (!context.mounted) return;
@@ -138,6 +140,9 @@ class _SessionContextMenuState extends State<SessionContextMenu> {
         ),
         Divider(height: 9, color: c.line),
         const _MenuItem(Icons.edit_outlined, 'Edit', _MenuAction.edit),
+        s.isNap
+            ? const _MenuItem(Icons.bedtime_outlined, 'Mark as night', _MenuAction.nap)
+            : const _MenuItem(Icons.wb_sunny_outlined, 'Mark as nap', _MenuAction.nap),
         _MenuItem(Icons.delete_outline, 'Delete', _MenuAction.delete, color: c.danger),
       ],
     );

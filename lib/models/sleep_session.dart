@@ -4,6 +4,7 @@ class SleepSession {
   final DateTime? wakeTime;
   final int? quality; // 1-5 stars
   final String? notes;
+  final bool isNap; // naps are kept out of nights, stats and charts
   final DateTime createdAt;
 
   SleepSession({
@@ -12,8 +13,14 @@ class SleepSession {
     this.wakeTime,
     this.quality,
     this.notes,
+    this.isNap = false,
     required this.createdAt,
   });
+
+  // A session that ends between 10am and 9pm and lasts under 4h is saved as a
+  // nap when stopped. Dated by wake time, like nights.
+  static bool looksLikeNap(DateTime bed, DateTime wake) =>
+      wake.hour >= 10 && wake.hour < 21 && wake.difference(bed) < const Duration(hours: 4);
 
   // Computed property: duration in minutes
   int? get duration {
@@ -40,6 +47,7 @@ class SleepSession {
       'wake_time': wakeTime?.millisecondsSinceEpoch,
       'quality': quality,
       'notes': notes,
+      'is_nap': isNap ? 1 : 0,
       'created_at': createdAt.millisecondsSinceEpoch,
     };
   }
@@ -54,6 +62,7 @@ class SleepSession {
           : null,
       quality: map['quality'] as int?,
       notes: map['notes'] as String?,
+      isNap: map['is_nap'] == 1,
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['created_at'] as int),
     );
   }
@@ -66,6 +75,7 @@ class SleepSession {
     DateTime? wakeTime,
     int? quality,
     String? notes,
+    bool? isNap,
     DateTime? createdAt,
     bool clearWakeTime = false,
     bool clearQuality = false,
@@ -77,6 +87,7 @@ class SleepSession {
       wakeTime: clearWakeTime ? null : wakeTime ?? this.wakeTime,
       quality: clearQuality ? null : quality ?? this.quality,
       notes: clearNotes ? null : notes ?? this.notes,
+      isNap: isNap ?? this.isNap,
       createdAt: createdAt ?? this.createdAt,
     );
   }
@@ -86,7 +97,7 @@ class SleepSession {
 
   @override
   String toString() {
-    return 'SleepSession(id: $id, bedTime: $bedTime, wakeTime: $wakeTime, duration: $duration, quality: $quality)';
+    return 'SleepSession(id: $id, bedTime: $bedTime, wakeTime: $wakeTime, duration: $duration, quality: $quality, isNap: $isNap)';
   }
 
   @override
@@ -99,6 +110,7 @@ class SleepSession {
         other.wakeTime == wakeTime &&
         other.quality == quality &&
         other.notes == notes &&
+        other.isNap == isNap &&
         other.createdAt == createdAt;
   }
 
@@ -109,6 +121,7 @@ class SleepSession {
         wakeTime.hashCode ^
         quality.hashCode ^
         notes.hashCode ^
+        isNap.hashCode ^
         createdAt.hashCode;
   }
 }

@@ -39,7 +39,7 @@ class _LogScreenState extends State<LogScreen> {
     LogFilter.all => true,
     LogFilter.unrated => s.quality == null,
     LogFilter.withNotes => s.hasNotes,
-    LogFilter.underGoal => s.length < goal,
+    LogFilter.underGoal => !s.isNap && s.length < goal,
   };
 
   String _weekLabel(DateTime start, DateTime thisWeek) {
@@ -51,26 +51,27 @@ class _LogScreenState extends State<LogScreen> {
     };
   }
 
-  List<Widget> _timeline(List<SleepSession> nights, Duration goal) {
+  // [sessions] includes naps; week averages use nights only.
+  List<Widget> _timeline(List<SleepSession> sessions, Duration goal) {
     final sleep = context.read<SleepProvider>();
-    if (nights.isEmpty) {
+    if (sessions.isEmpty) {
       return const [
         EmptyNote(message: 'No nights yet. Tap the moon at bedtime, or add a past night below.'),
       ];
     }
     // Week averages always cover the whole week, whatever the filter.
     final byWeek = <DateTime, List<SleepSession>>{};
-    for (final s in nights) {
+    for (final s in sessions.where((s) => !s.isNap)) {
       byWeek.putIfAbsent(weekStart(s.nightDate), () => []).add(s);
     }
     final thisWeek = weekStart(DateTime.now());
     final out = <Widget>[];
     DateTime? current;
-    for (final s in nights.where((s) => _matches(s, goal))) {
+    for (final s in sessions.where((s) => _matches(s, goal))) {
       final wk = weekStart(s.nightDate);
       if (wk != current) {
         current = wk;
-        final all = byWeek[wk]!;
+        final all = byWeek[wk] ?? const <SleepSession>[];
         out.add(
           WeekGroupHeader(
             label: _weekLabel(wk, thisWeek),
@@ -95,7 +96,8 @@ class _LogScreenState extends State<LogScreen> {
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
-    final nights = context.watch<SleepProvider>().nights;
+    final sleep = context.watch<SleepProvider>();
+    final nights = sleep.nights;
     final goal = context.select<SettingsProvider, Duration>((s) => s.goal);
     final today = dateOnly(DateTime.now());
     final thisMonth = DateTime(today.year, today.month);
@@ -107,7 +109,7 @@ class _LogScreenState extends State<LogScreen> {
         children: [
           LogFilterChips(value: _filter, onChanged: (f) => setState(() => _filter = f)),
           const SizedBox(height: 12),
-          ..._timeline(nights, goal),
+          ..._timeline(sleep.finished, goal),
           const SizedBox(height: 12),
           _TimelineLegend(colors: c),
         ],

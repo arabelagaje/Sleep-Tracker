@@ -51,6 +51,7 @@ class _SessionEditorSheetState extends State<SessionEditorSheet> {
   late DateTime _bed;
   DateTime? _wake;
   int? _quality;
+  bool _nap = false;
   late final TextEditingController _notes;
   bool _busy = false;
 
@@ -62,6 +63,7 @@ class _SessionEditorSheetState extends State<SessionEditorSheet> {
       _bed = s.bedTime;
       _wake = s.wakeTime;
       _quality = s.quality;
+      _nap = s.isNap;
     } else {
       // A night is named by its wake date: bed the evening before, up at 7.
       final day = dateOnly(widget.initialDate ?? DateTime.now());
@@ -113,12 +115,13 @@ class _SessionEditorSheetState extends State<SessionEditorSheet> {
       clearQuality: _quality == null,
       notes: notes,
       clearNotes: notes.isEmpty,
+      isNap: _nap,
     );
     await context.read<SleepProvider>().save(session);
     if (!mounted) return;
     Navigator.pop<_Outcome>(context, (
       message: switch (widget.mode) {
-        EditorMode.create => 'Night added',
+        EditorMode.create => 'Session added',
         EditorMode.editActive when _wake != null => 'Session saved',
         _ => 'Changes saved',
       },
@@ -222,6 +225,38 @@ class _SessionEditorSheetState extends State<SessionEditorSheet> {
                       style: TextStyle(color: c.danger, fontSize: 13),
                     ),
                   ],
+                  // Still sleeping: decided when the session is stopped.
+                  if (_wake != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Nap',
+                                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                                ),
+                                Text(
+                                  'Kept out of nights, averages and charts',
+                                  style: TextStyle(fontSize: 12.5, color: c.ink2),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Switch(
+                            value: _nap,
+                            onChanged: (v) => setState(() => _nap = v),
+                            activeTrackColor: c.accent,
+                            inactiveTrackColor: c.muted,
+                            inactiveThumbColor: Colors.white,
+                            trackOutlineColor: const WidgetStatePropertyAll(Colors.transparent),
+                          ),
+                        ],
+                      ),
+                    ),
                   const SizedBox(height: 16),
                   const _FieldLabel('How did you sleep?'),
                   Wrap(

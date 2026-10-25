@@ -58,6 +58,36 @@ void main() {
     expect(p.nights.single.id, s.id);
   });
 
+  test('nap rule: wakes 10am-9pm and under 4h', () {
+    bool nap(int bedH, int bedM, int minutes) {
+      final n = night(24, bedH, bedM, minutes);
+      return SleepSession.looksLikeNap(n.bedTime, n.wakeTime!);
+    }
+
+    expect(nap(14, 0, 60), isTrue); // 2pm -> 3pm
+    expect(nap(9, 30, 60), isTrue); // 9:30am -> 10:30am
+    expect(nap(18, 0, 150), isTrue); // 6pm -> 8:30pm
+    expect(nap(13, 0, 240), isFalse); // 4h is not under 4h
+    expect(nap(2, 0, 540), isFalse); // 2am -> 11am lie-in
+    expect(nap(1, 0, 210), isFalse); // 1am -> 4:30am broken night
+    expect(nap(19, 0, 150), isFalse); // wakes 9:30pm
+  });
+
+  test('naps stay out of nights', () async {
+    final p = SleepProvider();
+    await p.load();
+    await p.save(night(23, 23, 0, 480)); // wakes Oct 24, 7am
+    await p.startSleep(DateTime(2026, 10, 24, 14));
+    await p.stopSleep(DateTime(2026, 10, 24, 15));
+    expect(p.finished.first.isNap, isTrue);
+    expect(p.nights.single.length, const Duration(hours: 8));
+    expect(p.lastNight!.nightDate, DateTime(2026, 10, 24));
+
+    // Marking it as a night brings it back.
+    await p.save(p.finished.first.copyWith(isNap: false));
+    expect(p.nights, hasLength(2));
+  });
+
   test('settings persist', () async {
     final a = SettingsProvider();
     await a.load();

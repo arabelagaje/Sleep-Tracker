@@ -41,10 +41,13 @@ class DatabaseHelper {
     );
   }
 
-  static const schemaVersion = 2;
+  static const schemaVersion = 3;
 
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
     if (oldVersion < 2) await _createSettings(db);
+    if (oldVersion < 3) {
+      await db.execute('ALTER TABLE sleep_sessions ADD COLUMN is_nap INTEGER NOT NULL DEFAULT 0');
+    }
   }
 
   Future<void> _createSettings(Database db) async {
@@ -64,7 +67,8 @@ class DatabaseHelper {
         wake_time INTEGER,
         quality INTEGER,
         notes TEXT,
-        created_at INTEGER NOT NULL
+        created_at INTEGER NOT NULL,
+        is_nap INTEGER NOT NULL DEFAULT 0
       )
     ''');
     await _createSettings(db);

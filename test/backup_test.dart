@@ -75,12 +75,14 @@ void main() {
         )
       '''),
     );
-    await old.insert('sleep_sessions', night(18).toMap());
+    await old.insert('sleep_sessions', night(18).toMap()..remove('is_nap'));
     await old.close();
     await db.setSetting('goal_minutes', '600');
 
     await db.importFrom(file);
-    expect((await db.getAllSessions()).single.bedTime.day, 18);
+    final s = (await db.getAllSessions()).single;
+    expect(s.bedTime.day, 18);
+    expect(s.isNap, isFalse);
     expect(await db.getSettings(), isEmpty);
   });
 

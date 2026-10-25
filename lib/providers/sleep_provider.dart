@@ -10,6 +10,7 @@ class SleepProvider extends ChangeNotifier {
   final DatabaseHelper _db;
 
   bool _loading = true;
+  List<SleepSession> _finished = [];
   List<SleepSession> _nights = [];
   SleepSession? _active;
 
@@ -17,15 +18,19 @@ class SleepProvider extends ChangeNotifier {
   bool get isSleeping => _active != null;
   SleepSession? get active => _active;
 
-  // Finished sessions, newest wake-up first.
+  // Finished sessions, naps included, newest wake-up first.
+  List<SleepSession> get finished => _finished;
+
+  // Finished sessions without naps, newest wake-up first. Stats and charts use these.
   List<SleepSession> get nights => _nights;
   SleepSession? get lastNight => _nights.isEmpty ? null : _nights.first;
 
   Future<void> load() async {
     final all = await _db.getAllSessions();
     _active = all.where((s) => s.isActive).firstOrNull;
-    _nights = all.where((s) => !s.isActive).toList()
+    _finished = all.where((s) => !s.isActive).toList()
       ..sort((a, b) => b.wakeTime!.compareTo(a.wakeTime!));
+    _nights = _finished.where((s) => !s.isNap).toList();
     _loading = false;
     notifyListeners();
     await QuickTile.push(_active, lastNight);
@@ -41,7 +46,8 @@ class SleepProvider extends ChangeNotifier {
   Future<SleepSession?> stopSleep([DateTime? at]) async {
     final a = _active;
     if (a == null) return null;
-    final done = a.copyWith(wakeTime: at ?? DateTime.now());
+    final wake = at ?? DateTime.now();
+    final done = a.copyWith(wakeTime: wake, isNap: SleepSession.looksLikeNap(a.bedTime, wake));
     await _db.updateSession(done);
     await load();
     return done;

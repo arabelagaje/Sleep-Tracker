@@ -60,12 +60,28 @@ class TimelineRow extends StatelessWidget {
               ),
               const SizedBox(width: timelineGap),
               Expanded(
-                child: TimelineLane(
-                  bedTime: s.bedTime,
-                  wakeTime: s.wakeTime!,
-                  underGoal: s.length < goal,
-                  hasNote: s.hasNotes,
-                ),
+                // Naps fall outside the 6pm → 12pm track, so they get a label instead.
+                child: s.isNap
+                    ? Container(
+                        height: 26,
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        alignment: Alignment.centerLeft,
+                        decoration: BoxDecoration(
+                          color: c.track,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          'Nap · ${fmtClock(s.bedTime)} → ${fmtClock(s.wakeTime!)}',
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(fontSize: 12, color: c.ink2, fontWeight: FontWeight.w600),
+                        ),
+                      )
+                    : TimelineLane(
+                        bedTime: s.bedTime,
+                        wakeTime: s.wakeTime!,
+                        underGoal: s.length < goal,
+                        hasNote: s.hasNotes,
+                      ),
               ),
               const SizedBox(width: timelineGap),
               SizedBox(

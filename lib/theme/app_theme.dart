@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-// Design tokens from prototypes/index.html (V2 Moonrise+).
+// Design tokens: colors for light and dark, read via context.colors.
 @immutable
 class AppColors extends ThemeExtension<AppColors> {
   final Color bg, surface, surface2, ink, ink2, muted, line;

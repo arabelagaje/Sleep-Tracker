@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'providers/settings_provider.dart';
@@ -8,6 +10,13 @@ import 'theme/app_theme.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  // The bundled font isn't a package, so its license has to be added by hand.
+  LicenseRegistry.addLicense(() async* {
+    yield LicenseEntryWithLineBreaks(
+      ['Plus Jakarta Sans'],
+      await rootBundle.loadString('assets/fonts/OFL.txt'),
+    );
+  });
   runApp(
     MultiProvider(
       providers: [

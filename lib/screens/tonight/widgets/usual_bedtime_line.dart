@@ -29,7 +29,7 @@ class UsualBedtimeLine extends StatelessWidget {
         children: [
           const TextSpan(text: 'Usual bedtime '),
           TextSpan(
-            text: fmtTimeOfDay(usualBedtime!),
+            text: fmtTimeOfDay(context, usualBedtime!),
             style: TextStyle(fontWeight: FontWeight.w700, color: context.colors.ink),
           ),
           TextSpan(text: ' · last $nightsUsed nights'),

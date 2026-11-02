@@ -12,10 +12,19 @@ String fmtDur(Duration d) {
 // "7.8"
 String fmtHours(Duration d) => (d.inMinutes / 60).toStringAsFixed(1);
 
-// "11:43 PM"
-String fmtClock(DateTime d) => DateFormat('h:mm a').format(d);
+// "11:43 PM", or "23:43" when the phone is set to 24-hour
+String fmtClock(BuildContext context, DateTime d) =>
+    DateFormat(MediaQuery.alwaysUse24HourFormatOf(context) ? 'HH:mm' : 'h:mm a').format(d);
 
-String fmtTimeOfDay(TimeOfDay t) => fmtClock(DateTime(2000, 1, 1, t.hour, t.minute));
+String fmtTimeOfDay(BuildContext context, TimeOfDay t) =>
+    fmtClock(context, DateTime(2000, 1, 1, t.hour, t.minute));
+
+// Chart axis label for a whole hour: "8p", or "20" when the phone is set to 24-hour
+String fmtAxisHour(BuildContext context, int hour) {
+  if (MediaQuery.alwaysUse24HourFormatOf(context)) return hour.toString().padLeft(2, '0');
+  final h = hour % 12 == 0 ? 12 : hour % 12;
+  return '$h${hour < 12 ? 'a' : 'p'}';
+}
 
 // "Sun, Oct 18"
 String fmtDay(DateTime d) => DateFormat('EEE, MMM d').format(d);

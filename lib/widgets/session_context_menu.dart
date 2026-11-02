@@ -122,7 +122,7 @@ class _SessionContextMenuState extends State<SessionContextMenu> {
               ),
               const SizedBox(height: 2),
               Text(
-                '${fmtClock(s.bedTime)} → ${fmtClock(s.wakeTime!)} · ${fmtDur(s.length)}',
+                '${fmtClock(context, s.bedTime)} → ${fmtClock(context, s.wakeTime!)} · ${fmtDur(s.length)}',
                 style: TextStyle(fontSize: 13, color: c.ink2),
               ),
               const SizedBox(height: 4),

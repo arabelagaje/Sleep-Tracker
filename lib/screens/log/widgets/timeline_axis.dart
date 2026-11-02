@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../theme/app_theme.dart';
+import '../../../utils/formatters.dart';
 
 // Shared column widths for the axis and every row.
 const double timelineDayWidth = 52, timelineValueWidth = 76, timelineGap = 8;
@@ -22,7 +23,7 @@ class TimelineAxis extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              for (final t in ['6p', '9p', '12a', '3a', '6a', '9a', '12p']) Text(t, style: style),
+              for (final h in [18, 21, 0, 3, 6, 9, 12]) Text(fmtAxisHour(context, h), style: style),
             ],
           ),
         ),

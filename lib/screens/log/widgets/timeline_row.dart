@@ -97,7 +97,7 @@ class TimelineRow extends StatelessWidget {
                           ),
                     const SizedBox(height: 3),
                     Text(
-                      '${fmtClock(s.bedTime)} → ${fmtClock(s.wakeTime!)}',
+                      '${fmtClock(context, s.bedTime)} → ${fmtClock(context, s.wakeTime!)}',
                       style: TextStyle(
                         fontSize: 11.5,
                         color: c.ink2,

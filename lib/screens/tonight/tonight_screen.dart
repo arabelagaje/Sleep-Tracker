@@ -56,7 +56,7 @@ class TonightScreen extends StatelessWidget {
           style: TextStyle(fontWeight: FontWeight.w700, fontSize: 19),
         ),
         content: Text(
-          'Started at ${fmtClock(active.bedTime)} '
+          'Started at ${fmtClock(ctx, active.bedTime)} '
           '(${fmtDur(DateTime.now().difference(active.bedTime))} ago). '
           'It will be discarded, not saved as a night.',
           style: TextStyle(color: c.ink2, height: 1.45),

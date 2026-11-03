@@ -26,7 +26,7 @@ class BedWakeCards extends StatelessWidget {
           child: _EndCard(
             icon: Icons.bedtime_outlined,
             label: isSleeping ? 'In bed since' : 'Bedtime',
-            value: bedTime == null ? '—' : fmtClock(bedTime!),
+            value: bedTime == null ? '—' : fmtClock(context, bedTime!),
             onTap: tap,
           ),
         ),
@@ -35,7 +35,9 @@ class BedWakeCards extends StatelessWidget {
           child: _EndCard(
             icon: Icons.wb_sunny_outlined,
             label: 'Woke up',
-            value: isSleeping ? 'Sleeping…' : (wakeTime == null ? '—' : fmtClock(wakeTime!)),
+            value: isSleeping
+                ? 'Sleeping…'
+                : (wakeTime == null ? '—' : fmtClock(context, wakeTime!)),
             onTap: tap,
           ),
         ),

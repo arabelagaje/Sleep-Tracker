@@ -62,12 +62,12 @@ class _InsightsScreenState extends State<InsightsScreen> {
       StatTileData('Shortest', fmtDur(st.shortest.length), Text(fmtDay(st.shortest.nightDate))),
       StatTileData(
         'Avg bedtime',
-        ok ? fmtTimeOfDay(st.avgBed) : '—',
+        ok ? fmtTimeOfDay(context, st.avgBed) : '—',
         ok ? Text('± ${st.bedSpreadMinutes} min') : later,
       ),
       StatTileData(
         'Avg wake',
-        ok ? fmtTimeOfDay(st.avgWake) : '—',
+        ok ? fmtTimeOfDay(context, st.avgWake) : '—',
         ok ? const Text('typical morning') : later,
       ),
       StatTileData(

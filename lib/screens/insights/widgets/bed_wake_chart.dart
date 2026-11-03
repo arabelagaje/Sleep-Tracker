@@ -68,17 +68,12 @@ class BedWakeChart extends StatelessWidget {
                       ),
                     ),
                   ),
-                  for (final (m, t) in [
-                    (2 * 60, '8p'),
-                    (6 * 60, '12a'),
-                    (10 * 60, '4a'),
-                    (14 * 60, '8a'),
-                  ])
+                  for (final (m, h) in [(2 * 60, 20), (6 * 60, 0), (10 * 60, 4), (14 * 60, 8)])
                     Positioned(
                       left: 0,
                       width: _left - 6,
                       top: _y(m) - 7,
-                      child: Text(t, style: axis, textAlign: TextAlign.right),
+                      child: Text(fmtAxisHour(context, h), style: axis, textAlign: TextAlign.right),
                     ),
                   for (var i = 0; i < n; i++) _bar(sessions[i], x0 + i * bw, bw, c),
                   Positioned(
@@ -93,7 +88,7 @@ class BedWakeChart extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        _legend(c),
+        _legend(context, c),
       ],
     );
   }
@@ -120,7 +115,7 @@ class BedWakeChart extends StatelessWidget {
     );
   }
 
-  Widget _legend(AppColors c) {
+  Widget _legend(BuildContext context, AppColors c) {
     final style = TextStyle(fontSize: 12, color: c.ink2);
     Widget swatch(double alpha) => Container(
       width: 12,
@@ -155,7 +150,8 @@ class BedWakeChart extends StatelessWidget {
               children: [
                 const TextSpan(text: '- - Average '),
                 TextSpan(
-                  text: '${fmtTimeOfDay(usualBedtime!)} → ${fmtTimeOfDay(usualWake!)}',
+                  text:
+                      '${fmtTimeOfDay(context, usualBedtime!)} → ${fmtTimeOfDay(context, usualWake!)}',
                   style: TextStyle(color: c.ink, fontWeight: FontWeight.w700),
                 ),
               ],

@@ -5,6 +5,11 @@ All notable changes to Sleep Tracker will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+- Times and chart labels follow your phone's 12-hour or 24-hour setting
+
 ## [1.1.0] - 2026-10-25
 
 ### Added

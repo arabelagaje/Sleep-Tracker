@@ -420,7 +420,7 @@ class _TimeField extends StatelessWidget {
                             children: [
                               Text(fmtDay(value!), style: TextStyle(color: c.ink2, fontSize: 12)),
                               Text(
-                                fmtClock(value!),
+                                fmtClock(context, value!),
                                 style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
                               ),
                             ],

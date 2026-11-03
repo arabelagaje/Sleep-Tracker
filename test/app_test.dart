@@ -165,6 +165,11 @@ void main() {
     await tester.tap(find.text('Calendar'));
     await tester.pump();
     await menu(find.byWidgetPredicate((w) => w is CalendarDayCell && w.session != null), 'Delete');
+    // Early in a month every past day is seeded, so look in the previous month.
+    await tester.ensureVisible(find.byTooltip('Previous month'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Previous month'));
+    await tester.pump();
     await menu(
       find.byWidgetPredicate((w) => w is CalendarDayCell && w.session == null && !w.isFuture),
       'Add a night for',

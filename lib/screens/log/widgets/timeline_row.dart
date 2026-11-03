@@ -49,18 +49,11 @@ class TimelineRow extends StatelessWidget {
                   children: [
                     Text(
                       fmtDow(s.nightDate),
-                      style: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w700,
-                      ),
+                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
                     ),
                     Text(
                       fmtMonthDay(s.nightDate),
-                      style: TextStyle(
-                        fontSize: 11.5,
-                        color: c.ink2,
-                        fontWeight: FontWeight.w500,
-                      ),
+                      style: TextStyle(fontSize: 11.5, color: c.ink2, fontWeight: FontWeight.w500),
                     ),
                   ],
                 ),
@@ -98,11 +91,7 @@ class TimelineRow extends StatelessWidget {
                     const SizedBox(height: 3),
                     Text(
                       '${fmtClock(context, s.bedTime)} → ${fmtClock(context, s.wakeTime!)}',
-                      style: TextStyle(
-                        fontSize: 11.5,
-                        color: c.ink2,
-                        fontWeight: FontWeight.w500,
-                      ),
+                      style: TextStyle(fontSize: 11.5, color: c.ink2, fontWeight: FontWeight.w500),
                     ),
                   ],
                 ),
@@ -115,17 +104,9 @@ class TimelineRow extends StatelessWidget {
                   children: [
                     Text(
                       fmtDur(s.length),
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                      ),
+                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
                     ),
-                    StarRating(
-                      value: s.quality,
-                      onChanged: onRate,
-                      size: 13,
-                      gap: 0.5,
-                    ),
+                    StarRating(value: s.quality, onChanged: onRate, size: 13, gap: 0.5),
                   ],
                 ),
               ),

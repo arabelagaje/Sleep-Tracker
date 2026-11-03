@@ -12,10 +12,8 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   // The bundled font isn't a package, so its license has to be added by hand.
   LicenseRegistry.addLicense(() async* {
-    yield LicenseEntryWithLineBreaks(
-      ['Plus Jakarta Sans'],
-      await rootBundle.loadString('assets/fonts/OFL.txt'),
-    );
+    final text = await rootBundle.loadString('assets/fonts/OFL.txt');
+    yield LicenseEntryWithLineBreaks(['Plus Jakarta Sans'], text);
   });
   runApp(
     MultiProvider(

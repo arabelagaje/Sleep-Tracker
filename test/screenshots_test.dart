@@ -87,7 +87,10 @@ void main() {
 
     Future<void> shot(String name) async {
       await tester.pumpAndSettle();
-      await expectLater(find.byType(SleepTrackerApp), matchesGoldenFile('../docs/screenshots/$name.png'));
+      await expectLater(
+        find.byType(SleepTrackerApp),
+        matchesGoldenFile('../docs/screenshots/$name.png'),
+      );
     }
 
     Future<void> tab(String name) async {

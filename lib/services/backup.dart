@@ -13,10 +13,7 @@ class Backup {
     await DatabaseHelper().exportTo(tmp);
     try {
       final name = 'sleep_tracker_${DateFormat('yyyy-MM-dd_HHmmss').format(DateTime.now())}.db';
-      final saved = await FilePicker.saveFile(
-        fileName: name,
-        bytes: await File(tmp).readAsBytes(),
-      );
+      final saved = await FilePicker.saveFile(fileName: name, bytes: await File(tmp).readAsBytes());
       return saved != null;
     } finally {
       await File(tmp).delete();

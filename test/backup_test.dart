@@ -124,7 +124,11 @@ void main() {
     await expectLater(db.importFrom(junk), throwsFormatException);
 
     final other = join(dir.path, 'other.db');
-    final o = await openDatabase(other, version: 1, onCreate: (d, _) => d.execute('CREATE TABLE x (a)'));
+    final o = await openDatabase(
+      other,
+      version: 1,
+      onCreate: (d, _) => d.execute('CREATE TABLE x (a)'),
+    );
     await o.close();
     await expectLater(db.importFrom(other), throwsFormatException);
 

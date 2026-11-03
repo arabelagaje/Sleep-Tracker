@@ -30,13 +30,13 @@ Sleep Tracker is a small, offline Android app. These rules keep it that way.
 ## Code
 
 - Match the code around your change: its naming, comment density and layout.
-- Format with `dart format -l 100`.
 
 ## Pull requests
 
-Run these first. Both must be clean:
+Run these first. All must be clean:
 
 ```
+dart format lib test
 flutter analyze
 flutter test
 ```

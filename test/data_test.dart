@@ -117,6 +117,25 @@ void main() {
     expect(inLastDays(list, today, 7, offset: 7).length, 1);
   });
 
+  test('sleep debt sums the gap to the goal and never goes below zero', () {
+    const goal = Duration(hours: 8);
+    // 7h + 6h 30m against 16h: 2h 30m behind.
+    expect(
+      sleepDebt([night(18, 23, 0, 420), night(19, 23, 0, 390)], goal),
+      const Duration(minutes: 150),
+    );
+    // A 9h night pays back an hour of a 6h night.
+    expect(
+      sleepDebt([night(18, 23, 0, 360), night(19, 23, 0, 540)], goal),
+      const Duration(hours: 1),
+    );
+    // Ahead of the goal is no debt.
+    expect(sleepDebt([night(18, 23, 0, 540)], goal), Duration.zero);
+    expect(fmtDur(sleepDebt([night(18, 23, 0, 540)], goal)), '0m');
+    // Days with no night logged don't count.
+    expect(sleepDebt([], goal), Duration.zero);
+  });
+
   test('formatters', () {
     expect(fmtDur(const Duration(minutes: 465)), '7h 45m');
     expect(fmtDur(const Duration(hours: 8)), '8h');

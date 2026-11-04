@@ -25,8 +25,10 @@ class WeekBarsCard extends StatelessWidget {
 
   static const _barArea = 90.0, _labelArea = 24.0;
 
+  List<SleepSession> get _logged => days.map((d) => d.$2).whereType<SleepSession>().toList();
+
   String get _summary {
-    final logged = days.map((d) => d.$2).whereType<SleepSession>().toList();
+    final logged = _logged;
     if (logged.isEmpty) return 'no nights yet';
     if (logged.length < minNights) return '${logged.length} of 7 nights logged';
     final met = logged.where((s) => s.length >= goal).length;
@@ -43,78 +45,101 @@ class WeekBarsCard extends StatelessWidget {
     }
     if (goal.inMinutes > maxMin) maxMin = goal.inMinutes;
     double h(Duration d) => _barArea * d.inMinutes / maxMin;
+    final logged = _logged;
+
+    final bars = SizedBox(
+      height: _barArea + _labelArea + 6,
+      child: Stack(
+        children: [
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: _labelArea + h(goal),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text('${fmtDur(goal)} goal', style: TextStyle(fontSize: 11, color: c.ink2)),
+                const SizedBox(height: 2),
+                Opacity(opacity: 0.45, child: _DashedLine(color: c.ink2)),
+              ],
+            ),
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              for (final (date, s) in days)
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: s == null ? null : () => onTapSession(s),
+                      onLongPressStart: (d) => s == null
+                          ? onLongPressEmptyDay(date, d.globalPosition)
+                          : onLongPressSession(s, d.globalPosition),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Container(
+                            constraints: const BoxConstraints(maxWidth: 26),
+                            height: s == null ? 4 : h(s.length).clamp(4, _barArea + 6),
+                            decoration: BoxDecoration(
+                              color: s == null
+                                  ? c.track
+                                  : c.accent.withValues(alpha: s.length >= goal ? 1 : 0.45),
+                              borderRadius: const BorderRadius.vertical(
+                                top: Radius.circular(8),
+                                bottom: Radius.circular(4),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: _labelArea,
+                            child: Center(
+                              child: Text(
+                                fmtDow(date)[0],
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: c.ink2,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ],
+      ),
+    );
 
     return SectionCard(
       title: 'This week',
       trailing: CardCaption(_summary),
-      child: SizedBox(
-        height: _barArea + _labelArea + 6,
-        child: Stack(
-          children: [
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: _labelArea + h(goal),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          bars,
+          if (logged.isNotEmpty) ...[
+            const SizedBox(height: 10),
+            Text.rich(
+              TextSpan(
                 children: [
-                  Text('${fmtDur(goal)} goal', style: TextStyle(fontSize: 11, color: c.ink2)),
-                  const SizedBox(height: 2),
-                  Opacity(opacity: 0.45, child: _DashedLine(color: c.ink2)),
+                  const TextSpan(text: 'Sleep debt '),
+                  TextSpan(
+                    text: fmtDur(sleepDebt(logged, goal)),
+                    style: TextStyle(fontWeight: FontWeight.w700, color: c.ink),
+                  ),
                 ],
               ),
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                for (final (date, s) in days)
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                      child: GestureDetector(
-                        behavior: HitTestBehavior.opaque,
-                        onTap: s == null ? null : () => onTapSession(s),
-                        onLongPressStart: (d) => s == null
-                            ? onLongPressEmptyDay(date, d.globalPosition)
-                            : onLongPressSession(s, d.globalPosition),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Container(
-                              constraints: const BoxConstraints(maxWidth: 26),
-                              height: s == null ? 4 : h(s.length).clamp(4, _barArea + 6),
-                              decoration: BoxDecoration(
-                                color: s == null
-                                    ? c.track
-                                    : c.accent.withValues(alpha: s.length >= goal ? 1 : 0.45),
-                                borderRadius: const BorderRadius.vertical(
-                                  top: Radius.circular(8),
-                                  bottom: Radius.circular(4),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: _labelArea,
-                              child: Center(
-                                child: Text(
-                                  fmtDow(date)[0],
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    color: c.ink2,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-              ],
+              style: TextStyle(fontSize: 14, color: c.ink2),
             ),
           ],
-        ),
+        ],
       ),
     );
   }

@@ -30,6 +30,13 @@ Duration averageDuration(List<SleepSession> list) {
 
 double _mean(Iterable<num> xs) => xs.isEmpty ? 0 : xs.fold<num>(0, (a, b) => a + b) / xs.length;
 
+// Goal × nights minus the sleep they got. Long nights offset short ones;
+// zero when ahead of the goal.
+Duration sleepDebt(List<SleepSession> nights, Duration goal) {
+  final debt = nights.fold<Duration>(Duration.zero, (a, s) => a + goal - s.length);
+  return debt.isNegative ? Duration.zero : debt;
+}
+
 // Finished nights whose wake-up falls in the [n] calendar days ending
 // [offset] days before [today].
 List<SleepSession> inLastDays(

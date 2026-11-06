@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- The This week card on Tonight shows your sleep debt: how far short of your goal your logged nights in the last 7 days add up to. Longer nights pay it back
+
 ### Changed
 - Times and chart labels follow your phone's 12-hour or 24-hour setting
 

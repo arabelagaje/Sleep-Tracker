@@ -150,6 +150,7 @@ lib/
 | `onLongPressEmptyDay` | (DateTime, Offset) | "Add a night for …" menu |
 - States: no nights · early ("N of 7 nights logged") · normal ("avg … · x/y met goal")
 - Bar states: met goal · under goal · empty day
+- Below the bars, once a night is logged: "Sleep debt 3h 30m" = goal × logged nights − their total sleep; long nights offset short ones, days without a night are skipped, and "0m" when ahead of the goal
 
 ### Log
 

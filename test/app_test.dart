@@ -147,6 +147,7 @@ void main() {
       find.byType(ListView).first,
       const Offset(0, -200),
     );
+    expect(find.textContaining('Sleep debt'), findsOneWidget);
     await menu(find.byType(WeekBarsCard), 'Delete');
     await tester.ensureVisible(find.text('Previous sleep'));
     await tester.pumpAndSettle();

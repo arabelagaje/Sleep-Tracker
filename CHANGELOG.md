@@ -7,11 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-11-10
+
 ### Added
 - The This week card on Tonight shows your sleep debt: how far short of your goal your logged nights in the last 7 days add up to. Longer nights pay it back
 
 ### Changed
 - Times and chart labels follow your phone's 12-hour or 24-hour setting
+- Updated dependencies
+
+### Fixed
+- The Plus Jakarta Sans font license is now listed in the app's licenses
 
 ## [1.1.0] - 2026-10-25
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../../l10n/l10n.dart';
 import '../../models/sleep_session.dart';
 import '../../providers/settings_provider.dart';
 import '../../providers/sleep_provider.dart';
@@ -36,7 +37,7 @@ class TonightScreen extends StatelessWidget {
     }
     UndoSnackbar.show(
       context,
-      message: 'Session saved · tap it to rate or add notes',
+      message: context.l10n.sessionSavedTapToRate,
       onUndo: () => sleep.resume(done),
     );
   }
@@ -48,12 +49,13 @@ class TonightScreen extends StatelessWidget {
     if (active == null) return;
     HapticFeedback.mediumImpact();
     final c = context.colors;
+    final l = context.l10n;
     final ok = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text(
-          'Cancel this session?',
-          style: TextStyle(fontWeight: FontWeight.w700, fontSize: 19),
+        title: Text(
+          l.cancelSessionTitle,
+          style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 19),
         ),
         content: Text(
           'Started at ${fmtClock(ctx, active.bedTime)} '
@@ -66,12 +68,12 @@ class TonightScreen extends StatelessWidget {
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
             style: TextButton.styleFrom(foregroundColor: c.danger),
-            child: const Text('Discard'),
+            child: Text(l.discard),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, false),
             style: FilledButton.styleFrom(backgroundColor: c.accent, foregroundColor: c.onAccent),
-            child: const Text('Keep sleeping'),
+            child: Text(l.keepSleeping),
           ),
         ],
       ),
@@ -79,7 +81,7 @@ class TonightScreen extends StatelessWidget {
     if (ok != true || !context.mounted) return;
     await sleep.delete(active);
     if (!context.mounted) return;
-    UndoSnackbar.show(context, message: 'Session cancelled', onUndo: () => sleep.restore(active));
+    UndoSnackbar.show(context, message: l.sessionCancelled, onUndo: () => sleep.restore(active));
   }
 
   void _menu(BuildContext context, SleepSession s, Offset pos) =>

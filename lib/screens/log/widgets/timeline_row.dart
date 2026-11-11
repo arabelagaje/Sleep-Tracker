@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../l10n/l10n.dart';
 import '../../../models/sleep_session.dart';
 import '../../../theme/app_theme.dart';
 import '../../../utils/formatters.dart';
@@ -74,7 +75,7 @@ class TimelineRow extends StatelessWidget {
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
-                              'Nap',
+                              context.l10n.nap,
                               style: TextStyle(
                                 fontSize: 12,
                                 color: c.ink2,

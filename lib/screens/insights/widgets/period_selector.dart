@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
 
+import '../../../l10n/l10n.dart';
 import '../../../widgets/segmented_control.dart';
 
 enum InsightsPeriod {
-  week(7, '7 days'),
-  month(30, '30 days'),
-  all(null, 'All time');
+  week(7),
+  month(30),
+  all(null);
 
-  const InsightsPeriod(this.days, this.label);
+  const InsightsPeriod(this.days);
 
   final int? days; // null = all time
-  final String label;
+
+  String label(AppLocalizations l) => switch (this) {
+    week => l.period7Days,
+    month => l.period30Days,
+    all => l.periodAllTime,
+  };
 }
 
 class PeriodSelector extends StatelessWidget {
@@ -21,7 +27,7 @@ class PeriodSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SegmentedControl<InsightsPeriod>(
-    options: [for (final p in InsightsPeriod.values) (p, p.label)],
+    options: [for (final p in InsightsPeriod.values) (p, p.label(context.l10n))],
     value: value,
     onChanged: onChanged,
   );

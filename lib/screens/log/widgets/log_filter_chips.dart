@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../l10n/l10n.dart';
 import '../../../theme/app_theme.dart';
 
 enum LogFilter { all, unrated, withNotes, underGoal }
@@ -10,16 +11,17 @@ class LogFilterChips extends StatelessWidget {
   final LogFilter value;
   final ValueChanged<LogFilter> onChanged;
 
-  static const _labels = {
-    LogFilter.all: 'All',
-    LogFilter.unrated: 'Unrated',
-    LogFilter.withNotes: 'With notes',
-    LogFilter.underGoal: 'Under goal',
+  static String _label(AppLocalizations l, LogFilter f) => switch (f) {
+    LogFilter.all => l.filterAll,
+    LogFilter.unrated => l.filterUnrated,
+    LogFilter.withNotes => l.filterWithNotes,
+    LogFilter.underGoal => l.underGoal,
   };
 
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
+    final l = context.l10n;
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
@@ -43,7 +45,7 @@ class LogFilterChips extends StatelessWidget {
                       border: Border.all(color: f == value ? c.accent : c.line),
                     ),
                     child: Text(
-                      _labels[f]!,
+                      _label(l, f),
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,

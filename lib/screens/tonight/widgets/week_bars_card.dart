@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../l10n/l10n.dart';
 import '../../../models/sleep_session.dart';
 import '../../../theme/app_theme.dart';
 import '../../../utils/formatters.dart';
@@ -118,7 +119,7 @@ class WeekBarsCard extends StatelessWidget {
     );
 
     return SectionCard(
-      title: 'This week',
+      title: context.l10n.thisWeek,
       trailing: CardCaption(_summary),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

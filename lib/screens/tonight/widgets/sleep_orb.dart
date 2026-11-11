@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../l10n/l10n.dart';
 import '../../../theme/app_theme.dart';
 import 'live_timer_text.dart';
 
@@ -59,6 +60,7 @@ class _SleepOrbState extends State<SleepOrb> with SingleTickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
+    final l = context.l10n;
     final dark = Theme.of(context).brightness == Brightness.dark;
     final showStars = dark || widget.isSleeping;
     return SizedBox(
@@ -75,7 +77,7 @@ class _SleepOrbState extends State<SleepOrb> with SingleTickerProviderStateMixin
           ),
           Semantics(
             button: true,
-            label: widget.isSleeping ? 'Stop sleep' : 'Start sleep',
+            label: widget.isSleeping ? l.stopSleep : l.startSleep,
             child: GestureDetector(
               onTapDown: (_) => setState(() => _pressed = true),
               onTapCancel: () => setState(() => _pressed = false),
@@ -133,22 +135,25 @@ class _SleepOrbState extends State<SleepOrb> with SingleTickerProviderStateMixin
                                 ),
                               ),
                               const SizedBox(height: 6),
-                              const _OrbLabel('Tap when you wake'),
+                              _OrbLabel(l.tapWhenYouWake),
                               if (widget.onLongPress != null) ...[
                                 const SizedBox(height: 10),
-                                const Opacity(
+                                Opacity(
                                   opacity: 0.65,
                                   child: Text(
-                                    'Hold to cancel',
-                                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                                    l.holdToCancel,
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
                                 ),
                               ],
                             ]
-                          : const [
-                              Icon(Icons.bedtime_outlined, size: 42, color: Colors.white),
-                              SizedBox(height: 6),
-                              _OrbLabel('Start sleep'),
+                          : [
+                              const Icon(Icons.bedtime_outlined, size: 42, color: Colors.white),
+                              const SizedBox(height: 6),
+                              _OrbLabel(l.startSleep),
                             ],
                     ),
                   ),

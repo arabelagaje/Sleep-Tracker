@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../l10n/l10n.dart';
 import '../models/sleep_session.dart';
 import '../providers/sleep_provider.dart';
 import '../theme/app_theme.dart';
@@ -52,7 +53,7 @@ class SessionContextMenu extends StatefulWidget {
         if (!context.mounted) return;
         UndoSnackbar.show(
           context,
-          message: 'Session deleted',
+          message: context.l10n.sessionDeleted,
           onUndo: () => sleep.restore(current),
         );
       case _MenuAction.add:
@@ -84,7 +85,7 @@ class SessionContextMenu extends StatefulWidget {
     return showGeneralDialog<T>(
       context: context,
       barrierDismissible: true,
-      barrierLabel: 'Close menu',
+      barrierLabel: context.l10n.closeMenu,
       barrierColor: Colors.black26,
       transitionDuration: const Duration(milliseconds: 120),
       pageBuilder: (ctx, _, _) => CustomSingleChildLayout(
@@ -108,6 +109,7 @@ class _SessionContextMenuState extends State<SessionContextMenu> {
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
+    final l = context.l10n;
     final s = widget.session;
     return _MenuPanel(
       children: [
@@ -139,11 +141,11 @@ class _SessionContextMenuState extends State<SessionContextMenu> {
           ),
         ),
         Divider(height: 9, color: c.line),
-        const _MenuItem(Icons.edit_outlined, 'Edit', _MenuAction.edit),
+        _MenuItem(Icons.edit_outlined, l.edit, _MenuAction.edit),
         s.isNap
-            ? const _MenuItem(Icons.bedtime_outlined, 'Mark as night', _MenuAction.nap)
-            : const _MenuItem(Icons.wb_sunny_outlined, 'Mark as nap', _MenuAction.nap),
-        _MenuItem(Icons.delete_outline, 'Delete', _MenuAction.delete, color: c.danger),
+            ? _MenuItem(Icons.bedtime_outlined, l.markAsNight, _MenuAction.nap)
+            : _MenuItem(Icons.wb_sunny_outlined, l.markAsNap, _MenuAction.nap),
+        _MenuItem(Icons.delete_outline, l.delete, _MenuAction.delete, color: c.danger),
       ],
     );
   }

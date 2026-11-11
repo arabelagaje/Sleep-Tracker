@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../l10n/l10n.dart';
 import '../../../theme/app_theme.dart';
 
 // Shade scale: time slept ÷ goal, from ½× (lightest) to 1½× (darkest).
@@ -9,6 +10,7 @@ class CalendarLegend extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
+    final l = context.l10n;
     final style = TextStyle(fontSize: 11, color: c.ink2, fontWeight: FontWeight.w600);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -24,9 +26,9 @@ class CalendarLegend extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('½× goal', style: style),
-            Text('Goal', style: style),
-            Text('1½× goal', style: style),
+            Text(l.legendHalfGoal, style: style),
+            Text(l.legendGoal, style: style),
+            Text(l.legendOneAndHalfGoal, style: style),
           ],
         ),
       ],

@@ -1,0 +1,393 @@
+{
+  "@@locale": "en",
+  "appName": "Sleep Tracker",
+  "@appName": {
+    "description": "App name shown in About and the licenses page"
+  },
+  "about": "About",
+  "@about": {
+    "description": "About screen title and menu item"
+  },
+  "aboutBlurb": "Tap to log bed and wake times, rate your nights and keep notes. Everything stays on this device.",
+  "aboutGroupApp": "App",
+  "@aboutGroupApp": {
+    "description": "About screen group heading"
+  },
+  "yourData": "Your data",
+  "yourDataSubtitle": "Stored locally in SQLite, never uploaded",
+  "sendFeedback": "Send feedback",
+  "sendFeedbackSubtitle": "Ideas, bugs, anything",
+  "send": "Send",
+  "@send": {
+    "description": "Button"
+  },
+  "feedbackComingSoon": "Sending feedback is coming soon",
+  "licenses": "Open-source licenses",
+  "licensesSubtitle": "Packages this app is built with",
+  "view": "View",
+  "@view": {
+    "description": "Button"
+  },
+  "navTonight": "Tonight",
+  "@navTonight": {
+    "description": "Bottom navigation tab"
+  },
+  "navLog": "Log",
+  "@navLog": {
+    "description": "Bottom navigation tab: list of past nights"
+  },
+  "navInsights": "Insights",
+  "@navInsights": {
+    "description": "Bottom navigation tab: stats and charts"
+  },
+  "goodMorning": "Good morning",
+  "goodAfternoon": "Good afternoon",
+  "goodEvening": "Good evening",
+  "@goodEvening": {
+    "description": "Also used late at night"
+  },
+  "moreOptions": "More options",
+  "@moreOptions": {
+    "description": "Tooltip for the ⋮ button"
+  },
+  "closeMenu": "Close menu",
+  "@closeMenu": {
+    "description": "Screen reader label for tapping outside a menu"
+  },
+  "settings": "Settings",
+  "undo": "Undo",
+  "@undo": {
+    "description": "Snackbar action"
+  },
+  "howDidYouSleep": "How did you sleep?",
+  "skip": "Skip",
+  "@skip": {
+    "description": "Button"
+  },
+  "sessionSavedTapToRate": "Session saved · tap it to rate or add notes",
+  "@sessionSavedTapToRate": {
+    "description": "Snackbar after stopping sleep"
+  },
+  "cancelSessionTitle": "Cancel this session?",
+  "@cancelSessionTitle": {
+    "description": "Dialog title after long-pressing the orb while sleeping"
+  },
+  "discard": "Discard",
+  "@discard": {
+    "description": "Button: throw away the running session"
+  },
+  "keepSleeping": "Keep sleeping",
+  "@keepSleeping": {
+    "description": "Button: close the dialog and keep the session running"
+  },
+  "sessionCancelled": "Session cancelled",
+  "inBedSince": "In bed since",
+  "@inBedSince": {
+    "description": "Card label above the bedtime while sleeping"
+  },
+  "bedtime": "Bedtime",
+  "@bedtime": {
+    "description": "Card label above the bedtime"
+  },
+  "wokeUp": "Woke up",
+  "@wokeUp": {
+    "description": "Label above the wake time"
+  },
+  "sleepingEllipsis": "Sleeping…",
+  "@sleepingEllipsis": {
+    "description": "Shown in place of the wake time while a session is running"
+  },
+  "rightOnAverage": "right on your average",
+  "@rightOnAverage": {
+    "description": "Next to last night's length when it matches the average (lowercase in English)"
+  },
+  "previousSleep": "Previous sleep",
+  "@previousSleep": {
+    "description": "Card title"
+  },
+  "previousSleepEmpty": "Your first sleep shows up here. Tap the moon at bedtime, or add a past night from Log.",
+  "@previousSleepEmpty": {
+    "description": "'Log' is the bottom tab name"
+  },
+  "edit": "Edit",
+  "@edit": {
+    "description": "Button / link"
+  },
+  "howWasIt": "How was it?",
+  "@howWasIt": {
+    "description": "Next to the stars when last night isn't rated"
+  },
+  "yourRating": "Your rating",
+  "noNotesYet": "No notes yet — tap Edit to add some.",
+  "@noNotesYet": {
+    "description": "'Edit' is the card's link"
+  },
+  "sweetDreams": "Sweet dreams. Tap the bedtime card to adjust it.",
+  "@sweetDreams": {
+    "description": "Under the orb while sleeping"
+  },
+  "thisWeek": "This week",
+  "stopSleep": "Stop sleep",
+  "@stopSleep": {
+    "description": "Screen reader label for the orb while sleeping"
+  },
+  "startSleep": "Start sleep",
+  "@startSleep": {
+    "description": "Orb label and quick tile label"
+  },
+  "tapWhenYouWake": "Tap when you wake",
+  "@tapWhenYouWake": {
+    "description": "On the orb while sleeping"
+  },
+  "holdToCancel": "Hold to cancel",
+  "@holdToCancel": {
+    "description": "On the orb while sleeping"
+  },
+  "lastWeek": "Last week",
+  "@lastWeek": {
+    "description": "Week group heading in Log"
+  },
+  "logEmpty": "No nights yet. Tap the moon at bedtime, or add a past night below.",
+  "logNoMatches": "No nights match this filter.",
+  "addPastNight": "Add a past night",
+  "@addPastNight": {
+    "description": "Button in Log and editor sheet title"
+  },
+  "metGoal": "Met goal",
+  "@metGoal": {
+    "description": "Legend / stat label: night at or over the sleep goal"
+  },
+  "underGoal": "Under goal",
+  "@underGoal": {
+    "description": "Legend / filter: night shorter than the sleep goal"
+  },
+  "hasNote": "Has note",
+  "@hasNote": {
+    "description": "Legend"
+  },
+  "legendHalfGoal": "½× goal",
+  "@legendHalfGoal": {
+    "description": "Calendar shade scale, left end"
+  },
+  "legendGoal": "Goal",
+  "@legendGoal": {
+    "description": "Calendar shade scale, middle"
+  },
+  "legendOneAndHalfGoal": "1½× goal",
+  "@legendOneAndHalfGoal": {
+    "description": "Calendar shade scale, right end"
+  },
+  "filterAll": "All",
+  "@filterAll": {
+    "description": "Log filter chip"
+  },
+  "filterUnrated": "Unrated",
+  "@filterUnrated": {
+    "description": "Log filter chip"
+  },
+  "filterWithNotes": "With notes",
+  "@filterWithNotes": {
+    "description": "Log filter chip"
+  },
+  "viewTimeline": "Timeline",
+  "@viewTimeline": {
+    "description": "Log view switch"
+  },
+  "viewCalendar": "Calendar",
+  "@viewCalendar": {
+    "description": "Log view switch"
+  },
+  "nap": "Nap",
+  "@nap": {
+    "description": "A short daytime sleep"
+  },
+  "statAverage": "Average",
+  "@statAverage": {
+    "description": "Stat tile: average sleep length"
+  },
+  "statLongest": "Longest",
+  "@statLongest": {
+    "description": "Stat tile: longest night"
+  },
+  "statShortest": "Shortest",
+  "@statShortest": {
+    "description": "Stat tile: shortest night"
+  },
+  "statAvgBedtime": "Avg bedtime",
+  "@statAvgBedtime": {
+    "description": "Stat tile; short label"
+  },
+  "statAvgWake": "Avg wake",
+  "@statAvgWake": {
+    "description": "Stat tile; short label"
+  },
+  "typicalMorning": "typical morning",
+  "@typicalMorning": {
+    "description": "Caption under the average wake time (lowercase in English)"
+  },
+  "statAvgQuality": "Avg quality",
+  "@statAvgQuality": {
+    "description": "Stat tile: average star rating"
+  },
+  "noRatingsYet": "no ratings yet",
+  "@noRatingsYet": {
+    "description": "Caption (lowercase in English)"
+  },
+  "statNightsLogged": "Nights logged",
+  "@statNightsLogged": {
+    "description": "Stat tile"
+  },
+  "bedWakeTimes": "Bed & wake times",
+  "@bedWakeTimes": {
+    "description": "Chart card title"
+  },
+  "period7Days": "7 days",
+  "@period7Days": {
+    "description": "Insights period switch"
+  },
+  "period30Days": "30 days",
+  "@period30Days": {
+    "description": "Insights period switch"
+  },
+  "periodAllTime": "All time",
+  "@periodAllTime": {
+    "description": "Insights period switch"
+  },
+  "summary": "Summary",
+  "@summary": {
+    "description": "Card title"
+  },
+  "noNightsInPeriod": "No nights in this period yet.",
+  "chartLatest": "Latest",
+  "@chartLatest": {
+    "description": "Chart axis label at the newest night"
+  },
+  "backupSaved": "Backup saved",
+  "backupSaveFailed": "Couldn’t save the backup",
+  "replaceAllDataTitle": "Replace all data?",
+  "@replaceAllDataTitle": {
+    "description": "Dialog title before importing a backup"
+  },
+  "replaceAllDataBody": "Your sessions and settings will be replaced by the ones in the backup file.",
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Button"
+  },
+  "chooseFile": "Choose file",
+  "@chooseFile": {
+    "description": "Button"
+  },
+  "backupRestored": "Backup restored",
+  "backupTooNew": "Backup is from a newer app version",
+  "notABackup": "Not a Sleep Tracker backup",
+  "backupRestoreFailed": "Couldn’t restore the backup",
+  "settingsGroupSleep": "Sleep",
+  "@settingsGroupSleep": {
+    "description": "Settings group heading"
+  },
+  "sleepGoal": "Sleep goal",
+  "sleepGoalSubtitle": "Drives the goal line and “met goal” stats",
+  "ratePromptSetting": "Ask me to rate in the morning",
+  "ratePromptSettingSubtitle": "A gentle prompt after you stop — never required",
+  "settingsGroupAppearance": "Appearance",
+  "@settingsGroupAppearance": {
+    "description": "Settings group heading"
+  },
+  "theme": "Theme",
+  "settingsGroupData": "Data",
+  "@settingsGroupData": {
+    "description": "Settings group heading"
+  },
+  "exportData": "Export data",
+  "exportDataSubtitle": "Save a backup file of everything",
+  "exportAction": "Export",
+  "@exportAction": {
+    "description": "Button"
+  },
+  "importData": "Import data",
+  "importDataSubtitle": "Replace everything with a backup file",
+  "importAction": "Import",
+  "@importAction": {
+    "description": "Button"
+  },
+  "themeSystem": "System",
+  "@themeSystem": {
+    "description": "Theme option: follow the phone"
+  },
+  "themeLight": "Light",
+  "@themeLight": {
+    "description": "Theme option"
+  },
+  "themeDark": "Dark",
+  "@themeDark": {
+    "description": "Theme option"
+  },
+  "decreaseGoal": "Decrease goal",
+  "@decreaseGoal": {
+    "description": "Screen reader label for the − button"
+  },
+  "increaseGoal": "Increase goal",
+  "@increaseGoal": {
+    "description": "Screen reader label for the + button"
+  },
+  "currentSession": "Current session",
+  "@currentSession": {
+    "description": "Editor sheet title for the running session"
+  },
+  "sessionAdded": "Session added",
+  "sessionSaved": "Session saved",
+  "changesSaved": "Changes saved",
+  "sessionDeleted": "Session deleted",
+  "inProgress": "In progress",
+  "@inProgress": {
+    "description": "Duration shown while the session has no wake time"
+  },
+  "wentToBed": "Went to bed",
+  "@wentToBed": {
+    "description": "Label above the bed time field"
+  },
+  "stillSleeping": "Still sleeping",
+  "@stillSleeping": {
+    "description": "Placeholder for an empty wake time"
+  },
+  "duration": "Duration",
+  "wakeAfterBedError": "Wake time needs to be after bed time.",
+  "napExplainer": "Kept out of nights, averages and charts",
+  "@napExplainer": {
+    "description": "Under the Nap switch"
+  },
+  "notRated": "Not rated",
+  "@notRated": {
+    "description": "Disabled button when there is no rating"
+  },
+  "clear": "Clear",
+  "@clear": {
+    "description": "Button: remove the rating"
+  },
+  "notes": "Notes",
+  "notesHint": "Dreams, wake-ups, how you feel…",
+  "@notesHint": {
+    "description": "Hint inside the empty notes box"
+  },
+  "editableForever": "Times, rating and notes stay editable forever — come back any time.",
+  "delete": "Delete",
+  "@delete": {
+    "description": "Button"
+  },
+  "save": "Save",
+  "@save": {
+    "description": "Button"
+  },
+  "clearWakeTime": "Clear wake time",
+  "@clearWakeTime": {
+    "description": "Screen reader label for the × in the wake field"
+  },
+  "markAsNight": "Mark as night",
+  "@markAsNight": {
+    "description": "Menu item"
+  },
+  "markAsNap": "Mark as nap",
+  "@markAsNap": {
+    "description": "Menu item"
+  }
+}

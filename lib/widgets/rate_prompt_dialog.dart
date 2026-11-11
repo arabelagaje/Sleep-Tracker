@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/l10n.dart';
 import '../theme/app_theme.dart';
 import '../utils/formatters.dart';
 import 'star_rating.dart';
@@ -26,10 +27,11 @@ class _RatePromptDialogState extends State<RatePromptDialog> {
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
+    final l = context.l10n;
     return AlertDialog(
-      title: const Text(
-        'How did you sleep?',
-        style: TextStyle(fontWeight: FontWeight.w700, fontSize: 19),
+      title: Text(
+        l.howDidYouSleep,
+        style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 19),
       ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
@@ -47,7 +49,7 @@ class _RatePromptDialogState extends State<RatePromptDialog> {
           ),
         ],
       ),
-      actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('Skip'))],
+      actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text(l.skip))],
     );
   }
 }

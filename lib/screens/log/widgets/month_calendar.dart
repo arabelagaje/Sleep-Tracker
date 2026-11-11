@@ -62,12 +62,12 @@ class MonthCalendar extends StatelessWidget {
               ),
             ),
             IconButton(
-              tooltip: 'Previous month',
+              tooltip: MaterialLocalizations.of(context).previousMonthTooltip,
               icon: Icon(Icons.chevron_left, color: c.ink2),
               onPressed: onPrevMonth,
             ),
             IconButton(
-              tooltip: 'Next month',
+              tooltip: MaterialLocalizations.of(context).nextMonthTooltip,
               icon: Icon(Icons.chevron_right, color: onNextMonth == null ? c.muted : c.ink2),
               onPressed: onNextMonth,
             ),

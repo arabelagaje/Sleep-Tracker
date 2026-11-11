@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../l10n/l10n.dart';
 import '../../../theme/app_theme.dart';
 import '../../../utils/formatters.dart';
 import '../../../utils/sleep_stats.dart';
@@ -21,7 +22,7 @@ class UsualBedtimeLine extends StatelessWidget {
     final style = TextStyle(fontSize: 14, color: context.colors.ink2);
     final InlineSpan span;
     if (isSleeping) {
-      span = const TextSpan(text: 'Sweet dreams. Tap the bedtime card to adjust it.');
+      span = TextSpan(text: context.l10n.sweetDreams);
     } else if (usualBedtime == null) {
       span = const TextSpan(text: 'Your usual bedtime shows up after $minNights nights');
     } else {

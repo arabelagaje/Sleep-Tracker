@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../l10n/l10n.dart';
 import '../models/sleep_session.dart';
 import '../providers/sleep_provider.dart';
 import '../theme/app_theme.dart';
@@ -82,8 +83,8 @@ class _SessionEditorSheetState extends State<SessionEditorSheet> {
   bool get _wakeOk => _wake == null ? widget.mode == EditorMode.editActive : _wake!.isAfter(_bed);
 
   String get _title => switch (widget.mode) {
-    EditorMode.create => 'Add a past night',
-    EditorMode.editActive => 'Current session',
+    EditorMode.create => context.l10n.addPastNight,
+    EditorMode.editActive => context.l10n.currentSession,
     EditorMode.editNight => fmtLong(widget.session!.nightDate),
   };
 
@@ -119,11 +120,12 @@ class _SessionEditorSheetState extends State<SessionEditorSheet> {
     );
     await context.read<SleepProvider>().save(session);
     if (!mounted) return;
+    final l = context.l10n;
     Navigator.pop<_Outcome>(context, (
       message: switch (widget.mode) {
-        EditorMode.create => 'Session added',
-        EditorMode.editActive when _wake != null => 'Session saved',
-        _ => 'Changes saved',
+        EditorMode.create => l.sessionAdded,
+        EditorMode.editActive when _wake != null => l.sessionSaved,
+        _ => l.changesSaved,
       },
       deleted: null,
     ));
@@ -134,13 +136,14 @@ class _SessionEditorSheetState extends State<SessionEditorSheet> {
     final s = widget.session!;
     await context.read<SleepProvider>().delete(s);
     if (!mounted) return;
-    Navigator.pop<_Outcome>(context, (message: 'Session deleted', deleted: s));
+    Navigator.pop<_Outcome>(context, (message: context.l10n.sessionDeleted, deleted: s));
   }
 
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
-    final dur = _wake == null ? 'In progress' : (_wakeOk ? fmtDur(_wake!.difference(_bed)) : '—');
+    final l = context.l10n;
+    final dur = _wake == null ? l.inProgress : (_wakeOk ? fmtDur(_wake!.difference(_bed)) : '—');
     return Padding(
       padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
       child: Column(
@@ -158,7 +161,7 @@ class _SessionEditorSheetState extends State<SessionEditorSheet> {
                   ),
                 ),
                 IconButton(
-                  tooltip: 'Close',
+                  tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
                   icon: Icon(Icons.close, color: c.ink2),
                   onPressed: () => Navigator.pop(context),
                 ),
@@ -175,7 +178,7 @@ class _SessionEditorSheetState extends State<SessionEditorSheet> {
                     children: [
                       Expanded(
                         child: _TimeField(
-                          label: 'Went to bed',
+                          label: l.wentToBed,
                           value: _bed,
                           onTap: () async {
                             final d = await _pick(_bed);
@@ -186,9 +189,9 @@ class _SessionEditorSheetState extends State<SessionEditorSheet> {
                       const SizedBox(width: 12),
                       Expanded(
                         child: _TimeField(
-                          label: 'Woke up',
+                          label: l.wokeUp,
                           value: _wake,
-                          placeholder: 'Still sleeping',
+                          placeholder: l.stillSleeping,
                           onClear: widget.mode == EditorMode.editActive && _wake != null
                               ? () => setState(() => _wake = null)
                               : null,
@@ -210,7 +213,7 @@ class _SessionEditorSheetState extends State<SessionEditorSheet> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Duration', style: TextStyle(color: c.ink2, fontSize: 14)),
+                        Text(l.duration, style: TextStyle(color: c.ink2, fontSize: 14)),
                         Text(
                           dur,
                           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
@@ -220,10 +223,7 @@ class _SessionEditorSheetState extends State<SessionEditorSheet> {
                   ),
                   if (!_wakeOk) ...[
                     const SizedBox(height: 8),
-                    Text(
-                      'Wake time needs to be after bed time.',
-                      style: TextStyle(color: c.danger, fontSize: 13),
-                    ),
+                    Text(l.wakeAfterBedError, style: TextStyle(color: c.danger, fontSize: 13)),
                   ],
                   // Still sleeping: decided when the session is stopped.
                   if (_wake != null)
@@ -235,12 +235,12 @@ class _SessionEditorSheetState extends State<SessionEditorSheet> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  'Nap',
-                                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                                Text(
+                                  l.nap,
+                                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                                 ),
                                 Text(
-                                  'Kept out of nights, averages and charts',
+                                  l.napExplainer,
                                   style: TextStyle(fontSize: 12.5, color: c.ink2),
                                 ),
                               ],
@@ -258,7 +258,7 @@ class _SessionEditorSheetState extends State<SessionEditorSheet> {
                       ),
                     ),
                   const SizedBox(height: 16),
-                  const _FieldLabel('How did you sleep?'),
+                  _FieldLabel(l.howDidYouSleep),
                   Wrap(
                     crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
@@ -270,18 +270,18 @@ class _SessionEditorSheetState extends State<SessionEditorSheet> {
                       ),
                       TextButton(
                         onPressed: _quality == null ? null : () => setState(() => _quality = null),
-                        child: Text(_quality == null ? 'Not rated' : 'Clear'),
+                        child: Text(_quality == null ? l.notRated : l.clear),
                       ),
                     ],
                   ),
                   const SizedBox(height: 16),
-                  const _FieldLabel('Notes'),
+                  _FieldLabel(l.notes),
                   TextField(
                     controller: _notes,
                     minLines: 3,
                     maxLines: 6,
                     decoration: InputDecoration(
-                      hintText: 'Dreams, wake-ups, how you feel…',
+                      hintText: l.notesHint,
                       filled: true,
                       fillColor: c.surface2,
                       border: OutlineInputBorder(
@@ -302,7 +302,7 @@ class _SessionEditorSheetState extends State<SessionEditorSheet> {
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          'Times, rating and notes stay editable forever — come back any time.',
+                          l.editableForever,
                           style: TextStyle(fontSize: 12.5, color: c.ink2, height: 1.45),
                         ),
                       ),
@@ -327,7 +327,7 @@ class _SessionEditorSheetState extends State<SessionEditorSheet> {
                       minimumSize: const Size(0, 48),
                     ),
                     icon: const Icon(Icons.delete_outline, size: 18),
-                    label: const Text('Delete', style: TextStyle(fontWeight: FontWeight.w600)),
+                    label: Text(l.delete, style: const TextStyle(fontWeight: FontWeight.w600)),
                   ),
                 const Spacer(),
                 SizedBox(
@@ -345,7 +345,7 @@ class _SessionEditorSheetState extends State<SessionEditorSheet> {
                         fontSize: 15,
                       ),
                     ),
-                    child: const Text('Save'),
+                    child: Text(l.save),
                   ),
                 ),
               ],
@@ -433,7 +433,7 @@ class _TimeField extends StatelessWidget {
                         Icons.close,
                         size: 18,
                         color: c.ink2,
-                        semanticLabel: 'Clear wake time',
+                        semanticLabel: context.l10n.clearWakeTime,
                       ),
                     ),
                 ],

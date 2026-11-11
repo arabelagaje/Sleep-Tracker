@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/l10n.dart';
 import '../../theme/app_theme.dart';
 
 class OverflowMenu extends StatelessWidget {
@@ -16,7 +17,7 @@ class OverflowMenu extends StatelessWidget {
   }) => showGeneralDialog(
     context: context,
     barrierDismissible: true,
-    barrierLabel: 'Close menu',
+    barrierLabel: context.l10n.closeMenu,
     barrierColor: Colors.transparent,
     transitionDuration: const Duration(milliseconds: 120),
     pageBuilder: (ctx, _, _) => SafeArea(
@@ -43,6 +44,7 @@ class OverflowMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
+    final l = context.l10n;
     Widget item(IconData icon, String label, VoidCallback onTap) => InkWell(
       borderRadius: BorderRadius.circular(10),
       onTap: onTap,
@@ -74,8 +76,8 @@ class OverflowMenu extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              item(Icons.settings_outlined, 'Settings', onSettings),
-              item(Icons.info_outline, 'About', onAbout),
+              item(Icons.settings_outlined, l.settings, onSettings),
+              item(Icons.info_outline, l.about, onAbout),
             ],
           ),
         ),

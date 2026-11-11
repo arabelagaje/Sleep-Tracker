@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../l10n/l10n.dart';
 import '../../../models/sleep_session.dart';
 import '../../../theme/app_theme.dart';
 import '../../../utils/formatters.dart';
@@ -21,29 +22,28 @@ class LastNightCard extends StatelessWidget {
   final VoidCallback onEdit;
   final ValueChanged<int?> onRate;
 
-  String? get _deltaText {
+  String? _deltaText(AppLocalizations l) {
     final d = deltaVsAverage;
     if (d == null) return null;
-    if (d.inMinutes.abs() < 5) return 'right on your average';
+    if (d.inMinutes.abs() < 5) return l.rightOnAverage;
     return '${fmtDur(d.abs())} ${d.isNegative ? 'below' : 'above'} average';
   }
 
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
+    final l = context.l10n;
     final s = session;
+    final delta = _deltaText(l);
     if (s == null) {
-      return const SectionCard(
-        title: 'Previous sleep',
-        child: EmptyNote(
-          message:
-              'Your first sleep shows up here. Tap the moon at bedtime, or add a past night from Log.',
-        ),
+      return SectionCard(
+        title: l.previousSleep,
+        child: EmptyNote(message: l.previousSleepEmpty),
       );
     }
     return SectionCard(
-      title: 'Previous sleep',
-      trailing: CardLink('Edit', onPressed: onEdit),
+      title: l.previousSleep,
+      trailing: CardLink(l.edit, onPressed: onEdit),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -61,9 +61,9 @@ class LastNightCard extends StatelessWidget {
                   ),
                 ),
               ),
-              if (_deltaText != null)
+              if (delta != null)
                 Text(
-                  _deltaText!,
+                  delta,
                   style: TextStyle(fontSize: 13, color: c.ink2, fontWeight: FontWeight.w500),
                 ),
             ],
@@ -73,7 +73,7 @@ class LastNightCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                s.quality == null ? 'How was it?' : 'Your rating',
+                s.quality == null ? l.howWasIt : l.yourRating,
                 style: TextStyle(color: c.ink2, fontSize: 14),
               ),
               StarRating(value: s.quality, onChanged: onRate, size: 20),
@@ -84,7 +84,7 @@ class LastNightCard extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             decoration: BoxDecoration(color: c.surface2, borderRadius: BorderRadius.circular(12)),
             child: Text(
-              s.hasNotes ? s.notes! : 'No notes yet — tap Edit to add some.',
+              s.hasNotes ? s.notes! : l.noNotesYet,
               style: TextStyle(fontSize: 14, color: c.ink2),
             ),
           ),

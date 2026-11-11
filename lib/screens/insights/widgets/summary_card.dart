@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../l10n/l10n.dart';
 import '../../../widgets/empty_note.dart';
 import '../../../widgets/section_card.dart';
 import 'period_selector.dart';
@@ -22,7 +23,7 @@ class SummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SectionCard(
-      title: 'Summary',
+      title: context.l10n.summary,
       trailing: CardCaption(rangeLabel),
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -32,7 +33,7 @@ class SummaryCard extends StatelessWidget {
           PeriodSelector(value: period, onChanged: onPeriodChanged),
           const SizedBox(height: 12),
           if (tiles.isEmpty)
-            const EmptyNote(message: 'No nights in this period yet.')
+            EmptyNote(message: context.l10n.noNightsInPeriod)
           else
             LayoutBuilder(
               builder: (context, box) {

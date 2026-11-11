@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../l10n/l10n.dart';
 import '../../models/sleep_session.dart';
 import '../../providers/settings_provider.dart';
 import '../../providers/sleep_provider.dart';
@@ -29,6 +30,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
     final st = PeriodStats.of(list);
     if (st == null) return const [];
     final n = st.count, ok = n >= minNights;
+    final l = context.l10n;
     const later = Text('after $minNights nights');
 
     Widget averageCaption() {
@@ -52,30 +54,30 @@ class _InsightsScreenState extends State<InsightsScreen> {
 
     final q = st.avgQuality;
     return [
-      StatTileData('Average', ok ? fmtDur(st.average) : '—', averageCaption()),
+      StatTileData(l.statAverage, ok ? fmtDur(st.average) : '—', averageCaption()),
       StatTileData(
-        'Met goal',
+        l.metGoal,
         '${list.where((s) => s.length >= goal).length}/$n',
         Text('nights ≥ ${fmtDur(goal)}'),
       ),
-      StatTileData('Longest', fmtDur(st.longest.length), Text(fmtDay(st.longest.nightDate))),
-      StatTileData('Shortest', fmtDur(st.shortest.length), Text(fmtDay(st.shortest.nightDate))),
+      StatTileData(l.statLongest, fmtDur(st.longest.length), Text(fmtDay(st.longest.nightDate))),
+      StatTileData(l.statShortest, fmtDur(st.shortest.length), Text(fmtDay(st.shortest.nightDate))),
       StatTileData(
-        'Avg bedtime',
+        l.statAvgBedtime,
         ok ? fmtTimeOfDay(context, st.avgBed) : '—',
         ok ? Text('± ${st.bedSpreadMinutes} min') : later,
       ),
       StatTileData(
-        'Avg wake',
+        l.statAvgWake,
         ok ? fmtTimeOfDay(context, st.avgWake) : '—',
-        ok ? const Text('typical morning') : later,
+        ok ? Text(l.typicalMorning) : later,
       ),
       StatTileData(
-        'Avg quality',
+        l.statAvgQuality,
         q == null ? '—' : '${q.toStringAsFixed(1)} / 5',
-        q == null ? const Text('no ratings yet') : StarRating(value: q.round(), size: 12),
+        q == null ? Text(l.noRatingsYet) : StarRating(value: q.round(), size: 12),
       ),
-      StatTileData('Nights logged', '$n', Text('${n - st.rated} not rated yet')),
+      StatTileData(l.statNightsLogged, '$n', Text('${n - st.rated} not rated yet')),
     ];
   }
 
@@ -106,7 +108,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
         ),
         const SizedBox(height: 16),
         SectionCard(
-          title: 'Bed & wake times',
+          title: context.l10n.bedWakeTimes,
           trailing: recent.isEmpty
               ? null
               : CardCaption('last ${recent.length} night${recent.length == 1 ? '' : 's'}'),

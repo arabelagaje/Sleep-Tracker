@@ -193,4 +193,16 @@ void main() {
     expect(sleep.nights.length, count - 1);
     expect(find.text('Session deleted'), findsOneWidget);
   });
+
+  testWidgets('Kannada: all tabs render in Kannada', (tester) async {
+    tester.platformDispatcher.localesTestValue = const [Locale('kn')];
+    addTearDown(tester.platformDispatcher.clearLocalesTestValue);
+    await _pumpApp(tester, 30);
+    expect(find.text('ನಿದ್ರೆ ಆರಂಭಿಸಿ'), findsOneWidget); // Start sleep
+    for (final tab in ['ದಾಖಲೆ', 'ಒಳನೋಟಗಳು', 'ಇಂದು ರಾತ್ರಿ']) {
+      await tester.tap(find.text(tab).last);
+      await tester.pump();
+    }
+    expect(find.text('Start sleep'), findsNothing);
+  });
 }

@@ -43,7 +43,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
           Icon(d.isNegative ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_up, size: 14),
           Flexible(
             child: Text(
-              '${fmtDur(d.abs())} vs prev. ${_period.days}d',
+              '${fmtDur(context.l10n, d.abs())} vs prev. ${_period.days}d',
               style: const TextStyle(fontWeight: FontWeight.w600),
               overflow: TextOverflow.ellipsis,
             ),
@@ -54,14 +54,22 @@ class _InsightsScreenState extends State<InsightsScreen> {
 
     final q = st.avgQuality;
     return [
-      StatTileData(l.statAverage, ok ? fmtDur(st.average) : '—', averageCaption()),
+      StatTileData(l.statAverage, ok ? fmtDur(context.l10n, st.average) : '—', averageCaption()),
       StatTileData(
         l.metGoal,
         '${list.where((s) => s.length >= goal).length}/$n',
-        Text('nights ≥ ${fmtDur(goal)}'),
+        Text('nights ≥ ${fmtDur(context.l10n, goal)}'),
       ),
-      StatTileData(l.statLongest, fmtDur(st.longest.length), Text(fmtDay(st.longest.nightDate))),
-      StatTileData(l.statShortest, fmtDur(st.shortest.length), Text(fmtDay(st.shortest.nightDate))),
+      StatTileData(
+        l.statLongest,
+        fmtDur(context.l10n, st.longest.length),
+        Text(fmtDay(context.l10n, st.longest.nightDate)),
+      ),
+      StatTileData(
+        l.statShortest,
+        fmtDur(context.l10n, st.shortest.length),
+        Text(fmtDay(context.l10n, st.shortest.nightDate)),
+      ),
       StatTileData(
         l.statAvgBedtime,
         ok ? fmtTimeOfDay(context, st.avgBed) : '—',
@@ -91,8 +99,8 @@ class _InsightsScreenState extends State<InsightsScreen> {
     final list = days == null ? nights : inLastDays(nights, today, days);
     final prev = days == null ? <SleepSession>[] : inLastDays(nights, today, days, offset: days);
     final rangeLabel = days == null
-        ? (list.isEmpty ? '' : 'since ${fmtDay(list.last.nightDate)}')
-        : '${fmtDay(addDays(today, 1 - days))} – ${fmtDay(today)}';
+        ? (list.isEmpty ? '' : 'since ${fmtDay(context.l10n, list.last.nightDate)}')
+        : '${fmtDay(context.l10n, addDays(today, 1 - days))} – ${fmtDay(context.l10n, today)}';
 
     final recent = nights.take(usualWindow).toList().reversed.toList();
     final usual = usualTimes(nights);

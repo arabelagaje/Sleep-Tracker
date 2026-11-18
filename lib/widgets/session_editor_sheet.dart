@@ -85,7 +85,7 @@ class _SessionEditorSheetState extends State<SessionEditorSheet> {
   String get _title => switch (widget.mode) {
     EditorMode.create => context.l10n.addPastNight,
     EditorMode.editActive => context.l10n.currentSession,
-    EditorMode.editNight => fmtLong(widget.session!.nightDate),
+    EditorMode.editNight => fmtLong(context.l10n, widget.session!.nightDate),
   };
 
   Future<DateTime?> _pick(DateTime initial) async {
@@ -143,7 +143,9 @@ class _SessionEditorSheetState extends State<SessionEditorSheet> {
   Widget build(BuildContext context) {
     final c = context.colors;
     final l = context.l10n;
-    final dur = _wake == null ? l.inProgress : (_wakeOk ? fmtDur(_wake!.difference(_bed)) : '—');
+    final dur = _wake == null
+        ? l.inProgress
+        : (_wakeOk ? fmtDur(context.l10n, _wake!.difference(_bed)) : '—');
     return Padding(
       padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
       child: Column(
@@ -418,7 +420,10 @@ class _TimeField extends StatelessWidget {
                         : Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(fmtDay(value!), style: TextStyle(color: c.ink2, fontSize: 12)),
+                              Text(
+                                fmtDay(context.l10n, value!),
+                                style: TextStyle(color: c.ink2, fontSize: 12),
+                              ),
                               Text(
                                 fmtClock(context, value!),
                                 style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),

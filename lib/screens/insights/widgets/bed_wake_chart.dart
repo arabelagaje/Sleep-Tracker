@@ -80,7 +80,7 @@ class BedWakeChart extends StatelessWidget {
                   Positioned(
                     left: x0,
                     bottom: -2,
-                    child: Text(fmtDay(sessions.first.nightDate), style: axis),
+                    child: Text(fmtDay(context.l10n, sessions.first.nightDate), style: axis),
                   ),
                   Positioned(
                     right: 0,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../l10n/l10n.dart';
 import '../../../models/sleep_session.dart';
 import '../../../theme/app_theme.dart';
 import '../../../utils/formatters.dart';
@@ -40,7 +41,10 @@ class MonthCalendar extends StatelessWidget {
     final daysInMonth = DateTime(month.year, month.month + 1, 0).day;
     final lead = first.weekday - 1; // Monday first
     final cells = <Widget>[
-      for (final d in ['M', 'T', 'W', 'T', 'F', 'S', 'S'])
+      // 1 Jan 2024 was a Monday, so these are Monday to Sunday.
+      for (final d in [
+        for (var i = 0; i < 7; i++) fmtDowNarrow(context.l10n, DateTime(2024, 1, 1 + i)),
+      ])
         Center(
           child: Text(
             d,
@@ -57,7 +61,7 @@ class MonthCalendar extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                fmtMonth(month),
+                fmtMonth(context.l10n, month),
                 style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
               ),
             ),

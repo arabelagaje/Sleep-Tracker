@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
+import '../l10n/l10n.dart';
 import '../models/sleep_session.dart';
 import '../providers/sleep_provider.dart';
 import 'database_helper.dart';
@@ -28,7 +29,9 @@ class QuickTile {
     return {
       'active': false,
       'label': 'Start sleep',
-      'subtitle': last == null ? null : 'Last ${fmtDur(last.length)}',
+      'subtitle': last == null
+          ? null
+          : 'Last ${fmtDur(lookupAppLocalizations(const Locale('en')), last.length)}',
     };
   }
 

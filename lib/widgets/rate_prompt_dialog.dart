@@ -36,7 +36,7 @@ class _RatePromptDialogState extends State<RatePromptDialog> {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('${fmtDur(widget.length)} logged', style: TextStyle(color: c.ink2)),
+          Text('${fmtDur(context.l10n, widget.length)} logged', style: TextStyle(color: c.ink2)),
           const SizedBox(height: 12),
           StarRating(
             value: _value,

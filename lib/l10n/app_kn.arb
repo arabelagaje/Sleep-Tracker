@@ -128,5 +128,11 @@
   "save": "ಉಳಿಸಿ",
   "clearWakeTime": "ಏಳುವ ಸಮಯ ತೆರವುಗೊಳಿಸಿ",
   "markAsNight": "ರಾತ್ರಿ ಎಂದು ಗುರುತಿಸಿ",
-  "markAsNap": "ಕಿರುನಿದ್ರೆ ಎಂದು ಗುರುತಿಸಿ"
+  "markAsNap": "ಕಿರುನಿದ್ರೆ ಎಂದು ಗುರುತಿಸಿ",
+  "durHoursMinutes": "{h}ಗಂ {m}ನಿ",
+  "durHours": "{h}ಗಂ",
+  "durMinutes": "{m}ನಿ",
+  "durHoursDecimal": "{hours}ಗಂ",
+  "axisHourAm": "{h}ಬೆ",
+  "axisHourPm": "{h}ಸಂ"
 }

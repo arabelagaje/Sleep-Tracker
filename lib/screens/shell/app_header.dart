@@ -29,7 +29,7 @@ class AppHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  fmtLong(now),
+                  fmtLong(context.l10n, now),
                   style: TextStyle(fontSize: 13, color: c.ink2, fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(height: 2),

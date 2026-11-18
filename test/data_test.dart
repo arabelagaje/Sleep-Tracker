@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
+import 'package:sleep_tracker/l10n/l10n.dart';
 import 'package:sleep_tracker/models/sleep_session.dart';
 import 'package:sleep_tracker/providers/settings_provider.dart';
 import 'package:sleep_tracker/providers/sleep_provider.dart';
@@ -131,14 +132,22 @@ void main() {
     );
     // Ahead of the goal is no debt.
     expect(sleepDebt([night(18, 23, 0, 540)], goal), Duration.zero);
-    expect(fmtDur(sleepDebt([night(18, 23, 0, 540)], goal)), '0m');
+    expect(
+      fmtDur(lookupAppLocalizations(const Locale('en')), sleepDebt([night(18, 23, 0, 540)], goal)),
+      '0m',
+    );
     // Days with no night logged don't count.
     expect(sleepDebt([], goal), Duration.zero);
   });
 
   test('formatters', () {
-    expect(fmtDur(const Duration(minutes: 465)), '7h 45m');
-    expect(fmtDur(const Duration(hours: 8)), '8h');
+    final en = lookupAppLocalizations(const Locale('en'));
+    final kn = lookupAppLocalizations(const Locale('kn'));
+    expect(fmtDur(en, const Duration(minutes: 465)), '7h 45m');
+    expect(fmtDur(en, const Duration(hours: 8)), '8h');
+    expect(fmtDur(en, const Duration(minutes: 40)), '40m');
+    expect(fmtDur(kn, const Duration(minutes: 465)), '7ಗಂ 45ನಿ');
+    expect(fmtHours(en, const Duration(minutes: 468)), '7.8h');
     expect(fmtTimer(const Duration(seconds: 3723)), '01:02:03');
   });
 

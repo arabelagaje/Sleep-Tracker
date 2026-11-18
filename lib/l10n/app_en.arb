@@ -389,5 +389,62 @@
   "markAsNap": "Mark as nap",
   "@markAsNap": {
     "description": "Menu item"
+  },
+  "durHoursMinutes": "{h}h {m}m",
+  "@durHoursMinutes": {
+    "description": "Duration, short form: 7h 45m",
+    "placeholders": {
+      "h": {
+        "type": "int"
+      },
+      "m": {
+        "type": "int"
+      }
+    }
+  },
+  "durHours": "{h}h",
+  "@durHours": {
+    "description": "Duration of whole hours, short form: 8h",
+    "placeholders": {
+      "h": {
+        "type": "int"
+      }
+    }
+  },
+  "durMinutes": "{m}m",
+  "@durMinutes": {
+    "description": "Duration under an hour, short form: 40m",
+    "placeholders": {
+      "m": {
+        "type": "int"
+      }
+    }
+  },
+  "durHoursDecimal": "{hours}h",
+  "@durHoursDecimal": {
+    "description": "Hours with one decimal in a small calendar cell: 7.8h",
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "axisHourAm": "{h}a",
+  "@axisHourAm": {
+    "description": "Chart axis label for a morning hour on a 12-hour clock: 9a",
+    "placeholders": {
+      "h": {
+        "type": "int"
+      }
+    }
+  },
+  "axisHourPm": "{h}p",
+  "@axisHourPm": {
+    "description": "Chart axis label for an afternoon/evening hour on a 12-hour clock: 8p",
+    "placeholders": {
+      "h": {
+        "type": "int"
+      }
+    }
   }
 }

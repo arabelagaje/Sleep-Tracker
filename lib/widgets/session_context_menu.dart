@@ -72,7 +72,9 @@ class SessionContextMenu extends StatefulWidget {
       context,
       position,
       _MenuPanel(
-        children: [_MenuItem(Icons.add, 'Add a night for ${fmtDay(date)}', _MenuAction.add)],
+        children: [
+          _MenuItem(Icons.add, 'Add a night for ${fmtDay(context.l10n, date)}', _MenuAction.add),
+        ],
       ),
     );
     if (action == _MenuAction.add && context.mounted) {
@@ -119,12 +121,12 @@ class _SessionContextMenuState extends State<SessionContextMenu> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                fmtDay(s.nightDate),
+                fmtDay(context.l10n, s.nightDate),
                 style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
               ),
               const SizedBox(height: 2),
               Text(
-                '${fmtClock(context, s.bedTime)} → ${fmtClock(context, s.wakeTime!)} · ${fmtDur(s.length)}',
+                '${fmtClock(context, s.bedTime)} → ${fmtClock(context, s.wakeTime!)} · ${fmtDur(context.l10n, s.length)}',
                 style: TextStyle(fontSize: 13, color: c.ink2),
               ),
               const SizedBox(height: 4),

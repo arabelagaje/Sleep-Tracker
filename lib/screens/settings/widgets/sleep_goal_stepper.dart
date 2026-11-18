@@ -57,7 +57,7 @@ class SleepGoalStepper extends StatelessWidget {
         SizedBox(
           width: 58,
           child: Text(
-            fmtDur(value),
+            fmtDur(context.l10n, value),
             textAlign: TextAlign.center,
             style: const TextStyle(fontWeight: FontWeight.w700),
           ),

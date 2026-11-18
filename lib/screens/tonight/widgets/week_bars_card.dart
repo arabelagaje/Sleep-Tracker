@@ -28,12 +28,12 @@ class WeekBarsCard extends StatelessWidget {
 
   List<SleepSession> get _logged => days.map((d) => d.$2).whereType<SleepSession>().toList();
 
-  String get _summary {
+  String _summary(AppLocalizations l) {
     final logged = _logged;
     if (logged.isEmpty) return 'no nights yet';
     if (logged.length < minNights) return '${logged.length} of 7 nights logged';
     final met = logged.where((s) => s.length >= goal).length;
-    return 'avg ${fmtDur(averageDuration(logged))} · $met/${logged.length} met goal';
+    return 'avg ${fmtDur(l, averageDuration(logged))} · $met/${logged.length} met goal';
   }
 
   @override
@@ -59,7 +59,10 @@ class WeekBarsCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text('${fmtDur(goal)} goal', style: TextStyle(fontSize: 11, color: c.ink2)),
+                Text(
+                  '${fmtDur(context.l10n, goal)} goal',
+                  style: TextStyle(fontSize: 11, color: c.ink2),
+                ),
                 const SizedBox(height: 2),
                 Opacity(opacity: 0.45, child: _DashedLine(color: c.ink2)),
               ],
@@ -98,7 +101,7 @@ class WeekBarsCard extends StatelessWidget {
                             height: _labelArea,
                             child: Center(
                               child: Text(
-                                fmtDow(date)[0],
+                                fmtDowNarrow(context.l10n, date),
                                 style: TextStyle(
                                   fontSize: 11,
                                   color: c.ink2,
@@ -120,7 +123,7 @@ class WeekBarsCard extends StatelessWidget {
 
     return SectionCard(
       title: context.l10n.thisWeek,
-      trailing: CardCaption(_summary),
+      trailing: CardCaption(_summary(context.l10n)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -132,7 +135,7 @@ class WeekBarsCard extends StatelessWidget {
                 children: [
                   const TextSpan(text: 'Sleep debt '),
                   TextSpan(
-                    text: fmtDur(sleepDebt(logged, goal)),
+                    text: fmtDur(context.l10n, sleepDebt(logged, goal)),
                     style: TextStyle(fontWeight: FontWeight.w700, color: c.ink),
                   ),
                 ],

@@ -446,5 +446,175 @@
         "type": "int"
       }
     }
+  },
+  "aboutVersion": "Version {version}",
+  "@aboutVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "vsPrevDays": "{dur} vs prev. {days}d",
+  "@vsPrevDays": {
+    "description": "Change in the average against the previous period: '20m vs prev. 7d'. An arrow before it shows up or down.",
+    "placeholders": {
+      "dur": {
+        "type": "String"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "nightsAtLeast": "nights ≥ {dur}",
+  "@nightsAtLeast": {
+    "description": "Caption under 'Met goal': nights at least as long as the goal",
+    "placeholders": {
+      "dur": {
+        "type": "String"
+      }
+    }
+  },
+  "spreadMinutes": "± {minutes} min",
+  "@spreadMinutes": {
+    "description": "How much the bedtime varies, under 'Avg bedtime'",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "qualityOutOf5": "{rating} / 5",
+  "@qualityOutOf5": {
+    "description": "Average star rating, already formatted with one decimal: '4.2 / 5'",
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      }
+    }
+  },
+  "sinceDate": "since {date}",
+  "@sinceDate": {
+    "description": "Range caption for 'All time': since the first night",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "dateRange": "{start} – {end}",
+  "@dateRange": {
+    "description": "Range caption: 'Sun, Oct 12 – Sat, Oct 18'",
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "avgDuration": "avg {dur}",
+  "@avgDuration": {
+    "description": "Week average in the Log list (lowercase in English)",
+    "placeholders": {
+      "dur": {
+        "type": "String"
+      }
+    }
+  },
+  "timeRange": "{start} → {end}",
+  "@timeRange": {
+    "description": "Bed time to wake time: '10:45 PM → 6:30 AM'",
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "timeRangeWithDuration": "{start} → {end} · {dur}",
+  "@timeRangeWithDuration": {
+    "description": "Bed → wake and length, in the long-press menu",
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      },
+      "dur": {
+        "type": "String"
+      }
+    }
+  },
+  "cancelSessionBody": "Started at {time} ({dur} ago). It will be discarded, not saved as a night.",
+  "@cancelSessionBody": {
+    "description": "Dialog text after long-pressing the orb while sleeping",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "dur": {
+        "type": "String"
+      }
+    }
+  },
+  "goalDuration": "{dur} goal",
+  "@goalDuration": {
+    "description": "Label on the goal line in the week bars: '8h goal'",
+    "placeholders": {
+      "dur": {
+        "type": "String"
+      }
+    }
+  },
+  "belowAverage": "{dur} below average",
+  "@belowAverage": {
+    "description": "Next to last night's length (lowercase in English)",
+    "placeholders": {
+      "dur": {
+        "type": "String"
+      }
+    }
+  },
+  "aboveAverage": "{dur} above average",
+  "@aboveAverage": {
+    "description": "Next to last night's length (lowercase in English)",
+    "placeholders": {
+      "dur": {
+        "type": "String"
+      }
+    }
+  },
+  "durationLogged": "{dur} logged",
+  "@durationLogged": {
+    "description": "In the rating dialog after stopping: '7h 45m logged'",
+    "placeholders": {
+      "dur": {
+        "type": "String"
+      }
+    }
+  },
+  "rateNOf5": "Rate {stars} of 5",
+  "@rateNOf5": {
+    "description": "Screen reader label on each star",
+    "placeholders": {
+      "stars": {
+        "type": "int"
+      }
+    }
+  },
+  "addNightFor": "Add a night for {date}",
+  "@addNightFor": {
+    "description": "Menu item on an empty day",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
   }
 }

@@ -42,7 +42,7 @@ class AboutScreen extends StatelessWidget {
           style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
         ),
         Text(
-          'Version $appVersion',
+          l.aboutVersion(appVersion),
           textAlign: TextAlign.center,
           style: TextStyle(color: c.ink2, fontSize: 13),
         ),

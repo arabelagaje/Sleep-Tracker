@@ -73,7 +73,11 @@ class SessionContextMenu extends StatefulWidget {
       position,
       _MenuPanel(
         children: [
-          _MenuItem(Icons.add, 'Add a night for ${fmtDay(context.l10n, date)}', _MenuAction.add),
+          _MenuItem(
+            Icons.add,
+            context.l10n.addNightFor(fmtDay(context.l10n, date)),
+            _MenuAction.add,
+          ),
         ],
       ),
     );
@@ -126,7 +130,11 @@ class _SessionContextMenuState extends State<SessionContextMenu> {
               ),
               const SizedBox(height: 2),
               Text(
-                '${fmtClock(context, s.bedTime)} → ${fmtClock(context, s.wakeTime!)} · ${fmtDur(context.l10n, s.length)}',
+                l.timeRangeWithDuration(
+                  fmtClock(context, s.bedTime),
+                  fmtClock(context, s.wakeTime!),
+                  fmtDur(l, s.length),
+                ),
                 style: TextStyle(fontSize: 13, color: c.ink2),
               ),
               const SizedBox(height: 4),

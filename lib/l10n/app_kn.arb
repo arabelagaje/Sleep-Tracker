@@ -134,5 +134,22 @@
   "durMinutes": "{m}ನಿ",
   "durHoursDecimal": "{hours}ಗಂ",
   "axisHourAm": "{h}ಬೆ",
-  "axisHourPm": "{h}ಸಂ"
+  "axisHourPm": "{h}ಸಂ",
+  "aboutVersion": "ಆವೃತ್ತಿ {version}",
+  "vsPrevDays": "ಹಿಂದಿನ {days} ದಿನಕ್ಕಿಂತ {dur}",
+  "nightsAtLeast": "{dur} ಅಥವಾ ಹೆಚ್ಚಿನ ರಾತ್ರಿಗಳು",
+  "spreadMinutes": "± {minutes} ನಿಮಿಷ",
+  "qualityOutOf5": "{rating} / 5",
+  "sinceDate": "{date} ರಿಂದ",
+  "dateRange": "{start} – {end}",
+  "avgDuration": "ಸರಾಸರಿ {dur}",
+  "timeRange": "{start} → {end}",
+  "timeRangeWithDuration": "{start} → {end} · {dur}",
+  "cancelSessionBody": "{time} ಕ್ಕೆ ಆರಂಭವಾಗಿದೆ ({dur} ಹಿಂದೆ). ಇದನ್ನು ರಾತ್ರಿಯಾಗಿ ಉಳಿಸದೆ ತ್ಯಜಿಸಲಾಗುತ್ತದೆ.",
+  "goalDuration": "{dur} ಗುರಿ",
+  "belowAverage": "ಸರಾಸರಿಗಿಂತ {dur} ಕಡಿಮೆ",
+  "aboveAverage": "ಸರಾಸರಿಗಿಂತ {dur} ಹೆಚ್ಚು",
+  "durationLogged": "{dur} ದಾಖಲಾಗಿದೆ",
+  "rateNOf5": "5 ರಲ್ಲಿ {stars} ರೇಟ್ ಮಾಡಿ",
+  "addNightFor": "{date} ಗೆ ರಾತ್ರಿ ಸೇರಿಸಿ"
 }

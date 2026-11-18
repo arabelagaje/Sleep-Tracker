@@ -26,7 +26,8 @@ class LastNightCard extends StatelessWidget {
     final d = deltaVsAverage;
     if (d == null) return null;
     if (d.inMinutes.abs() < 5) return l.rightOnAverage;
-    return '${fmtDur(l, d.abs())} ${d.isNegative ? 'below' : 'above'} average';
+    final dur = fmtDur(l, d.abs());
+    return d.isNegative ? l.belowAverage(dur) : l.aboveAverage(dur);
   }
 
   @override

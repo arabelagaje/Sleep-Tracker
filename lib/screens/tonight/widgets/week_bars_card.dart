@@ -60,7 +60,7 @@ class WeekBarsCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  '${fmtDur(context.l10n, goal)} goal',
+                  context.l10n.goalDuration(fmtDur(context.l10n, goal)),
                   style: TextStyle(fontSize: 11, color: c.ink2),
                 ),
                 const SizedBox(height: 2),

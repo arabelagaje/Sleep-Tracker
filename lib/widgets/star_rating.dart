@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/l10n.dart';
 import '../theme/app_theme.dart';
 
 class StarRating extends StatelessWidget {
@@ -26,7 +27,7 @@ class StarRating extends StatelessWidget {
         final v = i + 1;
         return Semantics(
           button: true,
-          label: 'Rate $v of 5',
+          label: context.l10n.rateNOf5(v),
           child: InkResponse(
             radius: size,
             // Tapping the current rating clears it.

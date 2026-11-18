@@ -31,7 +31,7 @@ class WeekGroupHeader extends StatelessWidget {
           ),
           if (average != null)
             Text(
-              'avg ${fmtDur(context.l10n, average!)}',
+              context.l10n.avgDuration(fmtDur(context.l10n, average!)),
               style: TextStyle(fontSize: 12, color: c.ink2),
             ),
         ],

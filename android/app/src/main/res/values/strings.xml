@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Text Android shows before Dart has sent the tile anything. The app's own
+     text lives in lib/l10n/*.arb; keep these in step with startSleep there. -->
+<resources>
+    <string name="tile_label">Sleep</string>
+    <string name="tile_start_sleep">Start sleep</string>
+</resources>

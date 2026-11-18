@@ -1,3 +1,5 @@
+import 'dart:ui' show PlatformDispatcher;
+
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
@@ -13,25 +15,43 @@ import '../utils/formatters.dart';
 // forwards taps to [quickTileMain]. All sleep logic and wording lives here, so
 // DB or behaviour changes stay on the Dart side. The one exception: while
 // sleeping, Android replaces `{elapsed}` in the subtitle with the time since
-// `since` (epoch ms), so the tile counts up without waking Dart.
+// `since` (epoch ms), so the tile counts up without waking Dart. It formats that
+// time with the patterns in `elapsed` ({h}/{m}), so it matches the app's language.
 class QuickTile {
   static const channel = MethodChannel('sleep_tracker/quick_tile');
 
-  static Map<String, Object?> stateFor(SleepSession? active, SleepSession? last) {
+  // The tile has no screen to ask for a language, so this picks the app's one
+  // from the phone (or the per-app language set in Android settings).
+  static AppLocalizations _strings() => lookupAppLocalizations(
+    basicLocaleListResolution(
+      PlatformDispatcher.instance.locales,
+      AppLocalizations.supportedLocales,
+    ),
+  );
+
+  static Map<String, Object?> stateFor(
+    SleepSession? active,
+    SleepSession? last, [
+    AppLocalizations? strings,
+  ]) {
+    final l = strings ?? _strings();
     if (active != null) {
       return {
         'active': true,
-        'label': 'Sleeping',
+        'label': l.tileSleeping,
         'subtitle': '{elapsed}',
         'since': active.bedTime.millisecondsSinceEpoch,
+        'elapsed': {
+          'hm': l.durHoursMinutes('{h}', '{m}'),
+          'h': l.durHours('{h}'),
+          'm': l.durMinutes('{m}'),
+        },
       };
     }
     return {
       'active': false,
-      'label': 'Start sleep',
-      'subtitle': last == null
-          ? null
-          : 'Last ${fmtDur(lookupAppLocalizations(const Locale('en')), last.length)}',
+      'label': l.startSleep,
+      'subtitle': last == null ? null : l.tileLast(fmtDur(l, last.length)),
     };
   }
 

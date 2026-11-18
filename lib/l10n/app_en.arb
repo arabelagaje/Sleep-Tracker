@@ -392,31 +392,31 @@
   },
   "durHoursMinutes": "{h}h {m}m",
   "@durHoursMinutes": {
-    "description": "Duration, short form: 7h 45m",
+    "description": "Duration, short form: 7h 45m. The quick tile also uses it as a pattern, so keep the {placeholders}.",
     "placeholders": {
       "h": {
-        "type": "int"
+        "type": "String"
       },
       "m": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
   "durHours": "{h}h",
   "@durHours": {
-    "description": "Duration of whole hours, short form: 8h",
+    "description": "Duration of whole hours, short form: 8h. The quick tile also uses it as a pattern, so keep the {placeholders}.",
     "placeholders": {
       "h": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
   "durMinutes": "{m}m",
   "@durMinutes": {
-    "description": "Duration under an hour, short form: 40m",
+    "description": "Duration under an hour, short form: 40m. The quick tile also uses it as a pattern, so keep the {placeholders}.",
     "placeholders": {
       "m": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
@@ -736,6 +736,19 @@
         "type": "String"
       },
       "end": {
+        "type": "String"
+      }
+    }
+  },
+  "tileSleeping": "Sleeping",
+  "@tileSleeping": {
+    "description": "Quick Settings tile label while a session runs; the running time shows under it"
+  },
+  "tileLast": "Last {dur}",
+  "@tileLast": {
+    "description": "Quick Settings tile subtitle: length of the previous sleep",
+    "placeholders": {
+      "dur": {
         "type": "String"
       }
     }

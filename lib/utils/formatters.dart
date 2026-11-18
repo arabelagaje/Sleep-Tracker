@@ -10,9 +10,9 @@ import '../l10n/l10n.dart';
 // "7h 45m", "8h", "40m"
 String fmtDur(AppLocalizations l, Duration d) {
   final m = d.inMinutes < 0 ? 0 : d.inMinutes;
-  if (m < 60) return l.durMinutes(m);
+  if (m < 60) return l.durMinutes('$m');
   final h = m ~/ 60, r = m % 60;
-  return r == 0 ? l.durHours(h) : l.durHoursMinutes(h, r);
+  return r == 0 ? l.durHours('$h') : l.durHoursMinutes('$h', '$r');
 }
 
 // "7.8h"

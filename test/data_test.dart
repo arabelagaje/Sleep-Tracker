@@ -170,6 +170,12 @@ void main() {
       'label': 'Sleeping',
       'subtitle': '{elapsed}',
       'since': DateTime(2026, 10, 19, 23, 2).millisecondsSinceEpoch,
+      'elapsed': {'hm': '{h}h {m}m', 'h': '{h}h', 'm': '{m}m'},
     });
+    // Kannada: the tile text and the running-time patterns follow the language.
+    final kn = lookupAppLocalizations(const Locale('kn'));
+    expect(QuickTile.stateFor(null, n, kn)['subtitle'], 'ಕಳೆದದ್ದು 7ಗಂ 45ನಿ');
+    expect(QuickTile.stateFor(active, n, kn)['label'], 'ನಿದ್ರೆಯಲ್ಲಿ');
+    expect((QuickTile.stateFor(active, n, kn)['elapsed'] as Map)['hm'], '{h}ಗಂ {m}ನಿ');
   });
 }

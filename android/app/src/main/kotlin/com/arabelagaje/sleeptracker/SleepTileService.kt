@@ -33,30 +33,35 @@ class SleepTileService : TileService() {
     fun refresh() {
         handler.removeCallbacks(tick)
         val state = QuickTileBridge.load(this)
-            ?: QuickTileBridge.TileState(false, "Start sleep", null, null)
+            ?: QuickTileBridge.TileState(false, getString(R.string.tile_start_sleep), null, null)
         val since = state.since
         var subtitle = state.subtitle
         if (since != null) {
             val ms = System.currentTimeMillis() - since
-            subtitle = subtitle?.replace("{elapsed}", elapsed(ms))
+            subtitle = subtitle?.replace("{elapsed}", elapsed(ms, state))
             handler.postDelayed(tick, 60_000 - Math.floorMod(ms, 60_000L))
         }
         render(state.active, state.label, subtitle)
     }
 
-    // Same format as fmtDur in lib/utils/formatters.dart: "6h 12m", "8h", "40m".
-    private fun elapsed(ms: Long): String {
+    // Same rules as fmtDur in lib/utils/formatters.dart ("6h 12m", "8h", "40m"),
+    // with the patterns Dart sent for the app's language.
+    private fun elapsed(ms: Long, s: QuickTileBridge.TileState): String {
         val m = maxOf(ms / 60_000, 0)
-        if (m < 60) return "${m}m"
+        if (m < 60) return (s.elapsedM ?: "{m}m").replace("{m}", "$m")
         val h = m / 60
         val r = m % 60
-        return if (r == 0L) "${h}h" else "${h}h ${r}m"
+        return if (r == 0L) {
+            (s.elapsedH ?: "{h}h").replace("{h}", "$h")
+        } else {
+            (s.elapsedHm ?: "{h}h {m}m").replace("{h}", "$h").replace("{m}", "$r")
+        }
     }
 
     override fun onClick() {
         super.onClick()
         val current = QuickTileBridge.load(this)
-        render(current?.active ?: false, current?.label ?: "Start sleep", "…")
+        render(current?.active ?: false, current?.label ?: getString(R.string.tile_start_sleep), "…")
         QuickTileBridge.tap(this)
     }
 

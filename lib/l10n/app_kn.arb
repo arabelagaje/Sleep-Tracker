@@ -164,5 +164,7 @@
   "weekSummary": "ಸರಾಸರಿ {dur} · {total} ರಲ್ಲಿ {met} ಗುರಿ ತಲುಪಿವೆ",
   "usualBedtimeLine": "{count, plural, one{ಸಾಮಾನ್ಯ ಮಲಗುವ ಸಮಯ {time} · ಕಳೆದ ರಾತ್ರಿ} other{ಸಾಮಾನ್ಯ ಮಲಗುವ ಸಮಯ {time} · ಕಳೆದ {count} ರಾತ್ರಿಗಳು}}",
   "sleepDebtLine": "ನಿದ್ರೆಯ ಕೊರತೆ {dur}",
-  "averageBedWake": "ಸರಾಸರಿ {start} → {end}"
+  "averageBedWake": "ಸರಾಸರಿ {start} → {end}",
+  "tileSleeping": "ನಿದ್ರೆಯಲ್ಲಿ",
+  "tileLast": "ಕಳೆದದ್ದು {dur}"
 }

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tile_label">ನಿದ್ರೆ</string>
+    <string name="tile_start_sleep">ನಿದ್ರೆ ಆರಂಭಿಸಿ</string>
+</resources>

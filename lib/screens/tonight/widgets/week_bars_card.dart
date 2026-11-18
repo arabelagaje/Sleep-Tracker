@@ -30,10 +30,10 @@ class WeekBarsCard extends StatelessWidget {
 
   String _summary(AppLocalizations l) {
     final logged = _logged;
-    if (logged.isEmpty) return 'no nights yet';
-    if (logged.length < minNights) return '${logged.length} of 7 nights logged';
+    if (logged.isEmpty) return l.noNightsYet;
+    if (logged.length < minNights) return l.nOf7NightsLogged(logged.length);
     final met = logged.where((s) => s.length >= goal).length;
-    return 'avg ${fmtDur(l, averageDuration(logged))} · $met/${logged.length} met goal';
+    return l.weekSummary(fmtDur(l, averageDuration(logged)), met, logged.length);
   }
 
   @override

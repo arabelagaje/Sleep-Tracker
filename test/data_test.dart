@@ -148,6 +148,11 @@ void main() {
     expect(fmtDur(en, const Duration(minutes: 40)), '40m');
     expect(fmtDur(kn, const Duration(minutes: 465)), '7ಗಂ 45ನಿ');
     expect(fmtHours(en, const Duration(minutes: 468)), '7.8h');
+    // Plural forms come from the ARB files, picked by intl's rules per language.
+    expect(en.lastNNights(1), 'last night');
+    expect(en.lastNNights(5), 'last 5 nights');
+    expect(en.weeksAgo(3), '3 weeks ago');
+    expect(kn.lastNNights(5), 'ಕಳೆದ 5 ರಾತ್ರಿಗಳು');
     expect(fmtTimer(const Duration(seconds: 3723)), '01:02:03');
   });
 

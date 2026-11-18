@@ -151,5 +151,15 @@
   "aboveAverage": "ಸರಾಸರಿಗಿಂತ {dur} ಹೆಚ್ಚು",
   "durationLogged": "{dur} ದಾಖಲಾಗಿದೆ",
   "rateNOf5": "5 ರಲ್ಲಿ {stars} ರೇಟ್ ಮಾಡಿ",
-  "addNightFor": "{date} ಗೆ ರಾತ್ರಿ ಸೇರಿಸಿ"
+  "addNightFor": "{date} ಗೆ ರಾತ್ರಿ ಸೇರಿಸಿ",
+  "afterNNights": "{count, plural, one{{count} ರಾತ್ರಿಯ ನಂತರ} other{{count} ರಾತ್ರಿಗಳ ನಂತರ}}",
+  "nNights": "{count, plural, one{{count} ರಾತ್ರಿ} other{{count} ರಾತ್ರಿಗಳು}}",
+  "nNotRatedYet": "{count, plural, one{{count} ಇನ್ನೂ ರೇಟ್ ಆಗಿಲ್ಲ} other{{count} ಇನ್ನೂ ರೇಟ್ ಆಗಿಲ್ಲ}}",
+  "lastNNights": "{count, plural, one{ಕಳೆದ ರಾತ್ರಿ} other{ಕಳೆದ {count} ರಾತ್ರಿಗಳು}}",
+  "bedWakePatternAfter": "{count, plural, one{{count} ರಾತ್ರಿಯ ನಂತರ ನಿಮ್ಮ ಮಲಗುವ ಮತ್ತು ಏಳುವ ಮಾದರಿ ಕಾಣಿಸುತ್ತದೆ.} other{{count} ರಾತ್ರಿಗಳ ನಂತರ ನಿಮ್ಮ ಮಲಗುವ ಮತ್ತು ಏಳುವ ಮಾದರಿ ಕಾಣಿಸುತ್ತದೆ.}}",
+  "usualBedtimeAfter": "{count, plural, one{{count} ರಾತ್ರಿಯ ನಂತರ ನಿಮ್ಮ ಸಾಮಾನ್ಯ ಮಲಗುವ ಸಮಯ ಕಾಣಿಸುತ್ತದೆ} other{{count} ರಾತ್ರಿಗಳ ನಂತರ ನಿಮ್ಮ ಸಾಮಾನ್ಯ ಮಲಗುವ ಸಮಯ ಕಾಣಿಸುತ್ತದೆ}}",
+  "weeksAgo": "{count, plural, one{{count} ವಾರದ ಹಿಂದೆ} other{{count} ವಾರಗಳ ಹಿಂದೆ}}",
+  "noNightsYet": "ಇನ್ನೂ ಯಾವುದೇ ರಾತ್ರಿ ಇಲ್ಲ",
+  "nOf7NightsLogged": "{count, plural, one{7 ರಲ್ಲಿ {count} ರಾತ್ರಿ ದಾಖಲಾಗಿದೆ} other{7 ರಲ್ಲಿ {count} ರಾತ್ರಿಗಳು ದಾಖಲಾಗಿವೆ}}",
+  "weekSummary": "ಸರಾಸರಿ {dur} · {total} ರಲ್ಲಿ {met} ಗುರಿ ತಲುಪಿವೆ"
 }

@@ -32,11 +32,11 @@ class _InsightsScreenState extends State<InsightsScreen> {
     if (st == null) return const [];
     final n = st.count, ok = n >= minNights;
     final l = context.l10n;
-    const later = Text('after $minNights nights');
+    final later = Text(l.afterNNights(minNights));
 
     Widget averageCaption() {
       if (!ok) return later;
-      if (_period.days == null || prev.length < minNights) return Text('$n nights');
+      if (_period.days == null || prev.length < minNights) return Text(l.nNights(n));
       final d = st.average - averageDuration(prev);
       return Row(
         mainAxisSize: MainAxisSize.min,
@@ -86,7 +86,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
         q == null ? '—' : l.qualityOutOf5(NumberFormat('0.0', l.localeName).format(q)),
         q == null ? Text(l.noRatingsYet) : StarRating(value: q.round(), size: 12),
       ),
-      StatTileData(l.statNightsLogged, '$n', Text('${n - st.rated} not rated yet')),
+      StatTileData(l.statNightsLogged, '$n', Text(l.nNotRatedYet(n - st.rated))),
     ];
   }
 
@@ -119,9 +119,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
         const SizedBox(height: 16),
         SectionCard(
           title: context.l10n.bedWakeTimes,
-          trailing: recent.isEmpty
-              ? null
-              : CardCaption('last ${recent.length} night${recent.length == 1 ? '' : 's'}'),
+          trailing: recent.isEmpty ? null : CardCaption(l.lastNNights(recent.length)),
           child: BedWakeChart(
             sessions: recent,
             usualBedtime: usual?.bed,

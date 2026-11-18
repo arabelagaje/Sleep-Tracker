@@ -24,7 +24,7 @@ class UsualBedtimeLine extends StatelessWidget {
     if (isSleeping) {
       span = TextSpan(text: context.l10n.sweetDreams);
     } else if (usualBedtime == null) {
-      span = const TextSpan(text: 'Your usual bedtime shows up after $minNights nights');
+      span = TextSpan(text: context.l10n.usualBedtimeAfter(minNights));
     } else {
       span = TextSpan(
         children: [

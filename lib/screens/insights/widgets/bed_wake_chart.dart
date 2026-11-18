@@ -38,9 +38,7 @@ class BedWakeChart extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.colors;
     if (sessions.length < minNights) {
-      return const EmptyNote(
-        message: 'Your bed and wake pattern shows up after $minNights nights.',
-      );
+      return EmptyNote(message: context.l10n.bedWakePatternAfter(minNights));
     }
     final n = sessions.length;
     final axis = TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: c.ink2);

@@ -616,5 +616,95 @@
         "type": "String"
       }
     }
+  },
+  "afterNNights": "{count, plural, one{after {count} night} other{after {count} nights}}",
+  "@afterNNights": {
+    "description": "Stat caption when there isn't enough data yet (lowercase in English)",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "nNights": "{count, plural, one{{count} night} other{{count} nights}}",
+  "@nNights": {
+    "description": "Caption under the average (lowercase in English)",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "nNotRatedYet": "{count, plural, one{{count} not rated yet} other{{count} not rated yet}}",
+  "@nNotRatedYet": {
+    "description": "Caption under 'Nights logged' (lowercase in English)",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "lastNNights": "{count, plural, one{last night} other{last {count} nights}}",
+  "@lastNNights": {
+    "description": "Chart caption: how many recent nights it shows (lowercase in English)",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bedWakePatternAfter": "{count, plural, one{Your bed and wake pattern shows up after {count} night.} other{Your bed and wake pattern shows up after {count} nights.}}",
+  "@bedWakePatternAfter": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "usualBedtimeAfter": "{count, plural, one{Your usual bedtime shows up after {count} night} other{Your usual bedtime shows up after {count} nights}}",
+  "@usualBedtimeAfter": {
+    "description": "Under the orb before there is enough data",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "weeksAgo": "{count, plural, one{{count} week ago} other{{count} weeks ago}}",
+  "@weeksAgo": {
+    "description": "Week group heading in Log (2 or more; 0 and 1 are 'This week' and 'Last week')",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noNightsYet": "no nights yet",
+  "@noNightsYet": {
+    "description": "This week caption (lowercase in English)"
+  },
+  "nOf7NightsLogged": "{count, plural, one{{count} of 7 nights logged} other{{count} of 7 nights logged}}",
+  "@nOf7NightsLogged": {
+    "description": "This week caption (lowercase in English)",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "weekSummary": "avg {dur} · {met}/{total} met goal",
+  "@weekSummary": {
+    "description": "This week caption: average length and how many nights met the goal (lowercase in English)",
+    "placeholders": {
+      "dur": {
+        "type": "String"
+      },
+      "met": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
   }
 }

@@ -48,7 +48,7 @@ class _LogScreenState extends State<LogScreen> {
     return switch (ago) {
       0 => context.l10n.thisWeek,
       1 => context.l10n.lastWeek,
-      _ => '$ago weeks ago',
+      _ => context.l10n.weeksAgo(ago),
     };
   }
 

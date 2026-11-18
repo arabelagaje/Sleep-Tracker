@@ -20,13 +20,15 @@ class WeekGroupHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.baseline,
         textBaseline: TextBaseline.alphabetic,
         children: [
-          Text(
-            label.toUpperCase(),
-            style: TextStyle(
-              fontSize: 12,
-              letterSpacing: 1,
-              fontWeight: FontWeight.w700,
-              color: c.ink2,
+          Flexible(
+            child: Text(
+              label.toUpperCase(),
+              style: TextStyle(
+                fontSize: 12,
+                letterSpacing: 1,
+                fontWeight: FontWeight.w700,
+                color: c.ink2,
+              ),
             ),
           ),
           if (average != null)

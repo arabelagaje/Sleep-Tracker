@@ -706,5 +706,38 @@
         "type": "int"
       }
     }
+  },
+  "usualBedtimeLine": "{count, plural, one{Usual bedtime {time} · last night} other{Usual bedtime {time} · last {count} nights}}",
+  "@usualBedtimeLine": {
+    "description": "Under the orb: typical bedtime and how many recent nights it is based on",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "sleepDebtLine": "Sleep debt {dur}",
+  "@sleepDebtLine": {
+    "description": "Under the week bars: total shortfall against the goal this week",
+    "placeholders": {
+      "dur": {
+        "type": "String"
+      }
+    }
+  },
+  "averageBedWake": "Average {start} → {end}",
+  "@averageBedWake": {
+    "description": "Chart legend for the dashed lines: average bed time → wake time",
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
   }
 }

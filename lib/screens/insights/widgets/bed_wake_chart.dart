@@ -149,17 +149,9 @@ class BedWakeChart extends StatelessWidget {
           ],
         ),
         if (usualBedtime != null && usualWake != null)
-          Text.rich(
-            TextSpan(
-              children: [
-                const TextSpan(text: '- - Average '),
-                TextSpan(
-                  text:
-                      '${fmtTimeOfDay(context, usualBedtime!)} → ${fmtTimeOfDay(context, usualWake!)}',
-                  style: TextStyle(color: c.ink, fontWeight: FontWeight.w700),
-                ),
-              ],
-            ),
+          // "- -" stands for the dashed lines in the chart.
+          Text(
+            '- - ${l.averageBedWake(fmtTimeOfDay(context, usualBedtime!), fmtTimeOfDay(context, usualWake!))}',
             style: style,
           ),
       ],

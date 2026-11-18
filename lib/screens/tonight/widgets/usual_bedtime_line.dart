@@ -19,24 +19,16 @@ class UsualBedtimeLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = TextStyle(fontSize: 14, color: context.colors.ink2);
-    final InlineSpan span;
-    if (isSleeping) {
-      span = TextSpan(text: context.l10n.sweetDreams);
-    } else if (usualBedtime == null) {
-      span = TextSpan(text: context.l10n.usualBedtimeAfter(minNights));
-    } else {
-      span = TextSpan(
-        children: [
-          const TextSpan(text: 'Usual bedtime '),
-          TextSpan(
-            text: fmtTimeOfDay(context, usualBedtime!),
-            style: TextStyle(fontWeight: FontWeight.w700, color: context.colors.ink),
-          ),
-          TextSpan(text: ' · last $nightsUsed nights'),
-        ],
-      );
-    }
-    return Text.rich(span, style: style, textAlign: TextAlign.center);
+    final l = context.l10n;
+    final text = isSleeping
+        ? l.sweetDreams
+        : usualBedtime == null
+        ? l.usualBedtimeAfter(minNights)
+        : l.usualBedtimeLine(nightsUsed, fmtTimeOfDay(context, usualBedtime!));
+    return Text(
+      text,
+      style: TextStyle(fontSize: 14, color: context.colors.ink2),
+      textAlign: TextAlign.center,
+    );
   }
 }

@@ -161,5 +161,8 @@
   "weeksAgo": "{count, plural, one{{count} ವಾರದ ಹಿಂದೆ} other{{count} ವಾರಗಳ ಹಿಂದೆ}}",
   "noNightsYet": "ಇನ್ನೂ ಯಾವುದೇ ರಾತ್ರಿ ಇಲ್ಲ",
   "nOf7NightsLogged": "{count, plural, one{7 ರಲ್ಲಿ {count} ರಾತ್ರಿ ದಾಖಲಾಗಿದೆ} other{7 ರಲ್ಲಿ {count} ರಾತ್ರಿಗಳು ದಾಖಲಾಗಿವೆ}}",
-  "weekSummary": "ಸರಾಸರಿ {dur} · {total} ರಲ್ಲಿ {met} ಗುರಿ ತಲುಪಿವೆ"
+  "weekSummary": "ಸರಾಸರಿ {dur} · {total} ರಲ್ಲಿ {met} ಗುರಿ ತಲುಪಿವೆ",
+  "usualBedtimeLine": "{count, plural, one{ಸಾಮಾನ್ಯ ಮಲಗುವ ಸಮಯ {time} · ಕಳೆದ ರಾತ್ರಿ} other{ಸಾಮಾನ್ಯ ಮಲಗುವ ಸಮಯ {time} · ಕಳೆದ {count} ರಾತ್ರಿಗಳು}}",
+  "sleepDebtLine": "ನಿದ್ರೆಯ ಕೊರತೆ {dur}",
+  "averageBedWake": "ಸರಾಸರಿ {start} → {end}"
 }

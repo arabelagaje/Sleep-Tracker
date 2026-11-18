@@ -130,16 +130,8 @@ class WeekBarsCard extends StatelessWidget {
           bars,
           if (logged.isNotEmpty) ...[
             const SizedBox(height: 10),
-            Text.rich(
-              TextSpan(
-                children: [
-                  const TextSpan(text: 'Sleep debt '),
-                  TextSpan(
-                    text: fmtDur(context.l10n, sleepDebt(logged, goal)),
-                    style: TextStyle(fontWeight: FontWeight.w700, color: c.ink),
-                  ),
-                ],
-              ),
+            Text(
+              context.l10n.sleepDebtLine(fmtDur(context.l10n, sleepDebt(logged, goal))),
               style: TextStyle(fontSize: 14, color: c.ink2),
             ),
           ],

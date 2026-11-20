@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Kannada (ಕನ್ನಡ). The app follows your phone's language, or pick one just for Sleep Tracker on Android 13 and newer in Settings → Apps → Sleep Tracker → Language
+- Dates, durations, counts and the quick tile appear in the chosen language too
+
+### Changed
+- In "Usual bedtime", "Sleep debt" and the chart's "Average" line, the time is no longer shown in bold
+
 ## [1.2.0] - 2026-11-10
 
 ### Added

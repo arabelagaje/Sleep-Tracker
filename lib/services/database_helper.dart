@@ -5,6 +5,11 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import '../models/sleep_session.dart';
 
+// Import refused because the backup's schema is newer than this app knows.
+class NewerBackupException extends FormatException {
+  const NewerBackupException() : super('Backup is from a newer app version');
+}
+
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._internal();
   static Database? _database;
@@ -220,7 +225,7 @@ class DatabaseHelper {
       );
       if (tables.isEmpty) throw notOurs;
       if (await db.getVersion() > schemaVersion) {
-        throw const FormatException('Backup is from a newer app version');
+        throw const NewerBackupException();
       }
     } on DatabaseException {
       throw notOurs;

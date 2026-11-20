@@ -1,45 +1,60 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../l10n/l10n.dart';
+
+// Everything here formats in the app's language. Dates and durations take the
+// app's strings (context.l10n) so the quick tile can use them without a screen;
+// clock times take the context because they also follow the phone's 24-hour setting.
+
 // "7h 45m", "8h", "40m"
-String fmtDur(Duration d) {
+String fmtDur(AppLocalizations l, Duration d) {
   final m = d.inMinutes < 0 ? 0 : d.inMinutes;
-  if (m < 60) return '${m}m';
+  if (m < 60) return l.durMinutes('$m');
   final h = m ~/ 60, r = m % 60;
-  return r == 0 ? '${h}h' : '${h}h ${r}m';
+  return r == 0 ? l.durHours('$h') : l.durHoursMinutes('$h', '$r');
 }
 
-// "7.8"
-String fmtHours(Duration d) => (d.inMinutes / 60).toStringAsFixed(1);
+// "7.8h"
+String fmtHours(AppLocalizations l, Duration d) =>
+    l.durHoursDecimal(NumberFormat('0.0', l.localeName).format(d.inMinutes / 60));
 
-// "11:43 PM", or "23:43" when the phone is set to 24-hour
+// "11:43 PM", or "23:43" when the phone is set to 24-hour. Uses Flutter's own
+// time format for the language, so it matches the time picker.
 String fmtClock(BuildContext context, DateTime d) =>
-    DateFormat(MediaQuery.alwaysUse24HourFormatOf(context) ? 'HH:mm' : 'h:mm a').format(d);
+    fmtTimeOfDay(context, TimeOfDay.fromDateTime(d));
 
-String fmtTimeOfDay(BuildContext context, TimeOfDay t) =>
-    fmtClock(context, DateTime(2000, 1, 1, t.hour, t.minute));
+String fmtTimeOfDay(BuildContext context, TimeOfDay t) => MaterialLocalizations.of(
+  context,
+).formatTimeOfDay(t, alwaysUse24HourFormat: MediaQuery.alwaysUse24HourFormatOf(context));
 
-// Chart axis label for a whole hour: "8p", or "20" when the phone is set to 24-hour
+// Chart axis label for a whole hour: "8p", or "20" on a 24-hour phone or language
 String fmtAxisHour(BuildContext context, int hour) {
-  if (MediaQuery.alwaysUse24HourFormatOf(context)) return hour.toString().padLeft(2, '0');
+  final format = MaterialLocalizations.of(
+    context,
+  ).timeOfDayFormat(alwaysUse24HourFormat: MediaQuery.alwaysUse24HourFormatOf(context));
+  if (hourFormat(of: format) != HourFormat.h) return hour.toString().padLeft(2, '0');
   final h = hour % 12 == 0 ? 12 : hour % 12;
-  return '$h${hour < 12 ? 'a' : 'p'}';
+  return hour < 12 ? context.l10n.axisHourAm(h) : context.l10n.axisHourPm(h);
 }
 
 // "Sun, Oct 18"
-String fmtDay(DateTime d) => DateFormat('EEE, MMM d').format(d);
+String fmtDay(AppLocalizations l, DateTime d) => DateFormat.MMMEd(l.localeName).format(d);
 
 // "Oct 18"
-String fmtMonthDay(DateTime d) => DateFormat('MMM d').format(d);
+String fmtMonthDay(AppLocalizations l, DateTime d) => DateFormat.MMMd(l.localeName).format(d);
 
 // "Sun"
-String fmtDow(DateTime d) => DateFormat('EEE').format(d);
+String fmtDow(AppLocalizations l, DateTime d) => DateFormat.E(l.localeName).format(d);
+
+// "S": one-letter weekday for narrow columns
+String fmtDowNarrow(AppLocalizations l, DateTime d) => DateFormat('EEEEE', l.localeName).format(d);
 
 // "Sunday, October 18"
-String fmtLong(DateTime d) => DateFormat('EEEE, MMMM d').format(d);
+String fmtLong(AppLocalizations l, DateTime d) => DateFormat.MMMMEEEEd(l.localeName).format(d);
 
 // "October 2026"
-String fmtMonth(DateTime d) => DateFormat('MMMM y').format(d);
+String fmtMonth(AppLocalizations l, DateTime d) => DateFormat.yMMMM(l.localeName).format(d);
 
 // "01:02:03"
 String fmtTimer(Duration d) {

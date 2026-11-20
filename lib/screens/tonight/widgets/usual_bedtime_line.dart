@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../l10n/l10n.dart';
 import '../../../theme/app_theme.dart';
 import '../../../utils/formatters.dart';
 import '../../../utils/sleep_stats.dart';
@@ -18,24 +19,16 @@ class UsualBedtimeLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = TextStyle(fontSize: 14, color: context.colors.ink2);
-    final InlineSpan span;
-    if (isSleeping) {
-      span = const TextSpan(text: 'Sweet dreams. Tap the bedtime card to adjust it.');
-    } else if (usualBedtime == null) {
-      span = const TextSpan(text: 'Your usual bedtime shows up after $minNights nights');
-    } else {
-      span = TextSpan(
-        children: [
-          const TextSpan(text: 'Usual bedtime '),
-          TextSpan(
-            text: fmtTimeOfDay(context, usualBedtime!),
-            style: TextStyle(fontWeight: FontWeight.w700, color: context.colors.ink),
-          ),
-          TextSpan(text: ' · last $nightsUsed nights'),
-        ],
-      );
-    }
-    return Text.rich(span, style: style, textAlign: TextAlign.center);
+    final l = context.l10n;
+    final text = isSleeping
+        ? l.sweetDreams
+        : usualBedtime == null
+        ? l.usualBedtimeAfter(minNights)
+        : l.usualBedtimeLine(nightsUsed, fmtTimeOfDay(context, usualBedtime!));
+    return Text(
+      text,
+      style: TextStyle(fontSize: 14, color: context.colors.ink2),
+      textAlign: TextAlign.center,
+    );
   }
 }

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../l10n/l10n.dart';
 import '../../providers/settings_provider.dart';
 import '../../providers/sleep_provider.dart';
 import '../../services/backup.dart';
+import '../../services/database_helper.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/undo_snackbar.dart';
 import '../shell/sub_screen.dart';
@@ -19,33 +21,31 @@ class SettingsScreen extends StatelessWidget {
   Future<void> _export(BuildContext context) async {
     try {
       if (await Backup.export() && context.mounted) {
-        UndoSnackbar.show(context, message: 'Backup saved');
+        UndoSnackbar.show(context, message: context.l10n.backupSaved);
       }
     } catch (_) {
-      if (context.mounted) UndoSnackbar.show(context, message: 'Couldn’t save the backup');
+      if (context.mounted) UndoSnackbar.show(context, message: context.l10n.backupSaveFailed);
     }
   }
 
   Future<void> _import(BuildContext context) async {
     final c = context.colors;
+    final l = context.l10n;
     final ok = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text(
-          'Replace all data?',
-          style: TextStyle(fontWeight: FontWeight.w700, fontSize: 19),
+        title: Text(
+          l.replaceAllDataTitle,
+          style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 19),
         ),
-        content: Text(
-          'Your sessions and settings will be replaced by the ones in the backup file.',
-          style: TextStyle(color: c.ink2, height: 1.45),
-        ),
+        content: Text(l.replaceAllDataBody, style: TextStyle(color: c.ink2, height: 1.45)),
         actionsAlignment: MainAxisAlignment.spaceBetween,
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(l.cancel)),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
             style: FilledButton.styleFrom(backgroundColor: c.accent, foregroundColor: c.onAccent),
-            child: const Text('Choose file'),
+            child: Text(l.chooseFile),
           ),
         ],
       ),
@@ -61,11 +61,13 @@ class SettingsScreen extends StatelessWidget {
       await Backup.restore(path);
       await sleep.load();
       await settings.load();
-      message = 'Backup restored';
-    } on FormatException catch (e) {
-      message = e.message;
+      message = l.backupRestored;
+    } on NewerBackupException {
+      message = l.backupTooNew;
+    } on FormatException {
+      message = l.notABackup;
     } catch (_) {
-      message = 'Couldn’t restore the backup';
+      message = l.backupRestoreFailed;
     }
     if (context.mounted) UndoSnackbar.show(context, message: message);
   }
@@ -73,15 +75,16 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = context.watch<SettingsProvider>();
+    final l = context.l10n;
     return SubScreen(
-      title: 'Settings',
+      title: l.settings,
       children: [
         SettingsGroup(
-          title: 'Sleep',
+          title: l.settingsGroupSleep,
           children: [
             SettingsRow(
-              title: 'Sleep goal',
-              subtitle: 'Drives the goal line and “met goal” stats',
+              title: l.sleepGoal,
+              subtitle: l.sleepGoalSubtitle,
               trailing: SleepGoalStepper(
                 value: s.goal,
                 onChanged: s.setGoal,
@@ -91,8 +94,8 @@ class SettingsScreen extends StatelessWidget {
               ),
             ),
             SettingsSwitchTile(
-              title: 'Ask me to rate in the morning',
-              subtitle: 'A gentle prompt after you stop — never required',
+              title: l.ratePromptSetting,
+              subtitle: l.ratePromptSettingSubtitle,
               value: s.ratePrompt,
               onChanged: s.setRatePrompt,
             ),
@@ -100,14 +103,14 @@ class SettingsScreen extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         SettingsGroup(
-          title: 'Appearance',
+          title: l.settingsGroupAppearance,
           children: [
             Padding(
               padding: const EdgeInsets.only(bottom: 14),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const SettingsRow(title: 'Theme'),
+                  SettingsRow(title: l.theme),
                   ThemeModeSelector(value: s.themeMode, onChanged: s.setThemeMode),
                 ],
               ),
@@ -116,18 +119,18 @@ class SettingsScreen extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         SettingsGroup(
-          title: 'Data',
+          title: l.settingsGroupData,
           children: [
             SettingsActionTile(
-              title: 'Export data',
-              subtitle: 'Save a backup file of everything',
-              actionLabel: 'Export',
+              title: l.exportData,
+              subtitle: l.exportDataSubtitle,
+              actionLabel: l.exportAction,
               onPressed: () => _export(context),
             ),
             SettingsActionTile(
-              title: 'Import data',
-              subtitle: 'Replace everything with a backup file',
-              actionLabel: 'Import',
+              title: l.importData,
+              subtitle: l.importDataSubtitle,
+              actionLabel: l.importAction,
               onPressed: () => _import(context),
             ),
           ],

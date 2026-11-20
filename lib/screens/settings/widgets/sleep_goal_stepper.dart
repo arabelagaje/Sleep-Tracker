@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../l10n/l10n.dart';
 import '../../../theme/app_theme.dart';
 import '../../../utils/formatters.dart';
 
@@ -52,16 +53,16 @@ class SleepGoalStepper extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        btn('−', 'Decrease goal', value <= min ? null : () => onChanged(value - step)),
+        btn('−', context.l10n.decreaseGoal, value <= min ? null : () => onChanged(value - step)),
         SizedBox(
           width: 58,
           child: Text(
-            fmtDur(value),
+            fmtDur(context.l10n, value),
             textAlign: TextAlign.center,
             style: const TextStyle(fontWeight: FontWeight.w700),
           ),
         ),
-        btn('+', 'Increase goal', value >= max ? null : () => onChanged(value + step)),
+        btn('+', context.l10n.increaseGoal, value >= max ? null : () => onChanged(value + step)),
       ],
     );
   }

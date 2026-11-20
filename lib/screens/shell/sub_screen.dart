@@ -22,7 +22,7 @@ class SubScreen extends StatelessWidget {
                 Transform.translate(
                   offset: const Offset(-12, 0),
                   child: IconButton(
-                    tooltip: 'Back',
+                    tooltip: MaterialLocalizations.of(context).backButtonTooltip,
                     icon: Icon(Icons.chevron_left, color: c.ink2),
                     onPressed: () => Navigator.pop(context),
                   ),

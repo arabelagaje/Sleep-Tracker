@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../../l10n/l10n.dart';
 import '../../models/sleep_session.dart';
 import '../../providers/settings_provider.dart';
 import '../../providers/sleep_provider.dart';
@@ -29,11 +31,12 @@ class _InsightsScreenState extends State<InsightsScreen> {
     final st = PeriodStats.of(list);
     if (st == null) return const [];
     final n = st.count, ok = n >= minNights;
-    const later = Text('after $minNights nights');
+    final l = context.l10n;
+    final later = Text(l.afterNNights(minNights));
 
     Widget averageCaption() {
       if (!ok) return later;
-      if (_period.days == null || prev.length < minNights) return Text('$n nights');
+      if (_period.days == null || prev.length < minNights) return Text(l.nNights(n));
       final d = st.average - averageDuration(prev);
       return Row(
         mainAxisSize: MainAxisSize.min,
@@ -41,7 +44,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
           Icon(d.isNegative ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_up, size: 14),
           Flexible(
             child: Text(
-              '${fmtDur(d.abs())} vs prev. ${_period.days}d',
+              l.vsPrevDays(fmtDur(l, d.abs()), _period.days!),
               style: const TextStyle(fontWeight: FontWeight.w600),
               overflow: TextOverflow.ellipsis,
             ),
@@ -52,30 +55,38 @@ class _InsightsScreenState extends State<InsightsScreen> {
 
     final q = st.avgQuality;
     return [
-      StatTileData('Average', ok ? fmtDur(st.average) : '—', averageCaption()),
+      StatTileData(l.statAverage, ok ? fmtDur(context.l10n, st.average) : '—', averageCaption()),
       StatTileData(
-        'Met goal',
+        l.metGoal,
         '${list.where((s) => s.length >= goal).length}/$n',
-        Text('nights ≥ ${fmtDur(goal)}'),
+        Text(l.nightsAtLeast(fmtDur(l, goal))),
       ),
-      StatTileData('Longest', fmtDur(st.longest.length), Text(fmtDay(st.longest.nightDate))),
-      StatTileData('Shortest', fmtDur(st.shortest.length), Text(fmtDay(st.shortest.nightDate))),
       StatTileData(
-        'Avg bedtime',
+        l.statLongest,
+        fmtDur(context.l10n, st.longest.length),
+        Text(fmtDay(context.l10n, st.longest.nightDate)),
+      ),
+      StatTileData(
+        l.statShortest,
+        fmtDur(context.l10n, st.shortest.length),
+        Text(fmtDay(context.l10n, st.shortest.nightDate)),
+      ),
+      StatTileData(
+        l.statAvgBedtime,
         ok ? fmtTimeOfDay(context, st.avgBed) : '—',
-        ok ? Text('± ${st.bedSpreadMinutes} min') : later,
+        ok ? Text(l.spreadMinutes(st.bedSpreadMinutes)) : later,
       ),
       StatTileData(
-        'Avg wake',
+        l.statAvgWake,
         ok ? fmtTimeOfDay(context, st.avgWake) : '—',
-        ok ? const Text('typical morning') : later,
+        ok ? Text(l.typicalMorning) : later,
       ),
       StatTileData(
-        'Avg quality',
-        q == null ? '—' : '${q.toStringAsFixed(1)} / 5',
-        q == null ? const Text('no ratings yet') : StarRating(value: q.round(), size: 12),
+        l.statAvgQuality,
+        q == null ? '—' : l.qualityOutOf5(NumberFormat('0.0', l.localeName).format(q)),
+        q == null ? Text(l.noRatingsYet) : StarRating(value: q.round(), size: 12),
       ),
-      StatTileData('Nights logged', '$n', Text('${n - st.rated} not rated yet')),
+      StatTileData(l.statNightsLogged, '$n', Text(l.nNotRatedYet(n - st.rated))),
     ];
   }
 
@@ -88,9 +99,10 @@ class _InsightsScreenState extends State<InsightsScreen> {
 
     final list = days == null ? nights : inLastDays(nights, today, days);
     final prev = days == null ? <SleepSession>[] : inLastDays(nights, today, days, offset: days);
+    final l = context.l10n;
     final rangeLabel = days == null
-        ? (list.isEmpty ? '' : 'since ${fmtDay(list.last.nightDate)}')
-        : '${fmtDay(addDays(today, 1 - days))} – ${fmtDay(today)}';
+        ? (list.isEmpty ? '' : l.sinceDate(fmtDay(l, list.last.nightDate)))
+        : l.dateRange(fmtDay(l, addDays(today, 1 - days)), fmtDay(l, today));
 
     final recent = nights.take(usualWindow).toList().reversed.toList();
     final usual = usualTimes(nights);
@@ -106,10 +118,8 @@ class _InsightsScreenState extends State<InsightsScreen> {
         ),
         const SizedBox(height: 16),
         SectionCard(
-          title: 'Bed & wake times',
-          trailing: recent.isEmpty
-              ? null
-              : CardCaption('last ${recent.length} night${recent.length == 1 ? '' : 's'}'),
+          title: context.l10n.bedWakeTimes,
+          trailing: recent.isEmpty ? null : CardCaption(l.lastNNights(recent.length)),
           child: BedWakeChart(
             sessions: recent,
             usualBedtime: usual?.bed,

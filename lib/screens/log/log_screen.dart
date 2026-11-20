@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../l10n/l10n.dart';
 import '../../models/sleep_session.dart';
 import '../../providers/settings_provider.dart';
 import '../../providers/sleep_provider.dart';
@@ -45,9 +46,9 @@ class _LogScreenState extends State<LogScreen> {
   String _weekLabel(DateTime start, DateTime thisWeek) {
     final ago = thisWeek.difference(start).inDays ~/ 7;
     return switch (ago) {
-      0 => 'This week',
-      1 => 'Last week',
-      _ => '$ago weeks ago',
+      0 => context.l10n.thisWeek,
+      1 => context.l10n.lastWeek,
+      _ => context.l10n.weeksAgo(ago),
     };
   }
 
@@ -55,9 +56,7 @@ class _LogScreenState extends State<LogScreen> {
   List<Widget> _timeline(List<SleepSession> sessions, Duration goal) {
     final sleep = context.read<SleepProvider>();
     if (sessions.isEmpty) {
-      return const [
-        EmptyNote(message: 'No nights yet. Tap the moon at bedtime, or add a past night below.'),
-      ];
+      return [EmptyNote(message: context.l10n.logEmpty)];
     }
     // Week averages always cover the whole week, whatever the filter.
     final byWeek = <DateTime, List<SleepSession>>{};
@@ -89,7 +88,7 @@ class _LogScreenState extends State<LogScreen> {
         ),
       );
     }
-    if (out.isEmpty) return const [EmptyNote(message: 'No nights match this filter.')];
+    if (out.isEmpty) return [EmptyNote(message: context.l10n.logNoMatches)];
     return [const TimelineAxis(), ...out];
   }
 
@@ -163,7 +162,7 @@ class _LogScreenState extends State<LogScreen> {
             ),
           ),
           icon: const Icon(Icons.add, size: 18),
-          label: const Text('Add a past night'),
+          label: Text(context.l10n.addPastNight),
         ),
       ],
     );
@@ -178,6 +177,7 @@ class _TimelineLegend extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final style = TextStyle(fontSize: 12, color: colors.ink2);
+    final l = context.l10n;
     Widget swatch(double alpha) => Container(
       width: 12,
       height: 8,
@@ -195,14 +195,14 @@ class _TimelineLegend extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             swatch(1),
-            Text('Met goal', style: style),
+            Text(l.metGoal, style: style),
           ],
         ),
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             swatch(0.5),
-            Text('Under goal', style: style),
+            Text(l.underGoal, style: style),
           ],
         ),
         Row(
@@ -210,7 +210,7 @@ class _TimelineLegend extends StatelessWidget {
           children: [
             Icon(Icons.sticky_note_2_outlined, size: 12, color: colors.ink2),
             const SizedBox(width: 4),
-            Text('Has note', style: style),
+            Text(l.hasNote, style: style),
           ],
         ),
       ],

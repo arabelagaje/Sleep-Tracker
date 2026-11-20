@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../l10n/l10n.dart';
 import '../../../widgets/segmented_control.dart';
 
 enum LogView { timeline, month }
@@ -12,7 +13,10 @@ class LogViewToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SegmentedControl<LogView>(
-    options: const [(LogView.timeline, 'Timeline'), (LogView.month, 'Calendar')],
+    options: [
+      (LogView.timeline, context.l10n.viewTimeline),
+      (LogView.month, context.l10n.viewCalendar),
+    ],
     value: value,
     onChanged: onChanged,
   );

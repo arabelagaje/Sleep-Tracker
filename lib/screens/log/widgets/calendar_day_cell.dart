@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../l10n/l10n.dart';
 import '../../../models/sleep_session.dart';
 import '../../../theme/app_theme.dart';
 import '../../../utils/formatters.dart';
@@ -46,7 +47,7 @@ class CalendarDayCell extends StatelessWidget {
           ),
           if (s != null)
             Text(
-              '${fmtHours(s.length)}h',
+              fmtHours(context.l10n, s.length),
               style: TextStyle(
                 fontSize: 9.5,
                 fontWeight: FontWeight.w600,

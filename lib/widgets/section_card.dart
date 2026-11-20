@@ -32,7 +32,12 @@ class SectionCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
+              Flexible(
+                child: Text(
+                  title,
+                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+                ),
+              ),
               if (trailing != null) ...[
                 const SizedBox(width: 8),
                 Flexible(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../l10n/l10n.dart';
 import '../../../widgets/segmented_control.dart';
 
 class ThemeModeSelector extends StatelessWidget {
@@ -10,10 +11,10 @@ class ThemeModeSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SegmentedControl<ThemeMode>(
-    options: const [
-      (ThemeMode.system, 'System'),
-      (ThemeMode.light, 'Light'),
-      (ThemeMode.dark, 'Dark'),
+    options: [
+      (ThemeMode.system, context.l10n.themeSystem),
+      (ThemeMode.light, context.l10n.themeLight),
+      (ThemeMode.dark, context.l10n.themeDark),
     ],
     value: value,
     onChanged: onChanged,

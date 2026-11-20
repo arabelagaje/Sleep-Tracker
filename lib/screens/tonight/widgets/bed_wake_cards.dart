@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../l10n/l10n.dart';
 import '../../../theme/app_theme.dart';
 import '../../../utils/formatters.dart';
 
@@ -20,12 +21,13 @@ class BedWakeCards extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tap = bedTime == null ? null : onTap;
+    final l = context.l10n;
     return Row(
       children: [
         Expanded(
           child: _EndCard(
             icon: Icons.bedtime_outlined,
-            label: isSleeping ? 'In bed since' : 'Bedtime',
+            label: isSleeping ? l.inBedSince : l.bedtime,
             value: bedTime == null ? '—' : fmtClock(context, bedTime!),
             onTap: tap,
           ),
@@ -34,9 +36,9 @@ class BedWakeCards extends StatelessWidget {
         Expanded(
           child: _EndCard(
             icon: Icons.wb_sunny_outlined,
-            label: 'Woke up',
+            label: l.wokeUp,
             value: isSleeping
-                ? 'Sleeping…'
+                ? l.sleepingEllipsis
                 : (wakeTime == null ? '—' : fmtClock(context, wakeTime!)),
             onTap: tap,
           ),

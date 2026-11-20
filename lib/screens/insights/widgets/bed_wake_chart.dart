@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../l10n/l10n.dart';
 import '../../../models/sleep_session.dart';
 import '../../../theme/app_theme.dart';
 import '../../../utils/formatters.dart';
@@ -37,9 +38,7 @@ class BedWakeChart extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.colors;
     if (sessions.length < minNights) {
-      return const EmptyNote(
-        message: 'Your bed and wake pattern shows up after $minNights nights.',
-      );
+      return EmptyNote(message: context.l10n.bedWakePatternAfter(minNights));
     }
     final n = sessions.length;
     final axis = TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: c.ink2);
@@ -79,9 +78,13 @@ class BedWakeChart extends StatelessWidget {
                   Positioned(
                     left: x0,
                     bottom: -2,
-                    child: Text(fmtDay(sessions.first.nightDate), style: axis),
+                    child: Text(fmtDay(context.l10n, sessions.first.nightDate), style: axis),
                   ),
-                  Positioned(right: 0, bottom: -2, child: Text('Latest', style: axis)),
+                  Positioned(
+                    right: 0,
+                    bottom: -2,
+                    child: Text(context.l10n.chartLatest, style: axis),
+                  ),
                 ],
               );
             },
@@ -117,6 +120,7 @@ class BedWakeChart extends StatelessWidget {
 
   Widget _legend(BuildContext context, AppColors c) {
     final style = TextStyle(fontSize: 12, color: c.ink2);
+    final l = context.l10n;
     Widget swatch(double alpha) => Container(
       width: 12,
       height: 8,
@@ -134,28 +138,20 @@ class BedWakeChart extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             swatch(1),
-            Text('Met goal', style: style),
+            Text(l.metGoal, style: style),
           ],
         ),
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             swatch(0.5),
-            Text('Under goal', style: style),
+            Text(l.underGoal, style: style),
           ],
         ),
         if (usualBedtime != null && usualWake != null)
-          Text.rich(
-            TextSpan(
-              children: [
-                const TextSpan(text: '- - Average '),
-                TextSpan(
-                  text:
-                      '${fmtTimeOfDay(context, usualBedtime!)} → ${fmtTimeOfDay(context, usualWake!)}',
-                  style: TextStyle(color: c.ink, fontWeight: FontWeight.w700),
-                ),
-              ],
-            ),
+          // "- -" stands for the dashed lines in the chart.
+          Text(
+            '- - ${l.averageBedWake(fmtTimeOfDay(context, usualBedtime!), fmtTimeOfDay(context, usualWake!))}',
             style: style,
           ),
       ],

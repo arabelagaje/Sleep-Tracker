@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/l10n.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/undo_snackbar.dart';
 import '../settings/widgets/settings_action_tile.dart';
@@ -14,8 +15,9 @@ class AboutScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
+    final l = context.l10n;
     return SubScreen(
-      title: 'About',
+      title: l.about,
       children: [
         const SizedBox(height: 14),
         Center(
@@ -34,45 +36,40 @@ class AboutScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 6),
-        const Text(
-          'Sleep Tracker',
+        Text(
+          l.appName,
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
         ),
         Text(
-          'Version $appVersion',
+          l.aboutVersion(appVersion),
           textAlign: TextAlign.center,
           style: TextStyle(color: c.ink2, fontSize: 13),
         ),
         const SizedBox(height: 16),
         Text(
-          'Tap to log bed and wake times, rate your nights and keep notes. '
-          'Everything stays on this device.',
+          l.aboutBlurb,
           textAlign: TextAlign.center,
           style: TextStyle(color: c.ink2, fontSize: 14, height: 1.55),
         ),
         const SizedBox(height: 16),
         SettingsGroup(
-          title: 'App',
+          title: l.aboutGroupApp,
           children: [
-            const SettingsRow(
-              title: 'Your data',
-              subtitle: 'Stored locally in SQLite, never uploaded',
+            SettingsRow(title: l.yourData, subtitle: l.yourDataSubtitle),
+            SettingsActionTile(
+              title: l.sendFeedback,
+              subtitle: l.sendFeedbackSubtitle,
+              actionLabel: l.send,
+              onPressed: () => UndoSnackbar.show(context, message: l.feedbackComingSoon),
             ),
             SettingsActionTile(
-              title: 'Send feedback',
-              subtitle: 'Ideas, bugs, anything',
-              actionLabel: 'Send',
-              onPressed: () =>
-                  UndoSnackbar.show(context, message: 'Sending feedback is coming soon'),
-            ),
-            SettingsActionTile(
-              title: 'Open-source licenses',
-              subtitle: 'Packages this app is built with',
-              actionLabel: 'View',
+              title: l.licenses,
+              subtitle: l.licensesSubtitle,
+              actionLabel: l.view,
               onPressed: () => showLicensePage(
                 context: context,
-                applicationName: 'Sleep Tracker',
+                applicationName: l.appName,
                 applicationVersion: appVersion,
               ),
             ),

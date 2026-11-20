@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/l10n.dart';
 import '../../theme/app_theme.dart';
 
 class AppBottomNav extends StatelessWidget {
@@ -8,15 +9,13 @@ class AppBottomNav extends StatelessWidget {
   final int index;
   final ValueChanged<int> onChanged;
 
-  static const _items = [
-    (Icons.bedtime_outlined, 'Tonight'),
-    (Icons.format_list_bulleted, 'Log'),
-    (Icons.bar_chart, 'Insights'),
-  ];
+  static const _icons = [Icons.bedtime_outlined, Icons.format_list_bulleted, Icons.bar_chart];
 
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
+    final l = context.l10n;
+    final labels = [l.navTonight, l.navLog, l.navInsights];
     return Container(
       decoration: BoxDecoration(
         color: c.bg,
@@ -27,7 +26,7 @@ class AppBottomNav extends StatelessWidget {
         top: false,
         child: Row(
           children: [
-            for (var i = 0; i < _items.length; i++)
+            for (var i = 0; i < _icons.length; i++)
               Expanded(
                 child: Semantics(
                   selected: i == index,
@@ -40,10 +39,12 @@ class AppBottomNav extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(_items[i].$1, size: 22, color: i == index ? c.accentInk : c.ink2),
+                          Icon(_icons[i], size: 22, color: i == index ? c.accentInk : c.ink2),
                           const SizedBox(height: 4),
                           Text(
-                            _items[i].$2,
+                            labels[i],
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               fontSize: 11.5,
                               fontWeight: FontWeight.w600,

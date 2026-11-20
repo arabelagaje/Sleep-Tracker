@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../l10n/l10n.dart';
 import '../../../models/sleep_session.dart';
 import '../../../theme/app_theme.dart';
 import '../../../utils/formatters.dart';
@@ -48,11 +49,11 @@ class TimelineRow extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      fmtDow(s.nightDate),
+                      fmtDow(context.l10n, s.nightDate),
                       style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
                     ),
                     Text(
-                      fmtMonthDay(s.nightDate),
+                      fmtMonthDay(context.l10n, s.nightDate),
                       style: TextStyle(fontSize: 11.5, color: c.ink2, fontWeight: FontWeight.w500),
                     ),
                   ],
@@ -74,7 +75,7 @@ class TimelineRow extends StatelessWidget {
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
-                              'Nap',
+                              context.l10n.nap,
                               style: TextStyle(
                                 fontSize: 12,
                                 color: c.ink2,
@@ -90,7 +91,10 @@ class TimelineRow extends StatelessWidget {
                           ),
                     const SizedBox(height: 3),
                     Text(
-                      '${fmtClock(context, s.bedTime)} → ${fmtClock(context, s.wakeTime!)}',
+                      context.l10n.timeRange(
+                        fmtClock(context, s.bedTime),
+                        fmtClock(context, s.wakeTime!),
+                      ),
                       style: TextStyle(fontSize: 11.5, color: c.ink2, fontWeight: FontWeight.w500),
                     ),
                   ],
@@ -103,7 +107,7 @@ class TimelineRow extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      fmtDur(s.length),
+                      fmtDur(context.l10n, s.length),
                       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
                     ),
                     StarRating(value: s.quality, onChanged: onRate, size: 13, gap: 0.5),

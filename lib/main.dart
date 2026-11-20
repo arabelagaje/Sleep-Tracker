@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import 'l10n/l10n.dart';
 import 'providers/settings_provider.dart';
 import 'providers/sleep_provider.dart';
 import 'screens/shell/app_shell.dart';
@@ -33,7 +34,10 @@ class SleepTrackerApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeMode = context.select<SettingsProvider, ThemeMode>((s) => s.themeMode);
     return MaterialApp(
-      title: 'Sleep Tracker',
+      onGenerateTitle: (context) => context.l10n.appName,
+      // Follows the phone's language, or the per-app language picked in Android settings.
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       debugShowCheckedModeBanner: false,
       theme: buildTheme(Brightness.light),
       darkTheme: buildTheme(Brightness.dark),

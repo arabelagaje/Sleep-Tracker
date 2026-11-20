@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
+import 'package:sleep_tracker/l10n/l10n.dart';
 import 'package:sleep_tracker/models/sleep_session.dart';
 import 'package:sleep_tracker/providers/settings_provider.dart';
 import 'package:sleep_tracker/providers/sleep_provider.dart';
@@ -131,14 +132,27 @@ void main() {
     );
     // Ahead of the goal is no debt.
     expect(sleepDebt([night(18, 23, 0, 540)], goal), Duration.zero);
-    expect(fmtDur(sleepDebt([night(18, 23, 0, 540)], goal)), '0m');
+    expect(
+      fmtDur(lookupAppLocalizations(const Locale('en')), sleepDebt([night(18, 23, 0, 540)], goal)),
+      '0m',
+    );
     // Days with no night logged don't count.
     expect(sleepDebt([], goal), Duration.zero);
   });
 
   test('formatters', () {
-    expect(fmtDur(const Duration(minutes: 465)), '7h 45m');
-    expect(fmtDur(const Duration(hours: 8)), '8h');
+    final en = lookupAppLocalizations(const Locale('en'));
+    final kn = lookupAppLocalizations(const Locale('kn'));
+    expect(fmtDur(en, const Duration(minutes: 465)), '7h 45m');
+    expect(fmtDur(en, const Duration(hours: 8)), '8h');
+    expect(fmtDur(en, const Duration(minutes: 40)), '40m');
+    expect(fmtDur(kn, const Duration(minutes: 465)), '7ಗಂ 45ನಿ');
+    expect(fmtHours(en, const Duration(minutes: 468)), '7.8h');
+    // Plural forms come from the ARB files, picked by intl's rules per language.
+    expect(en.lastNNights(1), 'last night');
+    expect(en.lastNNights(5), 'last 5 nights');
+    expect(en.weeksAgo(3), '3 weeks ago');
+    expect(kn.lastNNights(5), 'ಕಳೆದ 5 ರಾತ್ರಿಗಳು');
     expect(fmtTimer(const Duration(seconds: 3723)), '01:02:03');
   });
 
@@ -156,6 +170,12 @@ void main() {
       'label': 'Sleeping',
       'subtitle': '{elapsed}',
       'since': DateTime(2026, 10, 19, 23, 2).millisecondsSinceEpoch,
+      'elapsed': {'hm': '{h}h {m}m', 'h': '{h}h', 'm': '{m}m'},
     });
+    // Kannada: the tile text and the running-time patterns follow the language.
+    final kn = lookupAppLocalizations(const Locale('kn'));
+    expect(QuickTile.stateFor(null, n, kn)['subtitle'], 'ಕಳೆದದ್ದು 7ಗಂ 45ನಿ');
+    expect(QuickTile.stateFor(active, n, kn)['label'], 'ನಿದ್ರೆಯಲ್ಲಿ');
+    expect((QuickTile.stateFor(active, n, kn)['elapsed'] as Map)['hm'], '{h}ಗಂ {m}ನಿ');
   });
 }
